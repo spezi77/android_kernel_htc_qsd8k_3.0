@@ -692,6 +692,12 @@ config CABLE_DETECT_GPIO_DOCK
         depends on CABLE_DETECT_8960
         default n
 
+config FSYNC_CONTROL
+       bool "Support for Fsync control"
+       default y
+       help
+         Google it.
+
 source "drivers/misc/c2port/Kconfig"
 source "drivers/misc/eeprom/Kconfig"
 source "drivers/misc/cb710/Kconfig"
