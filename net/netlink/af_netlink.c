@@ -1098,14 +1098,7 @@ int netlink_broadcast_filtered(struct sock *ssk, struct sk_buff *skb, u32 pid,
 	netlink_unlock_table();
 
 	if (info.delivery_failure) {
-
-#ifdef CONFIG_HTC_NETWORK_MODIFY
-		if (!IS_ERR(info.skb2) && (info.skb2))
-			kfree_skb(info.skb2);
-#else
-			kfree_skb(info.skb2);
-#endif
-
+		kfree_skb(info.skb2);
 		return -ENOBUFS;
 	} else
 		consume_skb(info.skb2);

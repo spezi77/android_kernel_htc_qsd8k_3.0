@@ -807,12 +807,7 @@ static int __ip_append_data(struct sock *sk,
 	int exthdrlen;
 	int mtu;
 	int copy;
-
-#ifdef CONFIG_HTC_NETWORK_MODIFY
-	int err = 0;
-#else
 	int err;
-#endif
 
 	int offset = 0;
 	unsigned int maxfraglen, fragheaderlen;

@@ -353,11 +353,6 @@ static void evict_oldest_expect(struct nf_conn *master,
 	struct nf_conntrack_expect *exp, *last = NULL;
 	struct hlist_node *n;
 
-#ifdef CONFIG_HTC_NETWORK_MODIFY
-	if (IS_ERR(master_help) || (!master_help))
-		printk(KERN_ERR "[NET] master_help is NULL in %s!\n", __func__);
-#endif
-
 	hlist_for_each_entry(exp, n, &master_help->expectations, lnode) {
 		if (exp->class == new->class)
 			last = exp;

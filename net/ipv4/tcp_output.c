@@ -831,11 +831,6 @@ static int tcp_transmit_skb(struct sock *sk, struct sk_buff *skb, int clone_it,
 	tp = tcp_sk(sk);
 	tcb = TCP_SKB_CB(skb);
 
-#ifdef CONFIG_HTC_NETWORK_MODIFY
-	if (IS_ERR(tcb) || (!tcb))
-		printk(KERN_ERR "[NET] tcb is NULL in %s!\n", __func__);
-#endif
-
 	memset(&opts, 0, sizeof(opts));
 
 	if (unlikely(tcb->flags & TCPHDR_SYN))
@@ -2254,11 +2249,6 @@ void tcp_xmit_retransmit_queue(struct sock *sk)
 		skb = tcp_write_queue_head(sk);
 		last_lost = tp->snd_una;
 	}
-
-#ifdef CONFIG_HTC_NETWORK_MODIFY
-	if (IS_ERR(skb) || (!skb))
-		printk(KERN_ERR "[NET] nat is NULL in %s!\n", __func__);
-#endif
 
 	tcp_for_write_queue_from(skb, sk) {
 		__u8 sacked = TCP_SKB_CB(skb)->sacked;
