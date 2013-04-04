@@ -16,6 +16,15 @@
 enum {
 	MSM_PM_BOOT_CONFIG_TZ		= 0,
 	MSM_PM_BOOT_CONFIG_RESET_VECTOR	= 1,
+	MSM_PM_BOOT_CONFIG_RESET_VECTOR_VIRT = 2,
+	MSM_PM_BOOT_CONFIG_REMAP_BOOT_ADDR   = 3,
+
+};
+
+struct msm_pm_boot_platform_data {
+	int mode;
+	phys_addr_t  p_addr;
+	void __iomem *v_addr;
 };
 
 #ifdef CONFIG_PM

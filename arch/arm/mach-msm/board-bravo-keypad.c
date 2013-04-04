@@ -23,7 +23,6 @@
 #include <linux/keyreset.h>
 #include <linux/platform_device.h>
 #include <mach/vreg.h>
-
 #include <asm/mach-types.h>
 
 #include "board-bravo.h"
@@ -69,7 +68,7 @@ static struct gpio_event_matrix_info bravo_keypad_matrix_info = {
 		  GPIOKPF_REMOVE_PHANTOM_KEYS |
 		  GPIOKPF_PRINT_UNMAPPED_KEYS),
 #ifdef CONFIG_OPTICALJOYSTICK_CRUCIAL
-	.info.oj_btn = true,
+	//.info.oj_btn = true,
 #endif
 };
 

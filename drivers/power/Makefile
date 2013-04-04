@@ -18,6 +18,7 @@ obj-$(CONFIG_BATTERY_DS2760)	+= ds2760_battery.o
 obj-$(CONFIG_BATTERY_DS2780)	+= ds2780_battery.o
 obj-$(CONFIG_BATTERY_DS2782)	+= ds2782_battery.o
 obj-$(CONFIG_BATTERY_DS2746)    += ds2746_battery.o
+obj-$(CONFIG_BATTERY_DS2784)  += ds2784_battery.o
 obj-$(CONFIG_BATTERY_DS2746)    += ds2746_param.o
 obj-$(CONFIG_BATTERY_PMU)	+= pmu_battery.o
 obj-$(CONFIG_BATTERY_OLPC)	+= olpc_battery.o

@@ -36,6 +36,19 @@
 
 #undef BRAVO_DEBUG_MMC
 
+static void config_gpio_table(uint32_t *table, int len)
+{
+	int n, rc;
+	for (n = 0; n < len; n++) {
+		rc = gpio_tlmm_config(table[n], GPIO_CFG_ENABLE);
+		if (rc) {
+			printk(KERN_ERR "%s: gpio_tlmm_config(%#x)=%d\n",
+				__func__, table[n], rc);
+			break;
+		}
+	}
+}
+
 static bool opt_disable_sdcard;
 static int __init bravo_disablesdcard_setup(char *str)
 {

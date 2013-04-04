@@ -1,6 +1,5 @@
-/* include/linux/ds2784_battery.h
+/* arch/arm/mach-msm/include/mach/msm_fast_timer.h
  *
- * Copyright (C) 2009 HTC Corporation
  * Copyright (C) 2009 Google, Inc.
  *
  * This software is licensed under the terms of the GNU General Public
@@ -14,16 +13,7 @@
  *
  */
 
-#ifndef __LINUX_DS2784_BATTERY_H
-#define __LINUX_DS2784_BATTERY_H
+void msm_enable_fast_timer(void);
+void msm_disable_fast_timer(void);
+u32 msm_read_fast_timer(void);
 
-#ifdef __KERNEL__
-
-struct ds2784_platform_data {
-	int (*charge)(int on, int fast);
-	void *w1_slave;
-};
-
-#endif /* __KERNEL__ */
-
-#endif /* __LINUX_DS2784_BATTERY_H */

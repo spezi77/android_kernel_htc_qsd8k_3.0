@@ -174,7 +174,6 @@ obj-$(CONFIG_MSM7KV2_AUDIO) += htc_acoustic_7x30.o htc_acdb_7x30.o
 ifndef CONFIG_MACH_HTCLEO
 obj-$(CONFIG_MSM_QDSP6) += qdsp6/
 else
-obj-y += dex_comm.o
 obj-$(CONFIG_MSM_QDSP6) += qdsp6_1550/
 endif
 obj-$(CONFIG_MSM8X60_AUDIO) += qdsp6v2_1x/
@@ -324,7 +323,7 @@ obj-$(CONFIG_MACH_BRAVO) += board-bravo-wifi.o board-bravo-audio.o
 obj-$(CONFIG_MACH_BRAVO) += msm_vibrator.o devices_htc.o htc_35mm_jack.o
 obj-$(CONFIG_MACH_BRAVO) += board-bravo-microp.o htc_acoustic_qsd.o
 obj-$(CONFIG_MACH_BRAVO) += board-bravo-tpa2018d1.o msm_flashlight.o
-obj-$(CONFIG_MACH_BRAVO) += board-bravo-smb329.o dex_comm.o
+obj-$(CONFIG_MACH_BRAVO) += board-bravo-smb329.o
 
 ifeq ($(CONFIG_ARCH_MSM8X60_LTE),y)
 obj-$(CONFIG_ARCH_MSM8X60_LTE) += 8x60-lte/
@@ -543,7 +542,7 @@ obj-$(CONFIG_ARCH_FSM9XXX) += board-fsm9xxx.o
 obj-$(CONFIG_HTC_BATTCHG) += htc_battery.o
 obj-$(CONFIG_HTC_BATT_CORE) += htc_battery_core.o
 obj-$(CONFIG_HTC_BATT8x60) += htc_battery_8x60.o
-
+obj-$(CONFIG_HTC_PWRSPLY) += htc_power_supply.o
 obj-$(CONFIG_HTC_PWRSINK) += htc_pwrsink.o
 obj-$(CONFIG_HTC_HEADSET_MGR) += htc_headset_mgr.o
 obj-$(CONFIG_HTC_HEADSET_H2W) += htc_headset_h2w.o
