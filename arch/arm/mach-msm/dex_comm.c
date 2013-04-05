@@ -28,7 +28,13 @@
 #include <asm/mach-types.h>
 
 #include "dex_comm.h"
-
+static int inited;
+static struct work_struct vbus_work;
+void notify_vbus_change_intr(void)  
+{  
+    if (!inited)    return;  
+    schedule_work(&vbus_work);  
+}
 
 // from board-htcleo-power.c
 void notify_vbus_change_intr(void);

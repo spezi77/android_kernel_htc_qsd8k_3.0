@@ -48,7 +48,6 @@
 #endif
 
 static struct wake_lock vbus_wake_lock;
-extern void notify_usb_connected(int);
 enum {
 	HTC_BATT_DEBUG_M2A_RPC = 1U << 0,
 	HTC_BATT_DEBUG_A2M_RPC = 1U << 1,
@@ -597,42 +596,6 @@ EXPORT_SYMBOL(htc_get_usb_accessory_adc_level);
 /* A9 reports USB charging when helf AC cable in and China AC charger. */
 /* notify userspace USB charging first,
 and then usb driver will notify AC while D+/D- Line short. */
-void notify_usb_connected(int online)
-{
-#if 1
-	pr_info("batt:online=%d",online);
-	/* TODO: replace charging_source to usb_status */
-	htc_batt_info.rep.charging_source = online;
-	htc_set_smem_cable_type(htc_batt_info.rep.charging_source);
-
-	/* TODO: use power_supply_change to notify battery drivers. */
-	if (htc_batt_info.guage_driver == GUAGE_DS2784 || htc_batt_info.guage_driver == GUAGE_DS2746)
-		blocking_notifier_call_chain(&cable_status_notifier_list,
-			htc_batt_info.rep.charging_source, NULL);
-
-	if (htc_battery_initial) {
-		power_supply_changed(&htc_power_supplies[CHARGER_AC]);
-		power_supply_changed(&htc_power_supplies[CHARGER_USB]);
-		power_supply_changed(&htc_power_supplies[CHARGER_BATTERY]);
-	} else {
-		pr_err("\n\n ### htc_battery_code is not inited yet! ###\n\n");
-	}
-	update_wake_lock(htc_batt_info.rep.charging_source);
-#else
-	mutex_lock(&htc_batt_info.lock);
-	if (htc_batt_debug_mask & HTC_BATT_DEBUG_USB_NOTIFY)
-		BATT_LOG("%s: online=%d, g_usb_online=%d", __func__, online, g_usb_online);
-	if (g_usb_online != online) {
-		g_usb_online = online;
-		if (online == CHARGER_AC && htc_batt_info.rep.charging_source == CHARGER_USB) {
-			mutex_unlock(&htc_batt_info.lock);
-			htc_cable_status_update(CHARGER_AC);
-			mutex_lock(&htc_batt_info.lock);
-		}
-	}
-	mutex_unlock(&htc_batt_info.lock);
-#endif
-}
 
 static int htc_get_batt_info(struct battery_info_reply *buffer)
 {

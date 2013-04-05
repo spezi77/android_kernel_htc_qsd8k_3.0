@@ -25,7 +25,7 @@
 #include "board-bravo-tpa2018d1.h"
 
 #include "dex_comm.h"
-
+/*
 static void config_gpio_table(uint32_t *table, int len)
 {
 	int n, rc;
@@ -37,8 +37,8 @@ static void config_gpio_table(uint32_t *table, int len)
 			break;
 		}
 	}
-}
-
+}	
+*/
 #if 0
 #define D(fmt, args...) printk(KERN_INFO "Audio: "fmt, ##args)
 #else

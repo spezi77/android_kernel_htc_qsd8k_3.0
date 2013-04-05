@@ -89,7 +89,6 @@ static int bravo_rfkill_remove(struct platform_device *dev)
 	rfkill_destroy(bt_rfk);
 	gpio_free(BRAVO_GPIO_BT_SHUTDOWN_N);
 	gpio_free(BRAVO_GPIO_BT_RESET_N);
-
 	return 0;
 }
 

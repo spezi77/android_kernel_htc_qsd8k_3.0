@@ -1,0 +1,278 @@
+[    0.000000] Initializing cgroup subsys cpu
+[    0.000000] Linux version 3.0.16-evervolv-turba-jellybean+ (nonamer@ubuntu) (gcc version 4.5.4 20111003 (prerelease) (Linaro GCC 4.5-2011.10) ) #52 PREEMPT Thu Apr 4 20:16:51 MSK 2013
+[    0.000000] CPU: ARMv7 Processor [510f00f2] revision 2 (ARMv7), cr=10c53c7d
+[    0.000000] CPU: VIPT nonaliasing data cache, VIVT ASID tagged instruction cache
+[    0.000000] Machine: bravo
+[    0.000000] bravo_fixup(...)
+[    0.000000] Ignoring unrecognised tag 0x4d534d76
+[    0.000000] Partition (from atag) misc -- Offset:ffb Size:5
+[    0.000000] Partition (from atag) recovery -- Offset:212 Size:24
+[    0.000000] Partition (from atag) boot -- Offset:236 Size:18
+[    0.000000] Partition (from atag) system -- Offset:24e Size:7d0
+[    0.000000] Partition (from atag) cache -- Offset:a1e Size:140
+[    0.000000] Partition (from atag) userdata -- Offset:b5e Size:49d
+[    0.000000] Ignoring unrecognised tag 0x5441000a
+[    0.000000] CAM_AWB_CAL Data size = 514 , 0x59504550, size = 2048
+[    0.000000] Ignoring unrecognised tag 0x41387898
+[    0.000000] parse_tag_ps_calibration: ps_kparam1 = 0x0, ps_kparam2 = 0x0
+[    0.000000] Memory policy: ECC disabled, Data cache writeback
+[    0.000000] bravo_map_io()
+[    0.000000] BUG: mapping for 0x00100000 at 0xf8100000 overlaps vmalloc space
+[    0.000000] smem_find(137, 72): wrong size 56
+[    0.000000] smem_find(137, 64): wrong size 56
+[    0.000000] smem_find(137, 64): wrong size 56
+[    0.000000] socinfo_init: v2, id=36, ver=2.0, raw_id=576, raw_ver=2
+[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 105362
+[    0.000000] Kernel command line: board_bravo.disable_uart3=0 board_bravo.usb_h2w_sw=0 board_bravo.disable_sdcard=0 diag.enabled=0 board_bravo.debug_uart=0 smisize=0 userdata_sel=0 androidboot.emmc=false  androidboot.baseband=5.17.05.23 androidboot.cid=HTC__A07 androidboot.carrier=HTC-Russia androidboot.mid=PB9920000 androidboot.keycaps=qwerty androidboot.mode=normal androidboot.serialno=SH0BWPL13225 androidboot.bootloader=6.93.1002 no_console_suspend=1 msmsdcc_sdioirq=1 wire.search_count=5
+[    0.000000] board_bootloader_setup: 6.93.1002
+[    0.000000] board_bootloader_setup: MFG BUILD
+[    0.000000] PID hash table entries: 2048 (order: 1, 8192 bytes)
+[    0.000000] Dentry cache hash table entries: 65536 (order: 6, 262144 bytes)
+[    0.000000] Inode-cache hash table entries: 32768 (order: 5, 131072 bytes)
+[    0.000000] Memory: 232MB 183MB = 415MB total
+[    0.000000] Memory: 413288k/413288k available, 11672k reserved, 0K highmem
+[    0.000000] Virtual kernel memory layout:
+[    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
+[    0.000000]     fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
+[    0.000000]     DMA     : 0xff000000 - 0xffe00000   (  14 MB)
+[    0.000000]     vmalloc : 0xdb800000 - 0xfa000000   ( 488 MB)
+[    0.000000]     lowmem  : 0xc0000000 - 0xdb700000   ( 439 MB)
+[    0.000000]     modules : 0xbf000000 - 0xc0000000   (  16 MB)
+[    0.000000]       .init : 0xc0008000 - 0xc0035000   ( 180 kB)
+[    0.000000]       .text : 0xc0035000 - 0xc0574000   (5372 kB)
+[    0.000000]       .data : 0xc0574000 - 0xc05bf7a8   ( 302 kB)
+[    0.000000]        .bss : 0xc05bf7cc - 0xc0788ee0   (1830 kB)
+[    0.000000] SLUB: Genslabs=13, HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.000000] NR_IRQS:293
+[    0.000000] bravo_init_irq()
+[    0.000000] sched_clock: 32 bits at 32kHz, resolution 30517ns, wraps every 131071999ms
+[    0.000030] Calibrating delay loop... 508.72 BogoMIPS (lpj=2543616)
+[    0.059875] pid_max: default: 32768 minimum: 301
+[    0.060119] Mount-cache hash table entries: 512
+[    0.060485] Initializing cgroup subsys cpuacct
+[    0.060516] Initializing cgroup subsys freezer
+[    0.060516] Initializing cgroup subsys blkio
+[    0.060577] CPU: Testing write buffer coherency: ok
+[    0.062744] print_constraints: dummy: 
+[    0.062774] rdev_init_debugfs: Error-Bad Function Input
+[    0.062927] NET: Registered protocol family 16
+[    0.062988] msm_gpio_init: start
+[    0.063537] bravo_init() revision=132
+[    0.064575] Max ACPU freq from efuse data is 998400 KHz
+[    3.079406] ACPU running at 768000 KHz
+[    3.079437] 5 scaling frequencies supported.
+[    3.080352] ram_console: got buffer at 3a00000, size 40000
+[    3.080474] ram_console: found existing buffer, size 31903, start 31903
+[    3.232208] console [ram0] enabled
+[    3.233032] bravo_init_mmc()+
+[    3.233306] bravo_init_mmc()-
+[    3.234191] print_constraints: fs_gfx3d: normal 
+[    3.239013] bio: create slab <bio-0> at 0
+[    3.239746] msm_i2c_probe
+[    3.239959] msm_i2c_probe: clk_ctl 35d, 100000 Hz
+[    3.241149] print_constraints: dcdc1: 800 <--> 1350 mV at 1300 mV 
+[    3.241424] rdev_init_debugfs: Error-Bad Function Input
+[    3.241638] print_constraints: dcdc2: 1260 mV 
+[    3.241912] rdev_init_debugfs: Error-Bad Function Input
+[    3.242095] print_constraints: dcdc3: 800 <--> 3300 mV at 1800 mV 
+[    3.242431] rdev_init_debugfs: Error-Bad Function Input
+[    3.243072] print_constraints: ldo1: 1000 <--> 3150 mV at 2800 mV 
+[    3.243316] rdev_init_debugfs: Error-Bad Function Input
+[    3.243530] print_constraints: ldo2: 3300 mV 
+[    3.243682] rdev_init_debugfs: Error-Bad Function Input
+[    3.244598] Bluetooth: Core ver 2.16
+[    3.244781] NET: Registered protocol family 31
+[    3.244995] Bluetooth: HCI device and connection manager initialized
+[    3.245117] Bluetooth: HCI socket layer initialized
+[    3.245605] cfg80211: Calling CRDA to update world regulatory domain
+[    3.246002] Switching to clocksource gp_timer
+[    3.254394] [TTY_IO] create tty_wq for smd0
+[    3.254760] NET: Registered protocol family 2
+[    3.255004] IP route cache hash table entries: 4096 (order: 2, 16384 bytes)
+[    3.255493] TCP established hash table entries: 16384 (order: 5, 131072 bytes)
+[    3.256042] TCP bind hash table entries: 16384 (order: 4, 65536 bytes)
+[    3.256378] TCP: Hash tables configured (established 16384 bind 16384)
+[    3.256622] TCP reno registered
+[    3.256744] UDP hash table entries: 256 (order: 0, 4096 bytes)
+[    3.256896] UDP-Lite hash table entries: 256 (order: 0, 4096 bytes)
+[    3.257385] NET: Registered protocol family 1
+[    3.257720] Unpacking initramfs...
+[    3.272064] Freeing initrd memory: 180K
+[    3.272277] PMU: registered new PMU device of type 0
+[    3.273681] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+[    3.273925] pgd = c0004000
+[    3.274047] [00000000] *pgd=00000000
+[    3.274414] Internal error: Oops: 5 [#1] PREEMPT
+[    3.274536] Modules linked in:
+[    3.274780] CPU: 0    Not tainted  (3.0.16-evervolv-turba-jellybean+ #52)
+[    3.275024] pc : [<c009ad98>]    lr : [<c009b27c>]    psr: 60000093
+[    3.275024] sp : db035dc8  ip : db035e00  fp : db035dfc
+[    3.275360] r10: 00000000  r9 : 00000000  r8 : 00000000
+[    3.275512] r7 : 00000001  r6 : 80000013  r5 : 00000201  r4 : 60000093
+[    3.275726] r3 : 00000200  r2 : c0581f4c  r1 : 00000000  r0 : 00000000
+[    3.275970] Flags: nZCv  IRQs off  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
+[    3.276092] Control: 10c5787d  Table: 20004019  DAC: 00000015
+[    3.276336] 
+[    3.276336] PC: 0xc009ad18:
+[    3.276580] ad18  e1a07000 ebfffefc e2505000 0a000015 e10f6000 f10c0080 e1a0300d e3c34d7f
+[    3.277862] ad38  e3c4403f e5943004 e2833001 e5843004 e1a01007 e5975000 ebfffd28 e2055001
+[    3.279144] ad58  e3500000 13855002 e121f006 e5943004 e2433001 e5843004 e5943000 e3130002
+[    3.280334] ad78  0a000000 eb1016e6 e1a00005 e89da8f0 e1a0c00d e92ddff0 e24cb004 e24dd00c
+[    3.281616] ad98  e5913000 e1a0a000 e1a04001 e1a06002 e3130040 0a000044 e1a0200d e3a08000
+[    3.282897] adb8  e3c25d7f e59f1448 e3c5503f ea000001 e59f1440 e3a08001 e10f3000 f10c0080
+[    3.284210] add8  e5952004 e2822001 e5852004 e3a02000 e5917020 ea000012 e5977000 ea000010
+[    3.285400] adf8  e121f003 e1a0100d e3c13d7f e3c3303f e5932004 e2422001 e5832004 e5933000
+[    3.286682] 
+[    3.286682] LR: 0xc009b1fc:
+[    3.286926] b1fc  0a000000 eb1015c5 e24bd028 e89daff0 c059099c c063b88c c063b884 c04f347f
+[    3.288208] b21c  c05be9e4 e1a0c00d e92dd818 e24cb004 e1a04000 ebfffba1 e1a02004 e1a03000
+[    3.289520] b23c  e3a00000 e5931004 ebfffecf e89da818 e1a0c00d e92dd830 e24cb004 e10f4000
+[    3.290802] b25c  f10c0080 e5923000 e3835001 e5825000 e121f004 e3130001 1a000002 ebfffec2
+[    3.291961] b27c  e3a00001 e89da830 e3a00000 e89da830 e1a0c00d e92dd800 e24cb004 e59f300c
+[    3.293243] b29c  e1a02001 e5931000 ebffffe8 e89da800 c057607c e1a0c00d e92dd830 e24cb004
+[    3.294433] b2bc  e1a02001 e1a0100d e3c14d7f e1a03000 e3c4403f e5941004 e2811001 e5841004
+[    3.295623] b2dc  e3a00000 e1a01003 ebffffd8 e1a05000 e5943004 e2433001 e5843004 e5943000
+[    3.296936] 
+[    3.296936] SP: 0xdb035d48:
+[    3.297271] 5d48  db035df4 db035d58 c00c5d88 c015dd90 ffffffff db035db4 80000013 00000001
+[    3.298461] 5d68  00000000 00000000 db035dfc db035d80 c003a52c c003517c 00000000 00000000
+[    3.299743] 5d88  c0581f4c 00000200 60000093 00000201 80000013 00000001 00000000 00000000
+[    3.300933] 5da8  00000000 db035dfc db035e00 db035dc8 c009b27c c009ad98 60000093 ffffffff
+[    3.302124] 5dc8  00000000 00000000 00000000 60000093 00000201 80000013 00000001 00000000
+[    3.303436] 5de8  00000000 00000000 db035e14 db035e00 c009b27c c009ad94 db034000 08010029
+[    3.304718] 5e08  db035e2c db035e18 c009b2e8 c009b258 00000000 08010029 db035e3c db035e30
+[    3.305999] 5e28  c0053ec4 c009b2bc db035e5c db035e40 c004e8d0 c0053eb4 c004e560 00000000
+[    3.307189] 
+[    3.307189] IP: 0xdb035d80:
+[    3.307556] 5d80  00000000 00000000 c0581f4c 00000200 60000093 00000201 80000013 00000001
+[    3.308715] 5da0  00000000 00000000 00000000 db035dfc db035e00 db035dc8 c009b27c c009ad98
+[    3.310028] 5dc0  60000093 ffffffff 00000000 00000000 00000000 60000093 00000201 80000013
+[    3.311309] 5de0  00000001 00000000 00000000 00000000 db035e14 db035e00 c009b27c c009ad94
+[    3.312591] 5e00  db034000 08010029 db035e2c db035e18 c009b2e8 c009b258 00000000 08010029
+[    3.313781] 5e20  db035e3c db035e30 c0053ec4 c009b2bc db035e5c db035e40 c004e8d0 c0053eb4
+[    3.315063] 5e40  c004e560 00000000 c05c2720 c0581bcc db035e7c db035e60 c004f194 c004e798
+[    3.316345] 5e60  c04e9bcd c004e78c c0581bb0 c05c2720 db035ea4 db035e80 c049c2b0 c004f024
+[    3.317657] 
+[    3.317657] FP: 0xdb035d7c:
+[    3.317901] 5d7c  c003517c 00000000 00000000 c0581f4c 00000200 60000093 00000201 80000013
+[    3.319183] 5d9c  00000001 00000000 00000000 00000000 db035dfc db035e00 db035dc8 c009b27c
+[    3.320343] 5dbc  c009ad98 60000093 ffffffff 00000000 00000000 00000000 60000093 00000201
+[    3.321655] 5ddc  80000013 00000001 00000000 00000000 00000000 db035e14 db035e00 c009b27c
+[    3.322937] 5dfc  c009ad94 db034000 08010029 db035e2c db035e18 c009b2e8 c009b258 00000000
+[    3.324218] 5e1c  08010029 db035e3c db035e30 c0053ec4 c009b2bc db035e5c db035e40 c004e8d0
+[    3.325408] 5e3c  c0053eb4 c004e560 00000000 c05c2720 c0581bcc db035e7c db035e60 c004f194
+[    3.326690] 5e5c  c004e798 c04e9bcd c004e78c c0581bb0 c05c2720 db035ea4 db035e80 c049c2b0
+[    3.328002] 
+[    3.328002] R2: 0xc0581ecc:
+[    3.328247] 1ecc  666e6963 6c70206f 68656361 65646c6f 00000072 00000000 ffffffff 00000000
+[    3.329528] 1eec  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    3.330810] 1f0c  00000000 00000000 00000001 c0581f18 c0581f18 c0053cf0 00000000 00000000
+[    3.332000] 1f2c  00000200 c0581f30 c0581f30 c0053d5c 00000200 c0581f40 c0581f40 c0053d78
+[    3.333312] 1f4c  00000201 c0581f50 c0581f50 c0053d94 c058265c 00000003 00000000 00000000
+[    3.334594] 1f6c  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    3.335754] 1f8c  00000000 00000000 00000000 c058268c 00000009 00000000 00000000 00000000
+[    3.337036] 1fac  00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+[    3.338348] Process swapper (pid: 1, stack limit = 0xdb0342f0)
+[    3.338470] Stack: (0xdb035dc8 to 0xdb036000)
+[    3.338714] 5dc0:                   00000000 00000000 00000000 60000093 00000201 80000013
+[    3.338958] 5de0: 00000001 00000000 00000000 00000000 db035e14 db035e00 c009b27c c009ad94
+[    3.339080] 5e00: db034000 08010029 db035e2c db035e18 c009b2e8 c009b258 00000000 08010029
+[    3.339324] 5e20: db035e3c db035e30 c0053ec4 c009b2bc db035e5c db035e40 c004e8d0 c0053eb4
+[    3.339569] 5e40: c004e560 00000000 c05c2720 c0581bcc db035e7c db035e60 c004f194 c004e798
+[    3.339721] 5e60: c04e9bcd c004e78c c0581bb0 c05c2720 db035ea4 db035e80 c049c2b0 c004f024
+[    3.339965] 5e80: 00000000 c0165b08 db035eb4 c0586b20 c0586b20 c0581bcc db035eb4 db035ea8
+[    3.340209] 5ea0: c027d278 c049c078 db035ed4 db035eb8 c027bf4c c027d268 c0586b20 c0586b54
+[    3.340423] 5ec0: c0581bcc 00000000 db035ef4 db035ed8 c027c064 c027bea8 00000000 c0581bcc
+[    3.340576] 5ee0: db035ef8 c027bffc db035f1c db035ef8 c027b134 c027c008 db01c0f8 db04c570
+[    3.340820] 5f00: c0581bcc db060f00 c05a4910 00000000 db035f2c db035f20 c027bc10 c027b0e8
+[    3.341064] 5f20: db035f5c db035f30 c027b840 c027bbfc c04e9d9a db035f40 c0581bcc c0030e5c
+[    3.341308] 5f40: c0087130 c000e6c0 00000000 00000000 db035f84 db035f60 c027c624 c027b794
+[    3.341430] 5f60: c00306f8 c0030e5c c0087130 c000e6c0 00000000 00000000 db035f94 db035f88
+[    3.341674] 5f80: c027d6f8 c027c588 db035fa4 db035f98 c000e6d4 c027d6b8 db035fdc db035fa8
+[    3.341918] 5fa0: c0035498 c000e6cc db035fc4 00000124 c0599d40 c0087130 db035fdc c00306f8
+[    3.342071] 5fc0: c0030e5c c0087130 00000013 00000000 db035ff4 db035fe0 c00089c4 c0035408
+[    3.342315] 5fe0: 00000000 c0008948 00000000 db035ff8 c0087130 c0008954 00000000 00000000
+[    3.342529] Backtrace: 
+[    3.342773] Function entered at [<c009ad88>] from [<c009b27c>]
+[    3.343017] Function entered at [<c009b24c>] from [<c009b2e8>]
+[    3.343139]  r5:08010029 r4:db034000
+[    3.343505] Function entered at [<c009b2b0>] from [<c0053ec4>]
+[    3.343749]  r5:08010029 r4:00000000
+[    3.344085] Function entered at [<c0053ea8>] from [<c004e8d0>]
+[    3.344329] Function entered at [<c004e78c>] from [<c004f194>]
+[    3.344451]  r7:c0581bcc r6:c05c2720 r5:00000000 r4:c004e560
+[    3.345153] Function entered at [<c004f018>] from [<c049c2b0>]
+[    3.345306]  r5:c05c2720 r4:c0581bb0
+[    3.345764] Function entered at [<c049c06c>] from [<c027d278>]
+[    3.345886]  r6:c0581bcc r5:c0586b20 r4:c0586b20
+[    3.346466] Function entered at [<c027d25c>] from [<c027bf4c>]
+[    3.346588] Function entered at [<c027be9c>] from [<c027c064>]
+[    3.346832]  r7:00000000 r6:c0581bcc r5:c0586b54 r4:c0586b20
+[    3.347412] Function entered at [<c027bffc>] from [<c027b134>]
+[    3.347656]  r6:c027bffc r5:db035ef8 r4:c0581bcc r3:00000000
+[    3.348266] Function entered at [<c027b0dc>] from [<c027bc10>]
+[    3.348480]  r7:00000000 r6:c05a4910 r5:db060f00 r4:c0581bcc
+[    3.349090] Function entered at [<c027bbf0>] from [<c027b840>]
+[    3.349334] Function entered at [<c027b788>] from [<c027c624>]
+[    3.349456] Function entered at [<c027c57c>] from [<c027d6f8>]
+[    3.349700] Function entered at [<c027d6ac>] from [<c000e6d4>]
+[    3.349822] Function entered at [<c000e6c0>] from [<c0035498>]
+[    3.350036] Function entered at [<c00353fc>] from [<c00089c4>]
+[    3.350189]  r8:00000000 r7:00000013 r6:c0087130 r5:c0030e5c r4:c00306f8
+[    3.351013] Function entered at [<c0008948>] from [<c0087130>]
+[    3.351135]  r5:c0008948 r4:00000000
+[    3.351593] Code: e1a0c00d e92ddff0 e24cb004 e24dd00c (e5913000) 
+[    3.351837] ---[ end trace 65f8ea860415c04f ]---
+[    3.352050] note: swapper[1] exited with preempt_count 2
+[    3.352203] Kernel panic - not syncing: Attempted to kill init!
+[    3.352447] Backtrace: 
+[    3.352691] Function entered at [<c003df1c>] from [<c049ffe8>]
+[    3.352813]  r6:db032000 r5:c0590b5c r4:c0619d08 r3:00000002
+[    3.353515] Function entered at [<c049ffd0>] from [<c04a0060>]
+[    3.353637] Function entered at [<c049ffec>] from [<c00871e8>]
+[    3.353881]  r3:c0590b5c r2:00000002 r1:db035ba8 r0:c04f3fab
+[    3.354492]  r7:00000000
+[    3.354827] Function entered at [<c0087130>] from [<c003e3b8>]
+[    3.354949]  r7:00000000
+[    3.355194] Function entered at [<c003e0d4>] from [<c003fdc0>]
+[    3.355438] Function entered at [<c003fd54>] from [<c003ff9c>]
+[    3.355560]  r8:00000005 r7:00000000 r6:db035d80 r5:db032000 r4:00000000
+[    3.356170] r3:db035d80
+[    3.356536] Function entered at [<c003fde0>] from [<c004004c>]
+[    3.356781] Function entered at [<c0040028>] from [<c00351c4>]
+[    3.356903]  r7:c057f83c r6:00000005 r5:00000000 r4:00000005
+[    3.357604] Function entered at [<c0035170>] from [<c003a52c>]
+[    3.357727] Exception stack(0xdb035d80 to 0xdb035dc8)
+[    3.357971] 5d80: 00000000 00000000 c0581f4c 00000200 60000093 00000201 80000013 00000001
+[    3.358123] 5da0: 00000000 00000000 00000000 db035dfc db035e00 db035dc8 c009b27c c009ad98
+[    3.358367] 5dc0: 60000093 ffffffff
+[    3.358489] Function entered at [<c009ad88>] from [<c009b27c>]
+[    3.358703] Function entered at [<c009b24c>] from [<c009b2e8>]
+[    3.358856]  r5:08010029 r4:db034000
+[    3.359313] Function entered at [<c009b2b0>] from [<c0053ec4>]
+[    3.359436]  r5:08010029 r4:00000000
+[    3.359893] Function entered at [<c0053ea8>] from [<c004e8d0>]
+[    3.360046] Function entered at [<c004e78c>] from [<c004f194>]
+[    3.360260]  r7:c0581bcc r6:c05c2720 r5:00000000 r4:c004e560
+[    3.360870] Function entered at [<c004f018>] from [<c049c2b0>]
+[    3.361083]  r5:c05c2720 r4:c0581bb0
+[    3.361450] Function entered at [<c049c06c>] from [<c027d278>]
+[    3.361602]  r6:c0581bcc r5:c0586b20 r4:c0586b20
+[    3.362182] Function entered at [<c027d25c>] from [<c027bf4c>]
+[    3.362304] Function entered at [<c027be9c>] from [<c027c064>]
+[    3.362548]  r7:00000000 r6:c0581bcc r5:c0586b54 r4:c0586b20
+[    3.363128] Function entered at [<c027bffc>] from [<c027b134>]
+[    3.363372]  r6:c027bffc r5:db035ef8 r4:c0581bcc r3:00000000
+[    3.363983] Function entered at [<c027b0dc>] from [<c027bc10>]
+[    3.364196]  r7:00000000 r6:c05a4910 r5:db060f00 r4:c0581bcc
+[    3.364807] Function entered at [<c027bbf0>] from [<c027b840>]
+[    3.365020] Function entered at [<c027b788>] from [<c027c624>]
+[    3.365173] Function entered at [<c027c57c>] from [<c027d6f8>]
+[    3.365386] Function entered at [<c027d6ac>] from [<c000e6d4>]
+[    3.365539] Function entered at [<c000e6c0>] from [<c0035498>]
+[    3.365753] Function entered at [<c00353fc>] from [<c00089c4>]
+[    3.365875]  r8:00000000 r7:00000013 r6:c0087130 r5:c0030e5c r4:c00306f8
+[    3.366729] Function entered at [<c0008948>] from [<c0087130>]
+[    3.366973]  r5:c0008948 r4:00000000
+[    3.367340] Rebooting in 5 seconds..
+No errors detected

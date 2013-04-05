@@ -526,4 +526,5 @@ int __init mdio_bus_init(void);
 void mdio_bus_exit(void);
 
 extern struct bus_type mdio_bus_type;
+
 #endif /* __PHY_H */

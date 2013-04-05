@@ -35,7 +35,7 @@
 #include "proc_comm.h"
 
 #undef BRAVO_DEBUG_MMC
-
+/*
 static void config_gpio_table(uint32_t *table, int len)
 {
 	int n, rc;
@@ -47,8 +47,8 @@ static void config_gpio_table(uint32_t *table, int len)
 			break;
 		}
 	}
-}
-
+}	
+*/
 static bool opt_disable_sdcard;
 static int __init bravo_disablesdcard_setup(char *str)
 {

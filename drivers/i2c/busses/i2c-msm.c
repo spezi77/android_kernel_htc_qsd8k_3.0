@@ -701,7 +701,7 @@ msm_i2c_probe(struct platform_device *pdev)
 //   Change order of operations in this function.
 //
 
-#ifdef CONFIG_MACH_HTCLEO
+#ifdef CONFIG_MACH_BRAVO
 
 	i2c_set_adapdata(&dev->adap_pri, dev);
 	dev->adap_pri.algo = &msm_i2c_algo;

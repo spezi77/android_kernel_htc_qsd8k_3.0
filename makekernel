@@ -1,0 +1,10 @@
+#!/bin/sh
+ABI=4.4.3
+JOBS=6
+
+TOOLCHAIN="android-toolchain-eabi-4.5"
+CROSS_COMPILE_PREFIX=arm-eabi-
+
+PATH="/home/nonamer/toolchains/$TOOLCHAIN/bin:$PATH"
+
+time make -j$JOBS ARCH=arm CROSS_COMPILE=$CROSS_COMPILE_PREFIX EXTRA_AFLAGS="-mfpu=neon"
