@@ -52,8 +52,8 @@
 #include "smd_rpc_sym.h"
 #include "smd_private.h"
 
-#if defined(CONFIG_MACH_HTCLEO)
-#include "board-htcleo.h"
+#if defined(CONFIG_MACH_BRAVO)
+#include "board-bravo.h"
 #endif
 
 enum {
@@ -251,8 +251,8 @@ static int rpcrouter_send_control_msg(struct rpcrouter_xprt_info *xprt_info,
 
 	if (!(msg->cmd == RPCROUTER_CTRL_CMD_HELLO) &&
 	    !xprt_info->initialized 
-#if defined(CONFIG_MACH_HTCLEO)
-	  && (!(msg->cmd == RPCROUTER_CTRL_CMD_BYE) && !htcleo_is_nand_boot())
+#if defined(CONFIG_MACH_BRAVO)
+	  && (!(msg->cmd == RPCROUTER_CTRL_CMD_BYE))
 #endif
 	)  {
 		printk(KERN_ERR "rpcrouter_send_control_msg(): Warning, "
@@ -781,12 +781,9 @@ static int process_control_msg(struct rpcrouter_xprt_info *xprt_info,
 	case RPCROUTER_CTRL_CMD_HELLO:
 		RR("o HELLO PID %d\n", xprt_info->remote_pid);
 		memset(&ctl, 0, sizeof(ctl));
-#if defined(CONFIG_MACH_HTCLEO)
-		if (htcleo_is_nand_boot())
-		{
+#if defined(CONFIG_MACH_BRAVO)
 			ctl.cmd = RPCROUTER_CTRL_CMD_HELLO;
 			rpcrouter_send_control_msg(xprt_info, &ctl);
-		}
 #else
 		ctl.cmd = RPCROUTER_CTRL_CMD_HELLO;
 		rpcrouter_send_control_msg(xprt_info, &ctl);

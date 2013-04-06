@@ -1354,6 +1354,7 @@ static struct platform_device *devices[] __initdata = {
 	&bravo_rfkill,
 	&msm_device_smd,
 	&msm_device_nand,
+	&msm_device_rtc,
 	&msm_device_hsusb,
 	&usb_mass_storage_device,
 #ifdef CONFIG_USB_ANDROID_RNDIS
@@ -1633,6 +1634,9 @@ static void __init msm_device_i2c_init(void)
 	msm_i2c_gpio_init();
 	msm_device_i2c.dev.platform_data = &msm_i2c_pdata;
 }
+///////////////////////////////////////////////////////////////////////
+// PM Platform data
+///////////////////////////////////////////////////////////////////////
 
 static struct msm_pm_platform_data msm_pm_data[MSM_PM_SLEEP_MODE_NR] = {
 	[MSM_PM_SLEEP_MODE_POWER_COLLAPSE] = {
@@ -1643,7 +1647,15 @@ static struct msm_pm_platform_data msm_pm_data[MSM_PM_SLEEP_MODE_NR] = {
 		.latency = 8594,
 		.residency = 23740,
 	},
-
+	[MSM_PM_SLEEP_MODE_APPS_SLEEP] = {
+		.idle_supported = 1,
+		.suspend_supported = 1,
+		.idle_enabled = 1,
+		.suspend_enabled = 1,
+		.latency = 8594,
+		.residency = 23740,
+	},
+/*
 	[MSM_PM_SLEEP_MODE_POWER_COLLAPSE_NO_XO_SHUTDOWN] = {
 		.idle_supported = 1,
 		.suspend_supported = 1,
@@ -1652,7 +1664,22 @@ static struct msm_pm_platform_data msm_pm_data[MSM_PM_SLEEP_MODE_NR] = {
 		.latency = 4594,
 		.residency = 23740,
 	},
-
+*/
+	[MSM_PM_SLEEP_MODE_POWER_COLLAPSE_STANDALONE] = {
+#ifdef CONFIG_MSM_STANDALONE_POWER_COLLAPSE
+		.idle_supported = 1,
+		.suspend_supported = 1,
+		.idle_enabled = 1,
+		.suspend_enabled = 0,
+#else /*CONFIG_MSM_STANDALONE_POWER_COLLAPSE*/
+		.idle_supported = 0,
+		.suspend_supported = 0,
+		.idle_enabled = 0,
+		.suspend_enabled = 0,
+#endif /*CONFIG_MSM_STANDALONE_POWER_COLLAPSE*/
+		.latency = 500,
+		.residency = 6000,
+	},
 	[MSM_PM_SLEEP_MODE_RAMP_DOWN_AND_WAIT_FOR_INTERRUPT] = {
 		.idle_supported = 1,
 		.suspend_supported = 1,
@@ -1661,7 +1688,6 @@ static struct msm_pm_platform_data msm_pm_data[MSM_PM_SLEEP_MODE_NR] = {
 		.latency = 443,
 		.residency = 1098,
 	},
-
 	[MSM_PM_SLEEP_MODE_WAIT_FOR_INTERRUPT] = {
 		.idle_supported = 1,
 		.suspend_supported = 1,
@@ -1671,6 +1697,7 @@ static struct msm_pm_platform_data msm_pm_data[MSM_PM_SLEEP_MODE_NR] = {
 		.residency = 0,
 	},
 };
+
 /*
 static void __init msm_device_i2c_init(void)
 {
