@@ -35,6 +35,7 @@
 #include <mach/usbdiag.h>
 #include <mach/rpc_hsusb.h>
 
+#define CONFIG_SPI_QSD
 static struct resource resources_uart1[] = {
 	{
 		.start	= INT_UART1,
