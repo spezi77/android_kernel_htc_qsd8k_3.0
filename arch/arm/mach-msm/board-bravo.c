@@ -439,7 +439,6 @@ struct platform_device msm_device_rtc = {
 	.name = "msm_rtc",
 	.id = -1,
 };
-
 static int bravo_phy_init_seq[] = {
 	0x0C, 0x31,
 	0x31, 0x32,
@@ -1858,7 +1857,7 @@ static void __init bravo_init(void)
 	msm_clock_init(&qds8x50_clock_init_data);
 	acpuclk_init(&acpuclk_8x50_soc_data);
 
-	qsd8x50_init_gpiomux(qsd8x50_gpiomux_cfgs);
+	//qsd8x50_init_gpiomux(qsd8x50_gpiomux_cfgs);
 
         /* TODO: CDMA version */
 
@@ -1910,7 +1909,7 @@ static void __init bravo_init(void)
 		pr_crit("%s: Unable to initialize MMC\n", __func__);
 
 	msm_pm_set_platform_data(msm_pm_data, ARRAY_SIZE(msm_pm_data));
-	//BUG_ON(msm_pm_boot_init(&msm_pm_boot_pdata));
+//	BUG_ON(msm_pm_boot_init(&msm_pm_boot_pdata));
 	//msm_pm_register_irqs();
 
 	bravo_audio_init();
