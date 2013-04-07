@@ -1136,7 +1136,7 @@ static int bravo_init_spi_hack(void)
 	if (!spi_base)
 		return -1;
 
-	spi_clk = clk_get(&msm_device_spi.dev, "spi_clk");
+	spi_clk = clk_get(&msm_device_spi.dev, "iface_clk");
 	if (IS_ERR(spi_clk)) {
 		pr_err("%s: unable to get spi_clk\n", __func__);
 		ret = PTR_ERR(spi_clk);
