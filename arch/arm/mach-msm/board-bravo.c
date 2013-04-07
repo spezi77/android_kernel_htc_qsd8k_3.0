@@ -1864,7 +1864,7 @@ static void __init bravo_init(void)
         /* TODO: CDMA version */
 
         msm_gpios_enable(misc_gpio_table, ARRAY_SIZE(misc_gpio_table));
-
+/*
         if (is_cdma_version(system_rev)) {
             //bcm_bt_lpm_pdata.gpio_wake = BRAVO_CDMA_GPIO_BT_WAKE;
             //bravo_flashlight_data.torch = BRAVO_CDMA_GPIO_FLASHLIGHT_TORCH;
@@ -1872,7 +1872,7 @@ static void __init bravo_init(void)
 	} else {
             config_gpio_table(bt_gpio_table, ARRAY_SIZE(bt_gpio_table));
 	}
-
+*/
 	gpio_request(BRAVO_GPIO_TP_LS_EN, "tp_ls_en");
 	gpio_direction_output(BRAVO_GPIO_TP_LS_EN, 0);
 	gpio_request(BRAVO_GPIO_TP_EN, "tp_en");
