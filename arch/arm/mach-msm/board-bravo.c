@@ -83,7 +83,6 @@
 #include "irq.h"
 #include "dex_comm.h"
 #include "pm-boot.h"
-#include "gpiomux-8x50.h"
 #include "footswitch.h"
 #ifdef CONFIG_OPTICALJOYSTICK_CRUCIAL
 #include <linux/curcial_oj.h>
@@ -1791,22 +1790,20 @@ static int msm_qsd_spi_dma_config(void)
 	return ret;
 }
 
-static struct msm_gpio qsd_spi_gpio_config_data[] = {
-	{ GPIO_CFG(17, 1, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA), "spi_clk" },
-	{ GPIO_CFG(18, 1, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA), "spi_mosi" },
-	{ GPIO_CFG(19, 1, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA), "spi_miso" },
-	{ GPIO_CFG(20, 1, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA), "spi_cs0" },
-	{ GPIO_CFG(21, 0, GPIO_CFG_OUTPUT, GPIO_CFG_PULL_UP, GPIO_CFG_16MA), "spi_pwr" },
+static uint32_t qsd_spi_gpio_config_data[] = {
+	PCOM_GPIO_CFG(17, 1, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
+	PCOM_GPIO_CFG(18, 1, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
+	PCOM_GPIO_CFG(19, 1, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
+	PCOM_GPIO_CFG(20, 1, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA),
+	PCOM_GPIO_CFG(21, 0, GPIO_CFG_OUTPUT, GPIO_CFG_PULL_UP, GPIO_CFG_16MA),
 };
 
 static int msm_qsd_spi_gpio_config(void)
 {
 	int rc;
 
-	rc = msm_gpios_enable(qsd_spi_gpio_config_data,
+	config_gpio_table(qsd_spi_gpio_config_data,
 		ARRAY_SIZE(qsd_spi_gpio_config_data));
-	if (rc)
-		return rc;
 
 	/* Set direction for SPI_PWR */
 	gpio_direction_output(21, 1);
@@ -1829,6 +1826,10 @@ static struct msm_spi_platform_data qsd_spi_pdata = {
 
 static void __init msm_qsd_spi_init(void)
 {
+	int rc;
+	rc = gpio_request(21, "spi_pwr");
+	if (rc)
+		pr_err("Failed requesting spi_pwr gpio\n");
 	qsd_device_spi.dev.platform_data = &qsd_spi_pdata;
 }
 
