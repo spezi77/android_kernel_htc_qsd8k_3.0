@@ -378,6 +378,20 @@ struct platform_device usb_gadget_fserial_device = {
 #endif
 
 #define MSM_NAND_PHYS		0xA0A00000
+static struct resource resources_nand[] = {
+	[0] = {
+		.name   = "msm_nand_dmac",
+		.start	= DMOV_NAND_CHAN,
+		.end	= DMOV_NAND_CHAN,
+		.flags	= IORESOURCE_DMA,
+	},
+	[1] = {
+		.name   = "msm_nand_phys",
+		.start  = MSM_NAND_PHYS,
+		.end    = MSM_NAND_PHYS + 0x7FF,
+		.flags  = IORESOURCE_MEM,
+	},
+};
 
 static struct resource resources_otg[] = {
 	{
@@ -430,14 +444,6 @@ struct flash_platform_data msm_nand_data = {
 	.nr_parts	= 0,
 };
 
-static struct resource resources_nand[] = {
-	[0] = {
-		.start	= 7,
-		.end	= 7,
-		.flags	= IORESOURCE_DMA,
-	},
-};
-
 struct platform_device msm_device_nand = {
 	.name		= "msm_nand",
 	.id		= -1,
@@ -447,7 +453,6 @@ struct platform_device msm_device_nand = {
 		.platform_data	= &msm_nand_data,
 	},
 };
-
 
 struct platform_device msm_device_smd = {
 	.name	= "msm_smd",
