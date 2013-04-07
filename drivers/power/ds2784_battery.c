@@ -30,6 +30,14 @@
 #include <linux/kernel.h>
 #include <linux/err.h>
 #include <linux/wakelock.h>
+#include <asm/gpio.h>
+#include <linux/delay.h>
+#include <linux/wrapper_types.h>
+#include <linux/smb329.h>
+#include <mach/htc_battery.h>
+#include <asm/mach-types.h>
+#include "../../arch/arm/mach-msm/proc_comm.h"
+#include <linux/i2c.h>  
 
 #include <linux/debugfs.h>
 #include <linux/seq_file.h>
@@ -38,6 +46,8 @@
 
 #include "../w1/w1.h"
 #include "w1_ds2784.h"
+#include <linux/time.h>
+#include <linux/rtc.h>
 
 extern int is_ac_power_supplied(void);
 
@@ -60,6 +70,10 @@ struct battery_status {
 	u8 charge_mode;
 } __attribute__((packed));
 
+
+static struct poweralg_type poweralg = {0};
+
+#define BATTERY_ID_UNKNOWN 0
 
 #define SOURCE_NONE	0
 #define SOURCE_USB	1
@@ -126,6 +140,66 @@ static int battery_log_print(struct seq_file *sf, void *private)
 			   s->status_reg, s->battery_full);
 	}
 	mutex_unlock(&battery_log_lock);
+	return 0;
+}
+
+static BLOCKING_NOTIFIER_HEAD(ds2784_notifier_list);
+int ds2784_register_notifier(struct notifier_block *nb)
+{
+	return blocking_notifier_chain_register(&ds2784_notifier_list, nb);
+}
+
+int ds2784_unregister_notifier(struct notifier_block *nb)
+{
+	return blocking_notifier_chain_unregister(&ds2784_notifier_list, nb);
+}
+
+
+int ds2784_blocking_notify(unsigned long val, void *v)
+{
+	int chg_ctl;
+
+	if (val == DS2784_CHARGING_CONTROL){
+		chg_ctl = *(int *) v;
+		if (machine_is_passionc()){
+			pr_info("[ds2746_batt] Switch charging %d\n", chg_ctl);
+			if (chg_ctl <= 2){
+				gpio_direction_output(22, !(!!chg_ctl));/*PNC*/
+				set_charger_ctrl(chg_ctl);
+			}
+			return 0;
+		}
+		else if (poweralg.battery.id_index != BATTERY_ID_UNKNOWN){
+			/* only notify at changes */
+			if (poweralg.charging_enable == chg_ctl)
+				return 0;
+			else
+				poweralg.charging_enable = chg_ctl;
+		}
+		else{
+			/* poweralg.charging_enable = DISABLE;
+			v = DISABLE;
+			pr_info("[HTC_BATT] Unknow battery\n");*/
+			if (poweralg.charging_enable == chg_ctl)
+				return 0;
+			else
+				poweralg.charging_enable = chg_ctl;
+		}
+	}
+	return blocking_notifier_call_chain(&ds2784_notifier_list, val, v);
+}
+
+
+int ds2784_get_battery_info(struct battery_info_reply *batt_info)
+{
+	batt_info->batt_id = poweralg.battery.id_index; /*Mbat ID*/
+	batt_info->batt_vol = poweralg.battery.voltage_mV; /*VMbat*/
+	batt_info->batt_temp = poweralg.battery.temp_01c; /*Temperature*/
+	batt_info->batt_current = poweralg.battery.current_mA; /*Current*/
+	batt_info->level = CEILING(poweralg.capacity_01p, 10); /*last_show%*/
+	batt_info->charging_source = poweralg.charging_source;
+	batt_info->charging_enabled = poweralg.charging_enable;
+	batt_info->full_bat = poweralg.battery.charge_full_real_mAh;
 	return 0;
 }
 

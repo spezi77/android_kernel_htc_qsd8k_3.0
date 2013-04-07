@@ -1864,7 +1864,7 @@ static void __init bravo_init(void)
         /* TODO: CDMA version */
 
         msm_gpios_enable(misc_gpio_table, ARRAY_SIZE(misc_gpio_table));
-/*
+
         if (is_cdma_version(system_rev)) {
             //bcm_bt_lpm_pdata.gpio_wake = BRAVO_CDMA_GPIO_BT_WAKE;
             //bravo_flashlight_data.torch = BRAVO_CDMA_GPIO_FLASHLIGHT_TORCH;
@@ -1882,7 +1882,7 @@ static void __init bravo_init(void)
 	gpio_direction_input(BRAVO_GPIO_COMPASS_INT_N);
 
 	gpio_request(BRAVO_GPIO_DS2482_SLP_N, "ds2482_slp_n");
-*/
+
         msm_device_hsusb.dev.platform_data = &msm_hsusb_pdata;
 	msm_device_uart_dm1.dev.platform_data = &msm_uart_dm1_pdata;
 
