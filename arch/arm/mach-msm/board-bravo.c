@@ -1378,42 +1378,42 @@ static struct platform_device *devices[] __initdata = {
 	&capella_cm3602,
 };
 
-static struct msm_gpio bt_gpio_table[] = {
-    {GPIO_CFG(BRAVO_GPIO_BT_UART1_RTS, 2, GPIO_CFG_OUTPUT,
-              GPIO_CFG_PULL_UP,  GPIO_CFG_8MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_UART1_CTS, 2, GPIO_CFG_INPUT,
-              GPIO_CFG_PULL_UP, GPIO_CFG_8MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_UART1_RX, 2, GPIO_CFG_INPUT,
-              GPIO_CFG_PULL_UP, GPIO_CFG_8MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_UART1_TX, 2, GPIO_CFG_OUTPUT,
-              GPIO_CFG_PULL_UP, GPIO_CFG_8MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_RESET_N, 0, GPIO_CFG_OUTPUT,
-              GPIO_CFG_PULL_DOWN, GPIO_CFG_4MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_SHUTDOWN_N, 0, GPIO_CFG_OUTPUT,
-              GPIO_CFG_PULL_DOWN, GPIO_CFG_4MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_WAKE, 0, GPIO_CFG_OUTPUT,
-              GPIO_CFG_PULL_DOWN, GPIO_CFG_4MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_HOST_WAKE, 0, GPIO_CFG_INPUT,
-              GPIO_CFG_PULL_DOWN, GPIO_CFG_4MA)},
+static uint32_t bt_gpio_table[] = {
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_RTS, 2, GPIO_OUTPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_CTS, 2, GPIO_INPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_RX, 2, GPIO_INPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_TX, 2, GPIO_OUTPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_RESET_N, 0, GPIO_OUTPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_SHUTDOWN_N, 0, GPIO_OUTPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_WAKE, 0, GPIO_OUTPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_HOST_WAKE, 0, GPIO_INPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
 };
 
-static struct msm_gpio bt_gpio_table_rev_CX[] = {
-    {GPIO_CFG(BRAVO_GPIO_BT_UART1_RTS, 2, GPIO_CFG_OUTPUT,
-              GPIO_CFG_PULL_UP, GPIO_CFG_8MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_UART1_CTS, 2, GPIO_CFG_INPUT,
-              GPIO_CFG_PULL_UP, GPIO_CFG_8MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_UART1_RX, 2, GPIO_CFG_INPUT,
-             GPIO_CFG_PULL_UP, GPIO_CFG_8MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_UART1_TX, 2, GPIO_CFG_OUTPUT,
-             GPIO_CFG_PULL_UP, GPIO_CFG_8MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_RESET_N, 0, GPIO_CFG_OUTPUT,
-             GPIO_CFG_PULL_DOWN, GPIO_CFG_4MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_SHUTDOWN_N, 0, GPIO_CFG_OUTPUT,
-             GPIO_CFG_PULL_DOWN, GPIO_CFG_4MA)},
-    {GPIO_CFG(BRAVO_CDMA_GPIO_BT_WAKE, 0, GPIO_CFG_OUTPUT,
-             GPIO_CFG_PULL_DOWN, GPIO_CFG_4MA)},
-    {GPIO_CFG(BRAVO_GPIO_BT_HOST_WAKE, 0, GPIO_CFG_INPUT,
-             GPIO_CFG_PULL_DOWN, GPIO_CFG_4MA)},
+static uint32_t bt_gpio_table_rev_CX[] = {
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_RTS, 2, GPIO_OUTPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_CTS, 2, GPIO_INPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_RX, 2, GPIO_INPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_TX, 2, GPIO_OUTPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_RESET_N, 0, GPIO_OUTPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_SHUTDOWN_N, 0, GPIO_OUTPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+	PCOM_GPIO_CFG(BRAVO_CDMA_GPIO_BT_WAKE, 0, GPIO_OUTPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_HOST_WAKE, 0, GPIO_INPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
 };
 
 static struct msm_gpio misc_gpio_table[] = {
@@ -1868,11 +1868,11 @@ static void __init bravo_init(void)
         if (is_cdma_version(system_rev)) {
             //bcm_bt_lpm_pdata.gpio_wake = BRAVO_CDMA_GPIO_BT_WAKE;
             //bravo_flashlight_data.torch = BRAVO_CDMA_GPIO_FLASHLIGHT_TORCH;
-            msm_gpios_enable(bt_gpio_table_rev_CX, ARRAY_SIZE(bt_gpio_table_rev_CX));
+            config_gpio_table(bt_gpio_table_rev_CX, ARRAY_SIZE(bt_gpio_table_rev_CX));
 	} else {
-            msm_gpios_enable(bt_gpio_table, ARRAY_SIZE(bt_gpio_table));
+            config_gpio_table(bt_gpio_table, ARRAY_SIZE(bt_gpio_table));
 	}
-
+*/
 	gpio_request(BRAVO_GPIO_TP_LS_EN, "tp_ls_en");
 	gpio_direction_output(BRAVO_GPIO_TP_LS_EN, 0);
 	gpio_request(BRAVO_GPIO_TP_EN, "tp_en");
