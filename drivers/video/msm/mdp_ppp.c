@@ -16,7 +16,6 @@
 #include <linux/file.h>
 #include <linux/delay.h>
 #include <linux/major.h>
-#include <linux/msm_hw3d.h>
 #include <linux/msm_mdp.h>
 #include <linux/mutex.h>
 #include <linux/android_pmem.h>
@@ -701,10 +700,11 @@ static int get_img(struct mdp_img *img, struct fb_info *info,
 	
 	if (!get_pmem_file(img->memory_id, start, &vstart, len, filep))
 		return 0;
+#if 0
 	else if (!get_msm_hw3d_file(img->memory_id, &img->offset, start, len,
 				    filep))
 		return 0;
-
+#endif
 	file = fget_light(img->memory_id, &put_needed);
 	if (file == NULL)
 		return -1;
@@ -735,9 +735,6 @@ void put_img(struct file *p_src_file)
 #ifdef CONFIG_ANDROID_PMEM
 	if (p_src_file)
 		put_pmem_file(p_src_file);
-#else
-    if (is_msm_hw3d_file(p_src_file))
-			put_msm_hw3d_file(p_src_file);
 #endif
 }
 
