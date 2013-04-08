@@ -837,7 +837,7 @@ static int vdec_open(struct inode *inode, struct file *file)
 	}
 
 	vd->vdec_handle = dal_attach(DALDEVICEID_VDEC_DEVICE,
-				     DALDEVICEID_VDEC_PORTNAME,
+				     DALDEVICEID_VDEC_PORTNAME, 1,
 				     callback, vd);
 
 	if (!vd->vdec_handle) {

@@ -1102,7 +1102,7 @@ static int q6venc_open(struct inode *inode, struct file *file)
 		list_add(&plist->list, &dvenc->venc_msg_list_free);
 	}
 	dvenc->q6_handle =
-	    dal_attach(DALDEVICEID_VENC_DEVICE, DALDEVICEID_VENC_PORTNAME,
+	    dal_attach(DALDEVICEID_VENC_DEVICE, DALDEVICEID_VENC_PORTNAME, 1,
 		       venc_q6_callback, (void *)dvenc);
 	if (!(dvenc->q6_handle)) {
 		pr_err("%s: daldevice_attach failed (%d)\n", __func__, ret);
