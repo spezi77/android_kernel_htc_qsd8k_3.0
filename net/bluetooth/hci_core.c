@@ -1,6 +1,6 @@
 /*
    BlueZ - Bluetooth protocol stack for Linux
-   Copyright (c) 2000-2001, 2010-2012 Code Aurora Forum.  All rights reserved.
+   Copyright (c) 2000-2001, 2010-2012 The Linux Foundation.  All rights reserved.
 
    Written 2000,2001 by Maxim Krasnyansky <maxk@qualcomm.com>
 
@@ -305,6 +305,12 @@ static void hci_le_init_req(struct hci_dev *hdev, unsigned long opt)
 
 	/* Read LE buffer size */
 	hci_send_cmd(hdev, HCI_OP_LE_READ_BUFFER_SIZE, 0, NULL);
+
+	/* Read LE clear white list */
+	hci_send_cmd(hdev, HCI_OP_LE_CLEAR_WHITE_LIST, 0, NULL);
+
+	/* Read LE white list size */
+	hci_send_cmd(hdev, HCI_OP_LE_READ_WHITE_LIST_SIZE, 0, NULL);
 }
 
 static void hci_scan_req(struct hci_dev *hdev, unsigned long opt)
@@ -543,6 +549,11 @@ int hci_dev_open(__u16 dev)
 
 	hci_req_lock(hdev);
 
+	if (test_bit(HCI_UNREGISTER, &hdev->flags)) {
+		ret = -ENODEV;
+		goto done;
+	}
+
 	if (hdev->rfkill && rfkill_blocked(hdev->rfkill)) {
 		ret = -ERFKILL;
 		goto done;
@@ -559,6 +570,19 @@ int hci_dev_open(__u16 dev)
 	if (hdev->open(hdev)) {
 		ret = -EIO;
 		goto done;
+	}
+
+	if (!skb_queue_empty(&hdev->cmd_q)) {
+		BT_ERR("command queue is not empty, purging");
+		skb_queue_purge(&hdev->cmd_q);
+	}
+	if (!skb_queue_empty(&hdev->rx_q)) {
+		BT_ERR("rx queue is not empty, purging");
+		skb_queue_purge(&hdev->rx_q);
+	}
+	if (!skb_queue_empty(&hdev->raw_q)) {
+		BT_ERR("raw queue is not empty, purging");
+		skb_queue_purge(&hdev->raw_q);
 	}
 
 	if (!test_bit(HCI_RAW, &hdev->flags)) {
@@ -613,7 +637,7 @@ done:
 	return ret;
 }
 
-static int hci_dev_do_close(struct hci_dev *hdev)
+static int hci_dev_do_close(struct hci_dev *hdev, u8 is_process)
 {
 	unsigned long keepflags = 0;
 
@@ -634,7 +658,7 @@ static int hci_dev_do_close(struct hci_dev *hdev)
 
 	hci_dev_lock_bh(hdev);
 	inquiry_cache_flush(hdev);
-	hci_conn_hash_flush(hdev);
+	hci_conn_hash_flush(hdev, is_process);
 	hci_dev_unlock_bh(hdev);
 
 	hci_notify(hdev, HCI_DEV_DOWN);
@@ -701,7 +725,7 @@ int hci_dev_close(__u16 dev)
 	hdev = hci_dev_get(dev);
 	if (!hdev)
 		return -ENODEV;
-	err = hci_dev_do_close(hdev);
+	err = hci_dev_do_close(hdev, 1);
 	hci_dev_put(hdev);
 	return err;
 }
@@ -727,7 +751,7 @@ int hci_dev_reset(__u16 dev)
 
 	hci_dev_lock_bh(hdev);
 	inquiry_cache_flush(hdev);
-	hci_conn_hash_flush(hdev);
+	hci_conn_hash_flush(hdev, 0);
 	hci_dev_unlock_bh(hdev);
 
 	if (hdev->flush)
@@ -940,7 +964,7 @@ static int hci_rfkill_set_block(void *data, bool blocked)
 	if (!blocked)
 		return 0;
 
-	hci_dev_do_close(hdev);
+	hci_dev_do_close(hdev, 0);
 
 	return 0;
 }
@@ -1546,11 +1570,13 @@ int hci_unregister_dev(struct hci_dev *hdev)
 
 	BT_DBG("%p name %s bus %d", hdev, hdev->name, hdev->bus);
 
+	set_bit(HCI_UNREGISTER, &hdev->flags);
+
 	write_lock_bh(&hci_dev_list_lock);
 	list_del(&hdev->list);
 	write_unlock_bh(&hci_dev_list_lock);
 
-	hci_dev_do_close(hdev);
+	hci_dev_do_close(hdev, 0);
 
 	for (i = 0; i < NUM_REASSEMBLY; i++)
 		kfree_skb(hdev->reassembly[i]);
