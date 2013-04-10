@@ -58,6 +58,7 @@
 #include <mach/socinfo.h>
 #include <mach/msm_spi.h>
 #include <mach/msm_hsusb.h>
+#include <mach/msm_hsusb_hw.h>
 #include <mach/msm_smd.h>
 #include <mach/gpiomux.h>
 #include <mach/msm_flashlight.h>
@@ -1209,7 +1210,7 @@ static struct spi_platform_data bravo_spi_pdata = {
 	.clk_rate	= 4800000,
 };
 
-static struct platform_device qsd_device_spi = {
+struct platform_device qsd_device_spi = {
 	.name           = "spi_qsd",
 	.id             = 0,
 	.num_resources  = ARRAY_SIZE(qsd_spi_resources),
@@ -1883,7 +1884,7 @@ static void __init bravo_init(void)
 
 	gpio_request(BRAVO_GPIO_DS2482_SLP_N, "ds2482_slp_n");
 
-        msm_device_hsusb.dev.platform_data = &msm_hsusb_pdata;
+    msm_device_hsusb.dev.platform_data = &msm_hsusb_pdata;
 	msm_device_uart_dm1.dev.platform_data = &msm_uart_dm1_pdata;
 
 	config_gpio_table(bt_gpio_table, ARRAY_SIZE(bt_gpio_table));
@@ -1893,7 +1894,7 @@ static void __init bravo_init(void)
 	platform_add_devices(msm_footswitch_devices,
 			msm_num_footswitch_devices);
 
-        msm_device_i2c_init();
+    msm_device_i2c_init();
 	msm_qsd_spi_init();
 
 	i2c_register_board_info(0, base_i2c_devices, ARRAY_SIZE(base_i2c_devices));
