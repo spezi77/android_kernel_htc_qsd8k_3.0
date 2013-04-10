@@ -1848,9 +1848,7 @@ static void __init bravo_init(void)
 				ARRAY_SIZE(smd_cdma_default_channels));
 	*/
 
-	//msm_hw_reset_hook = bravo_reset;
-
-	//init_dex_comm();
+	msm_hw_reset_hook = bravo_reset;
 
 	bravo_board_serialno_setup(board_serialno());
 
@@ -1905,7 +1903,6 @@ static void __init bravo_init(void)
                                     ARRAY_SIZE(rev_CX_i2c_devices));
 	}
 
-	i2c_register_board_info(0, base_i2c_devices, ARRAY_SIZE(base_i2c_devices));
 */
 	ret = bravo_init_mmc(system_rev, debug_uart);
 	if (ret != 0)
@@ -1917,9 +1914,9 @@ static void __init bravo_init(void)
 
 	bravo_audio_init();
 
-        bravo_headset_init();
+    bravo_headset_init();
 
-        ds2784_battery_init();
+    ds2784_battery_init();
         //bravo_reset();
 }
 
