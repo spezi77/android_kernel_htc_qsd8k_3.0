@@ -183,6 +183,9 @@ static struct mmc_platform_data bravo_sdslot_data = {
 	.status			= bravo_microp_sdslot_status,
 	.register_status_notify	= bravo_microp_sdslot_status_register,
 	.translate_vdd		= bravo_sdslot_switchvdd,
+	.msmsdcc_fmin	= 144000,
+	.msmsdcc_fmid	= 25000000,
+	.msmsdcc_fmax	= 49152000,
 };
 
 static uint32_t wifi_on_gpio_table[] = {
@@ -249,6 +252,9 @@ static struct mmc_platform_data bravo_wifi_data = {
 	.status			= bravo_wifi_status,
 	.register_status_notify	= bravo_wifi_status_register,
 	.embedded_sdio		= &bravo_wifi_emb_data,
+	.msmsdcc_fmin	= 144000,
+	.msmsdcc_fmid	= 25000000,
+	.msmsdcc_fmax	= 49152000,
 };
 
 int bravo_wifi_set_carddetect(int val)
