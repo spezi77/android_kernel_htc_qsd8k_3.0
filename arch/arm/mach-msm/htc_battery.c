@@ -105,7 +105,7 @@ tm.tm_hour, tm.tm_min, tm.tm_sec, ts.tv_nsec); \
 #define HTC_PROCEDURE_SET_FULL_LEVEL	7
 #define HTC_PROCEDURE_GET_USB_ACCESSORY_ADC_LEVEL	10
 
-#if CONFIG_MACH_HTCLEO
+#if CONFIG_MACH_BRAVO
 #define FORCE_NO_RPC 1
 #endif
 
@@ -275,7 +275,7 @@ int unregister_notifier_cable_rpc(struct notifier_block *nb)
 
 /* -------------------------------------------------------------------------- */
 /* HTCLeo Dex Functions. */
-#if defined(CONFIG_MACH_HTCLEO)
+#if defined(CONFIG_MACH_BRAVO)
 
 static int get_vbus_state(void)
 {
@@ -2313,12 +2313,12 @@ static int __init htc_battery_init(void)
 
 static int inited;
 static struct work_struct vbus_work;
-void notify_vbus_change_intr(void)  
+/*void notify_vbus_change_intr(void)  
 {  
     if (!inited)    return;  
     schedule_work(&vbus_work);  
 }
-
+*/
 module_init(htc_battery_init);
 MODULE_DESCRIPTION("HTC Battery Driver");
 MODULE_LICENSE("GPL");

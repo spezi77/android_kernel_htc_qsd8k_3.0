@@ -63,7 +63,7 @@ extern u8 batt_charging_state;
 extern int tps_set_charger_ctrl(u32 ctl);
 extern int tps_register_notifier(struct tps65200_chg_int_notifier *notifier);
 #else
-/* static int tps_set_charger_ctrl(u32 ctl) { return 0 ; } */
+ static int tps_set_charger_ctrl(u32 ctl) { return 0 ; } 
 extern int tps_register_notifier(struct tps65200_chg_int_notifier *notifier) { return 0; }
 #endif
 #endif
