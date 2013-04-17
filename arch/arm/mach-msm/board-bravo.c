@@ -409,6 +409,7 @@ static int bravo_phy_init_seq[] = {
 	-1
 };
 */
+/*
 static void bravo_usb_phy_reset(void)
 {
 	u32 id;
@@ -448,6 +449,7 @@ static void bravo_usb_hw_reset(bool enable)
 		pr_err("%s: Cannot set reset to %d (%d)\n", __func__, enable,
 		       ret);
 }
+*/
 #if 0
 static struct msm_hsusb_platform_data msm_hsusb_pdata = {
 	.phy_init_seq		= bravo_phy_init_seq,
@@ -1753,12 +1755,9 @@ static struct platform_device *devices[] __initdata = {
 	&msm_device_smd,
 	&msm_device_nand,
 	&msm_device_rtc,
-	&msm_device_hsusb,
-	&usb_mass_storage_device,
 #ifdef CONFIG_USB_ANDROID_RNDIS
 	&rndis_device,
 #endif
-	&android_usb_device,
     &android_pmem_device,
 	&android_pmem_adsp_device,
     &android_pmem_audio_device,
@@ -2286,7 +2285,7 @@ static void __init bravo_init(void)
 	msm_pm_set_platform_data(msm_pm_data, ARRAY_SIZE(msm_pm_data));
 //	BUG_ON(msm_pm_boot_init(&msm_pm_boot_pdata));
 	//msm_pm_register_irqs();
-#ifdef CONFIG_USB_ANDROID
+#ifdef CONFIG_USB_G_ANDROID
 	bravo_add_usb_devices();
 #endif
 
