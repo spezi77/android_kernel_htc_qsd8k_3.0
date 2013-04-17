@@ -493,6 +493,13 @@ static void msm_pm_config_hw_before_power_down(void)
 	mb();
 	__raw_writel(1, APPS_PWRDOWN);
 	mb();
+#elif defined(CONFIG_ARCH_QSD8X50)
+    __raw_writel(0x1f, APPS_CLK_SLEEP_EN);
+    mb();
+    __raw_writel(0, APPS_STANDBY_CTL);
+    mb();
+    __raw_writel(1, APPS_PWRDOWN);
+    mb();
 #else
 	__raw_writel(0x1f, APPS_CLK_SLEEP_EN);
 	mb();
