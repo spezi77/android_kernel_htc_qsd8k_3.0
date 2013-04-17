@@ -1163,6 +1163,7 @@ static struct platform_device android_usb_device = {
 		.platform_data = &android_usb_pdata,
 	},
 };
+#if 0
 static void bravo_add_usb_devices(void)
 {
 #if 0
@@ -1186,6 +1187,28 @@ static void bravo_add_usb_devices(void)
 	platform_device_register(&msm_device_gadget_peripheral);
 	platform_device_register(&android_usb_device);
 }
+#endif
+
+void bravo_add_usb_devices(void)
+{
+	printk(KERN_INFO "%s rev: %d\n", __func__, system_rev);
+	android_usb_pdata.products[0].product_id =
+			android_usb_pdata.product_id;
+
+
+	/* add cdrom support in normal mode */
+	if (board_mfg_mode() == 0) {
+		android_usb_pdata.nluns = 3;
+		android_usb_pdata.cdrom_lun = 0x4;
+	}
+
+	msm_device_otg.dev.platform_data = &msm_otg_pdata;
+	//msm_device_gadget_peripheral.dev.platform_data = &msm_gadget_pdata;
+	msm_device_gadget_peripheral.dev.parent = &msm_device_otg.dev;
+	usb_gpio_init();
+	platform_device_register(&msm_device_gadget_peripheral);
+	platform_device_register(&android_usb_device);
+}
 
 unsigned bravo_get_vbus_state(void)
 {
@@ -1194,6 +1217,14 @@ unsigned bravo_get_vbus_state(void)
 	else
 		return 0;
 }
+
+static int __init board_serialno_setup(char *serialno)
+{
+	android_usb_pdata.serial_number = serialno;
+	return 1;
+}
+__setup("androidboot.serialno=", board_serialno_setup);
+
 
 /// camera
 
@@ -1832,29 +1863,6 @@ static int __init parse_tag_bdaddr(const struct tag *tag)
 
 __tagtable(ATAG_BDADDR, parse_tag_bdaddr);
 
-static int __init bravo_board_serialno_setup(char *serialno)
-{
-#ifdef CONFIG_USB_ANDROID_RNDIS
-	int i;
-	char *src = serialno;
-
-	/* create a fake MAC address from our serial number.
-	 * first byte is 0x02 to signify locally administered.
-	 */
-	rndis_pdata.ethaddr[0] = 0x02;
-	for (i = 0; *src; i++) {
-		/* XOR the USB serial across the remaining bytes */
-		rndis_pdata.ethaddr[i % (ETH_ALEN - 1) + 1] ^= *src++;
-	}
-#endif
-
-	android_usb_pdata.serial_number = serialno;
-//	msm_hsusb_pdata.serial_number = serialno;
-	return 1;
-}
-__setup("androidboot.serialno=", bravo_board_serialno_setup);
-
-
 #ifdef CONFIG_PERFLOCK
 static unsigned bravo_perf_acpu_table[] = {
 	245000000,
@@ -2217,7 +2225,7 @@ static void __init bravo_init(void)
 
 	msm_hw_reset_hook = bravo_reset;
 
-	bravo_board_serialno_setup(board_serialno());
+	board_serialno_setup(board_serialno());
 
 	do_grp_reset();
 	do_sdc1_reset();
@@ -2259,7 +2267,7 @@ static void __init bravo_init(void)
 	platform_add_devices(msm_footswitch_devices,
 			msm_num_footswitch_devices);
 
-    msm_device_i2c_init();
+    	msm_device_i2c_init();
 	msm_qsd_spi_init();
 
 	i2c_register_board_info(0, base_i2c_devices, ARRAY_SIZE(base_i2c_devices));
@@ -2284,9 +2292,9 @@ static void __init bravo_init(void)
 
 	bravo_audio_init();
 
-    bravo_headset_init();
+    	bravo_headset_init();
 
-    ds2784_battery_init();
+    	ds2784_battery_init();
         //bravo_reset();
 }
 
