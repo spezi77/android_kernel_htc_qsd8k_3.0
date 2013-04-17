@@ -12,16 +12,11 @@
  *
  */
 
+#undef TRACE_SYSTEM
+#define TRACE_SYSTEM binder
 
 #if !defined(_BINDER_TRACE_H) || defined(TRACE_HEADER_MULTI_READ)
 #define _BINDER_TRACE_H
-
-#undef TRACE_SYSTEM
-#define TRACE_SYSTEM binder
-#undef TRACE_INCLUDE_PATH
-#undef TRACE_INCLUDE_FILE
-#define TRACE_INCLUDE_PATH .
-#define TRACE_INCLUDE_FILE binder_trace
 
 #include <linux/tracepoint.h>
 
@@ -325,4 +320,8 @@ TRACE_EVENT(binder_return,
 
 #endif /* _BINDER_TRACE_H */
 
+#undef TRACE_INCLUDE_PATH
+#undef TRACE_INCLUDE_FILE
+#define TRACE_INCLUDE_PATH .
+#define TRACE_INCLUDE_FILE binder_trace
 #include <trace/define_trace.h>

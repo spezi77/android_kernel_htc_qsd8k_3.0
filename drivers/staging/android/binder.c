@@ -35,7 +35,6 @@
 #include <linux/slab.h>
 
 #include "binder.h"
-//#define CREATE_TRACE_POINTS
 #include "binder_trace.h"
 
 static DEFINE_MUTEX(binder_main_lock);
@@ -3660,5 +3659,8 @@ static int __init binder_init(void)
 }
 
 device_initcall(binder_init);
+
+#define CREATE_TRACE_POINTS
+#include "binder_trace.h"
 
 MODULE_LICENSE("GPL v2");
