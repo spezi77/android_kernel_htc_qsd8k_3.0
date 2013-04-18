@@ -234,6 +234,10 @@ ifdef CONFIG_CPU_IDLE
 	obj-$(CONFIG_ARCH_MSM9615) += cpuidle.o
 endif
 
+obj-$(CONFIG_HTC_35MM_JACK) += htc_35mm_jack.o
+obj-$(CONFIG_ARCH_MSM_FLASHLIGHT) += msm_flashlight.o
+obj-$(CONFIG_HTC_ACOUSTIC_QSD) += htc_acoustic_qsd.o
+
 
 obj-$(CONFIG_ARCH_FSM9XXX) += devices-fsm9xxx.o
 obj-$(CONFIG_ARCH_FSM9XXX) += clock-fsm9xxx.o clock-local.o acpuclock-fsm9xxx.o
@@ -321,9 +325,10 @@ obj-$(CONFIG_MACH_BRAVO) += board-bravo.o board-bravo-panel.o
 obj-$(CONFIG_MACH_BRAVO) += board-bravo-keypad.o board-bravo-mmc.o
 obj-$(CONFIG_MACH_BRAVO) += board-bravo-rfkill.o htc_wifi_nvs.o htc_awb_cal.o
 obj-$(CONFIG_MACH_BRAVO) += board-bravo-wifi.o board-bravo-audio.o
-obj-$(CONFIG_MACH_BRAVO) += msm_vibrator.o devices_htc.o htc_35mm_jack.o
-obj-$(CONFIG_MACH_BRAVO) += board-bravo-microp.o htc_acoustic_qsd.o htc_set_perflock.o
-obj-$(CONFIG_MACH_BRAVO) += board-bravo-tpa2018d1.o msm_flashlight.o
+obj-$(CONFIG_MACH_BRAVO) += msm_vibrator.o
+obj-$(CONFIG_MACH_BRAVO) += devices_htc.o
+obj-$(CONFIG_MACH_BRAVO) += board-bravo-microp.o htc_set_perflock.o
+obj-$(CONFIG_MACH_BRAVO) += board-bravo-tpa2018d1.o
 obj-$(CONFIG_MACH_BRAVO) += board-bravo-smb329.o
 
 ifeq ($(CONFIG_ARCH_MSM8X60_LTE),y)
