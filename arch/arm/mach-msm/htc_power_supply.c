@@ -484,7 +484,7 @@ static void dock_work_proc(struct work_struct *work)
 
 	pr_info("Detected dock with ID %02x\n", dockid);
 	if (dockid >= 0) {
-		msm_hsusb_set_vbus_state(0);
+//		msm_hsusb_set_vbus_state(0);
 		dock_mains = !!(dockid & 0x80);
 		switch_set_state(&dock_switch, (dockid & 1) ? 2 : 1);
 		goto done;
@@ -492,7 +492,7 @@ static void dock_work_proc(struct work_struct *work)
 no_dock:
 	dock_mains = false;
 	switch_set_state(&dock_switch, 0);
-	msm_hsusb_set_vbus_state(vbus_present);
+//	msm_hsusb_set_vbus_state(vbus_present);
 done:
 	power_supply_changed(&ac_supply);
 	power_supply_changed(&usb_supply);
