@@ -1199,6 +1199,12 @@ config HTC_HEADSET
 	 headset, on the trout platform. Can be used with the msm serial
 	 debugger, but not with serial console.
 
+config HTC_35MM_JACK
+	bool "HTC 3.5mm headset jack"
+	default n
+	help
+	 Provides support for 3.5mm headset jack devices, like wired headsets.
+
 config TROUT_BATTCHG
 	depends on MACH_TROUT && POWER_SUPPLY
 	default y
@@ -1230,6 +1236,20 @@ config HTC_PWRSINK
 	depends on MSM_SMD
 	default n
 	bool "HTC Power Sink Driver"
+
+config ARCH_MSM_FLASHLIGHT
+	bool "Flashlight Driver"
+	depends on ARCH_MSM
+	help
+	The flashlight driver is for MSM series.
+
+config HTC_ACOUSTIC_QSD
+	tristate "HTC acoustic driver for QSD"
+	depends on ARCH_QSD8X50
+	default y
+	help
+	Provides user space use shared memory allocate by using RPC code.
+	Provides headset amp, mic bias and speaker amp control.
 
 config BUILD_OMA_DM
 	bool "Build in OMA-DM fixes"
