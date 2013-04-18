@@ -1591,7 +1591,7 @@ config MSM_DALRPC
 config MSM_DALRPC_TEST
 	tristate "DAL RPC test module"
 	depends on (MSM_DALRPC && DEBUG_FS)
-	default m
+	default n
 	help
 	  Exercises DAL RPC calls to QDSP6.
 
