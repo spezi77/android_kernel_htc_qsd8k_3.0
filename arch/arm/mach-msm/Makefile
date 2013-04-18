@@ -385,6 +385,7 @@ obj-$(CONFIG_MACH_PYRAMID) += board-pyramid-keypad.o
 obj-$(CONFIG_MACH_PYRAMID) += board-pyramid-audio.o
 obj-$(CONFIG_HTC_BATT_CORE) += htc_battery_core.o
 obj-$(CONFIG_HTC_BATT8x60) += htc_battery_8x60.o
+obj-$(CONFIG_HTC_PWRSPLY) += htc_power_supply.o 
 obj-$(CONFIG_HTC_BATT_8960) += htc_battery_8960.o htc_battery_cell.o
 obj-$(CONFIG_MACH_PYRAMID) += htc_bdaddress.o board-pyramid-rfkill.o
 obj-$(CONFIG_MACH_PYRAMID) += board-pyramid-mmc.o board-pyramid-wifi.o
