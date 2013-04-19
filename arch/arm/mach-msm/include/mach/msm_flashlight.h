@@ -58,7 +58,7 @@ struct flashlight_platform_data {
 	uint32_t chip_model;
 };
 
-int flashlight_control(int mode);
+static int flashlight_control(int mode);
 int aat1271_flashlight_control(int mode);
 int adp1650_flashlight_control(int mode);
 int aat3177_flashlight_control(int mode);

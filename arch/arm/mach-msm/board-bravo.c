@@ -104,8 +104,6 @@ extern void msm_init_pmic_vibrator(void);
 extern void __init bravo_audio_init(void);
 
 extern int microp_headset_has_mic(void);
-static unsigned int engineerid;
-
 
 ///////////////////////////////////////////////////////////////////////
 // KGSL (HW3D support)#include <linux/android_pmem.h>
@@ -1227,110 +1225,6 @@ static int __init board_serialno_setup(char *serialno)
 }
 __setup("androidboot.serialno=", board_serialno_setup);
 
-
-/// camera
-
-static uint32_t camera_off_gpio_table[] = {
-	/* CAMERA */
-	PCOM_GPIO_CFG(0, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT0 */
-	PCOM_GPIO_CFG(1, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT1 */
-	PCOM_GPIO_CFG(2, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT2 */
-	PCOM_GPIO_CFG(3, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT3 */
-	PCOM_GPIO_CFG(4, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT4 */
-	PCOM_GPIO_CFG(5, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT5 */
-	PCOM_GPIO_CFG(6, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT6 */
-	PCOM_GPIO_CFG(7, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT7 */
-	PCOM_GPIO_CFG(8, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT8 */
-	PCOM_GPIO_CFG(9, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT9 */
-	PCOM_GPIO_CFG(10, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT10 */
-	PCOM_GPIO_CFG(11, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT11 */
-	PCOM_GPIO_CFG(12, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* PCLK */
-	PCOM_GPIO_CFG(13, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* HSYNC */
-	PCOM_GPIO_CFG(14, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* VSYNC */
-	PCOM_GPIO_CFG(15, 0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_4MA), /* MCLK */
-};
-
-static uint32_t camera_on_gpio_table[] = {
-	/* CAMERA */
-	PCOM_GPIO_CFG(0, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT0 */
-	PCOM_GPIO_CFG(1, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT1 */
-	PCOM_GPIO_CFG(2, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT2 */
-	PCOM_GPIO_CFG(3, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT3 */
-	PCOM_GPIO_CFG(4, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT4 */
-	PCOM_GPIO_CFG(5, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT5 */
-	PCOM_GPIO_CFG(6, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT6 */
-	PCOM_GPIO_CFG(7, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT7 */
-	PCOM_GPIO_CFG(8, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT8 */
-	PCOM_GPIO_CFG(9, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT9 */
-	PCOM_GPIO_CFG(10, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT10 */
-	PCOM_GPIO_CFG(11, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT11 */
-	PCOM_GPIO_CFG(12, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_16MA), /* PCLK */
-	PCOM_GPIO_CFG(13, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* HSYNC */
-	PCOM_GPIO_CFG(14, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* VSYNC */
-	PCOM_GPIO_CFG(15, 1, GPIO_OUTPUT, GPIO_PULL_UP, GPIO_8MA), /* MCLK */
-};
-
-int config_camera_on_gpios(void)
-{
-	config_gpio_table(camera_on_gpio_table,
-		ARRAY_SIZE(camera_on_gpio_table));
-
-    return 0;
-}
-
-void config_camera_off_gpios(void)
-{
-	config_gpio_table(camera_off_gpio_table,
-		ARRAY_SIZE(camera_off_gpio_table));
-}
-
-static struct resource msm_camera_resources[] = {
-	{
-		.start	= MSM_VFE_PHYS,
-		.end	= MSM_VFE_PHYS + MSM_VFE_SIZE - 1,
-		.flags	= IORESOURCE_MEM,
-	},
-	{
-		.start	= INT_VFE,
-		 INT_VFE,
-		.flags	= IORESOURCE_IRQ,
-	},
-};
-
-static struct msm_camera_device_platform_data msm_camera_device_data = {
-	.camera_gpio_on  = config_camera_on_gpios,
-	.camera_gpio_off = config_camera_off_gpios,
-	.ioext.mdcphy = MSM_MDC_PHYS,
-	.ioext.mdcsz  = MSM_MDC_SIZE,
-	.ioext.appphy = MSM_CLK_CTL_PHYS,
-	.ioext.appsz  = MSM_CLK_CTL_SIZE,
-};
-
-static struct camera_flash_cfg msm_camera_sensor_flash_cfg = {
-	.camera_flash		= flashlight_control,
-	.num_flash_levels	= FLASHLIGHT_NUM,
-	.low_temp_limit		= 5,
-	.low_cap_limit		= 15,
-};
-
-static struct msm_camera_sensor_info msm_camera_sensor_s5k3e2fx_data = {
-	.sensor_name 	= "s5k3e2fx",
-	.sensor_reset 	= 144,  /* CAM1_RST */
-	.sensor_pwd 	= 143,  /* CAM1_PWDN, enabled in a9 */
-	/*.vcm_pwd 	= 31,*/ /* CAM1_VCM_EN, enabled in a9 */
-	.pdata 		= &msm_camera_device_data,
-	.resource 	= msm_camera_resources,
-	.num_resources 	= ARRAY_SIZE(msm_camera_resources),
-	.flash_cfg	= &msm_camera_sensor_flash_cfg,
-};
-
-static struct platform_device msm_camera_sensor_s5k3e2fx = {
-	.name	= "msm_camera_s5k3e2fx",
-	.dev	= {
-		.platform_data = &msm_camera_sensor_s5k3e2fx_data,
-	},
-};
-
 static int __capella_cm3602_power(int on)
 {
 	printk(KERN_DEBUG "%s: Turn the capella_cm3602 power %s\n",
@@ -1385,29 +1279,26 @@ static struct platform_device capella_cm3602 = {
 	}
 };
 
+///////////////////////////////////////////////////////////////////////
+// Flashlight
+///////////////////////////////////////////////////////////////////////
 
 static uint32_t flashlight_gpio_table[] = {
-	PCOM_GPIO_CFG(BRAVO_GPIO_FLASHLIGHT_TORCH, 0, GPIO_OUTPUT,
-						GPIO_NO_PULL, GPIO_2MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_FLASHLIGHT_FLASH, 0, GPIO_OUTPUT,
-						GPIO_NO_PULL, GPIO_2MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_FLASHLIGHT_TORCH, 0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_2MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_FLASHLIGHT_FLASH, 0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_2MA),
 };
 
 static uint32_t flashlight_gpio_table_rev_CX[] = {
-	PCOM_GPIO_CFG(BRAVO_CDMA_GPIO_FLASHLIGHT_TORCH, 0, GPIO_OUTPUT,
-						GPIO_NO_PULL, GPIO_2MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_FLASHLIGHT_FLASH, 0, GPIO_OUTPUT,
-						GPIO_NO_PULL, GPIO_2MA),
+	PCOM_GPIO_CFG(BRAVO_CDMA_GPIO_FLASHLIGHT_TORCH, 0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_2MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_FLASHLIGHT_FLASH, 0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_2MA),
 };
 
 static int config_bravo_flashlight_gpios(void)
 {
 	if (is_cdma_version(system_rev)) {
-		config_gpio_table(flashlight_gpio_table_rev_CX,
-				ARRAY_SIZE(flashlight_gpio_table_rev_CX));
+		config_gpio_table(flashlight_gpio_table_rev_CX, ARRAY_SIZE(flashlight_gpio_table_rev_CX));
 	} else {
-		config_gpio_table(flashlight_gpio_table,
-				ARRAY_SIZE(flashlight_gpio_table));
+		config_gpio_table(flashlight_gpio_table, ARRAY_SIZE(flashlight_gpio_table));
 	}
 	return 0;
 }
@@ -1426,6 +1317,124 @@ static struct platform_device bravo_flashlight_device = {
 	},
 };
 
+///////////////////////////////////////////////////////////////////////
+// Camera
+///////////////////////////////////////////////////////////////////////
+
+static uint32_t camera_off_gpio_table[] =
+{
+	PCOM_GPIO_CFG(0, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT0 */
+	PCOM_GPIO_CFG(1, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT1 */
+	PCOM_GPIO_CFG(2, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT2 */
+	PCOM_GPIO_CFG(3, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT3 */
+	PCOM_GPIO_CFG(4, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT4 */
+	PCOM_GPIO_CFG(5, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT5 */
+	PCOM_GPIO_CFG(6, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT6 */
+	PCOM_GPIO_CFG(7, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT7 */
+	PCOM_GPIO_CFG(8, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT8 */
+	PCOM_GPIO_CFG(9, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT9 */
+	PCOM_GPIO_CFG(10, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT10 */
+	PCOM_GPIO_CFG(11, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* DAT11 */
+	PCOM_GPIO_CFG(12, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* PCLK */
+	PCOM_GPIO_CFG(13, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* HSYNC */
+	PCOM_GPIO_CFG(14, 0, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_4MA), /* VSYNC */
+	PCOM_GPIO_CFG(15, 0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_4MA), /* MCLK */
+};
+
+static uint32_t camera_on_gpio_table[] =
+{
+	PCOM_GPIO_CFG(0, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT0 */
+	PCOM_GPIO_CFG(1, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT1 */
+	PCOM_GPIO_CFG(2, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT2 */
+	PCOM_GPIO_CFG(3, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT3 */
+	PCOM_GPIO_CFG(4, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT4 */
+	PCOM_GPIO_CFG(5, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT5 */
+	PCOM_GPIO_CFG(6, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT6 */
+	PCOM_GPIO_CFG(7, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT7 */
+	PCOM_GPIO_CFG(8, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT8 */
+	PCOM_GPIO_CFG(9, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT9 */
+	PCOM_GPIO_CFG(10, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT10 */
+	PCOM_GPIO_CFG(11, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* DAT11 */
+	PCOM_GPIO_CFG(12, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_16MA), /* PCLK */
+	PCOM_GPIO_CFG(13, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* HSYNC */
+	PCOM_GPIO_CFG(14, 1, GPIO_INPUT, GPIO_PULL_UP, GPIO_2MA), /* VSYNC */
+	PCOM_GPIO_CFG(15, 1, GPIO_OUTPUT, GPIO_PULL_UP, GPIO_8MA), /* MCLK */
+};
+
+int config_camera_on_gpios(void)
+{
+	config_gpio_table(camera_on_gpio_table, ARRAY_SIZE(camera_on_gpio_table));
+
+	return 0;
+}
+
+void config_camera_off_gpios(void)
+{
+	config_gpio_table(camera_off_gpio_table, ARRAY_SIZE(camera_off_gpio_table));
+}
+
+static struct resource msm_camera_resources[] =
+{
+	{
+		.start	= MSM_VFE_PHYS,
+		.end	= MSM_VFE_PHYS + MSM_VFE_SIZE - 1,
+		.flags	= IORESOURCE_MEM,
+	},
+	{
+		.start	= INT_VFE,
+		 INT_VFE,
+		.flags	= IORESOURCE_IRQ,
+	},
+};
+
+static struct msm_camera_device_platform_data msm_camera_device_data =
+{
+	.camera_gpio_on  = config_camera_on_gpios,
+	.camera_gpio_off = config_camera_off_gpios,
+	.ioext.mdcphy = MSM_MDC_PHYS,
+	.ioext.mdcsz  = MSM_MDC_SIZE,
+	.ioext.appphy = MSM_CLK_CTL_PHYS,
+	.ioext.appsz  = MSM_CLK_CTL_SIZE,
+};
+
+static int flashlight_control(int mode)
+{
+        return aat1271_flashlight_control(mode);
+}
+
+static struct camera_flash_cfg msm_camera_sensor_flash_cfg = {
+	.camera_flash		= flashlight_control,
+	.num_flash_levels	= FLASHLIGHT_NUM,
+	.low_temp_limit		= 5,
+	.low_cap_limit		= 15,
+};
+
+static struct msm_camera_sensor_info msm_camera_sensor_s5k3e2fx_data =
+{
+	.sensor_name = "s5k3e2fx",
+	.sensor_reset = 144,
+	/* CAM1_PWDN, enabled in a9 */
+	//.sensor_pwd = 143,
+	/* CAM1_VCM_EN, enabled in a9 */
+	//.vcm_pwd = 31,
+	.pdata = &msm_camera_device_data,
+	.resource = msm_camera_resources,
+	.num_resources = ARRAY_SIZE(msm_camera_resources),
+	.flash_cfg = &msm_camera_sensor_flash_cfg,
+};
+
+static struct platform_device msm_camera_sensor_s5k3e2fx =
+{
+	.name     = "msm_camera_s5k3e2fx",
+	.dev      = {
+		.platform_data = &msm_camera_sensor_s5k3e2fx_data,
+	},
+};
+
+
+///////////////////////////////////////////////////////////////////////
+// Vibrator
+///////////////////////////////////////////////////////////////////////
 
 static struct timed_gpio timed_gpios[] = {
 	{
@@ -1751,16 +1760,16 @@ static struct platform_device *devices[] __initdata = {
 	&msm_device_uart_dm1,
 	&ram_console_device,
 	&bravo_rfkill,
-    &msm_device_dmov,
+    	&msm_device_dmov,
 	&msm_device_smd,
 	&msm_device_nand,
 	&msm_device_rtc,
 #ifdef CONFIG_USB_ANDROID_RNDIS
 	&rndis_device,
 #endif
-    &android_pmem_device,
+    	&android_pmem_device,
 	&android_pmem_adsp_device,
-    &android_pmem_audio_device,
+    	&android_pmem_audio_device,
 	&android_pmem_venc_device,
     //&android_pmem_kernel_ebi1_device,
 #ifdef CONFIG_720P_CAMERA
