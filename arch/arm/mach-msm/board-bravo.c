@@ -39,7 +39,6 @@
 #include <linux/akm8973.h>
 #include <linux/regulator/machine.h>
 #include <linux/ds2784_battery.h>
-#include <../../../drivers/w1/w1.h>
 
 #include <asm/mach-types.h>
 #include <asm/mach/arch.h>
@@ -1492,64 +1491,30 @@ static int ds2784_charge(int on, int fast)
 	return 0;
 }
 
-static int w1_ds2784_add_slave(struct w1_slave *sl)
-{
-	struct dd {
-		struct platform_device pdev;
-		struct ds2784_platform_data pdata;
-	} *p;
-
-	int rc;
-
-	p = kzalloc(sizeof(struct dd), GFP_KERNEL);
-	if (!p) {
-		pr_err("%s: out of memory\n", __func__);
-		return -ENOMEM;
-	}
-
-	rc = gpio_request(BRAVO_GPIO_BATTERY_CHARGER_EN, "charger_en");
-	if (rc < 0) {
-		pr_err("%s: gpio_request(%d) failed: %d\n", __func__,
-			BRAVO_GPIO_BATTERY_CHARGER_EN, rc);
-		kfree(p);
-		return rc;
-	}
-
-	if (!is_cdma_version(system_rev)) {
-		rc = gpio_request(BRAVO_GPIO_BATTERY_CHARGER_CURRENT, "charger_current");
-		if (rc < 0) {
-			pr_err("%s: gpio_request(%d) failed: %d\n", __func__,
-					BRAVO_GPIO_BATTERY_CHARGER_CURRENT, rc);
-			gpio_free(BRAVO_GPIO_BATTERY_CHARGER_EN);
-			kfree(p);
-			return rc;
-		}
-	}
-
-	p->pdev.name = "ds2784-battery";
-	p->pdev.id = -1;
-	p->pdev.dev.platform_data = &p->pdata;
-	p->pdata.charge = ds2784_charge;
-	p->pdata.w1_slave = sl;
-
-	platform_device_register(&p->pdev);
-
-	return 0;
-}
-
-static struct w1_family_ops w1_ds2784_fops = {
-	.add_slave = w1_ds2784_add_slave,
+static struct htc_battery_platform_data htc_battery_pdev_data = {
+	.func_show_batt_attr = htc_battery_show_attr,
+	.gpio_mbat_in = -1,
+	.gpio_mchg_en_n = BRAVO_GPIO_BATTERY_CHARGER_EN,
+	.gpio_iset = BRAVO_GPIO_BATTERY_CHARGER_CURRENT,
+	.gpio_adp_9v = BRAVO_GPIO_POWER_USB,
+	.guage_driver = GUAGE_DS2784,
+	.charger = LINEAR_CHARGER,
+	.m2a_cable_detect = 0,
+//	.force_no_rpc = 1,
+/*	.int_data = {
+		.chg_int = HTCLEO_GPIO_BATTERY_OVER_CHG,
+	},*/
 };
 
-static struct w1_family w1_ds2784_family = {
-	.fid = W1_FAMILY_DS2784,
-	.fops = &w1_ds2784_fops,
-};
 
-static int __init ds2784_battery_init(void)
-{
-	return w1_register_family(&w1_ds2784_family);
-}
+
+static struct platform_device htc_battery_pdev = {
+	.name = "htc_battery",
+	.id = -1,
+	.dev	= {
+		.platform_data = &htc_battery_pdev_data,
+	},
+};
 
 static struct resource qsd_spi_resources[] = {
 	{
@@ -1779,6 +1744,7 @@ static struct platform_device *devices[] __initdata = {
 	&msm_device_i2c,
 	&msm_camera_sensor_s5k3e2fx,
 	&bravo_flashlight_device,
+    &htc_battery_pdev,
 #ifdef CONFIG_OPTICALJOYSTICK_CRUCIAL
 	&bravo_oj,
 #endif
@@ -2300,10 +2266,10 @@ static void __init bravo_init(void)
 
 	bravo_audio_init();
 
-    	bravo_headset_init();
+    bravo_headset_init();
 
-    	ds2784_battery_init();
-        //bravo_reset();
+    //ds2784_battery_init();
+    //bravo_reset();
 }
 
 static void __init bravo_fixup(struct machine_desc *desc, struct tag *tags,
