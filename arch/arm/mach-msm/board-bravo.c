@@ -1702,14 +1702,14 @@ static struct platform_device *devices[] __initdata = {
 	&msm_device_uart_dm1,
 	&ram_console_device,
 	&bravo_rfkill,
-    &msm_device_dmov,
+	&msm_device_dmov,
 	&msm_device_smd,
 	&msm_device_nand,
 	&msm_device_rtc,
 #ifdef CONFIG_USB_ANDROID_RNDIS
 	&rndis_device,
 #endif
-    &android_pmem_device,
+	&android_pmem_device,
 	&android_pmem_adsp_device,
 	&android_pmem_venc_device,
     //&android_pmem_kernel_ebi1_device,
@@ -1720,7 +1720,7 @@ static struct platform_device *devices[] __initdata = {
 	&msm_device_i2c,
 	&msm_camera_sensor_s5k3e2fx,
 	&bravo_flashlight_device,
-    &htc_battery_pdev,
+	&htc_battery_pdev,
 #ifdef CONFIG_OPTICALJOYSTICK_CRUCIAL
 	&bravo_oj,
 #endif
