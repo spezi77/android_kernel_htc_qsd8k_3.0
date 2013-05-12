@@ -4585,6 +4585,7 @@ void ftrace_dump(enum ftrace_dump_mode oops_dump_mode)
 		printk(KERN_TRACE "---------------------------------\n");
 
  out_enable:
+	/* Re-enable tracing if requested */
 	trace_flags |= old_userobj;
 
 	for_each_tracing_cpu(cpu) {
