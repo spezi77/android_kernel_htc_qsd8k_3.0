@@ -373,56 +373,7 @@ struct platform_device msm_device_rtc = {
 	.name = "msm_rtc",
 	.id = -1,
 };
-/*
-static int bravo_phy_init_seq[] = {
-	0x0C, 0x31,
-	0x31, 0x32,
-	0x1D, 0x0D,
-	0x1D, 0x10,
-	-1
-};
-*/
-/*
-static void bravo_usb_phy_reset(void)
-{
-	u32 id;
-	int ret;
 
-	id = PCOM_CLKRGM_APPS_RESET_USB_PHY;
-	ret = msm_proc_comm(PCOM_CLK_REGIME_SEC_RESET_ASSERT, &id, NULL);
-	if (ret) {
-		pr_err("%s: Cannot assert (%d)\n", __func__, ret);
-		return;
-	}
-
-	msleep(1);
-
-	id = PCOM_CLKRGM_APPS_RESET_USB_PHY;
-	ret = msm_proc_comm(PCOM_CLK_REGIME_SEC_RESET_DEASSERT, &id, NULL);
-	if (ret) {
-		pr_err("%s: Cannot assert (%d)\n", __func__, ret);
-		return;
-	}
-}
-
-
-static void bravo_usb_hw_reset(bool enable)
-{
-	u32 id;
-	int ret;
-	u32 func;
-
-	id = PCOM_CLKRGM_APPS_RESET_USBH;
-	if (enable)
-		func = PCOM_CLK_REGIME_SEC_RESET_ASSERT;
-	else
-		func = PCOM_CLK_REGIME_SEC_RESET_DEASSERT;
-	ret = msm_proc_comm(func, &id, NULL);
-	if (ret)
-		pr_err("%s: Cannot set reset to %d (%d)\n", __func__, enable,
-		       ret);
-}
-*/
 #if 0
 static struct msm_hsusb_platform_data msm_hsusb_pdata = {
 	.phy_init_seq		= bravo_phy_init_seq,
@@ -2207,8 +2158,11 @@ static void __init bravo_init(void)
 
 	gpio_request(BRAVO_GPIO_DS2482_SLP_N, "ds2482_slp_n");
 
-//    msm_device_hsusb.dev.platform_data = &msm_hsusb_pdata;
+#ifdef CONFIG_SERIAL_MSM_HS
 	msm_device_uart_dm1.dev.platform_data = &msm_uart_dm1_pdata;
+    msm_device_uart_dm1.name = "msm_serial_hs_brcm"; /* for bcm */
+    msm_device_uart_dm1.resource[3].end = 6;
+#endif
 
 	config_gpio_table(bt_gpio_table, ARRAY_SIZE(bt_gpio_table));
 
@@ -2283,7 +2237,6 @@ MACHINE_START(BRAVO, "bravo")
 MACHINE_START(BRAVOC, "bravoc")
 #endif
     .boot_params = 0x20000100,
-//    .boot_params = (CONFIG_PHYS_OFFSET + 0x00000100),
     .fixup = bravo_fixup,
     .map_io = bravo_map_io,
     .reserve	= qsd8x50_reserve,
