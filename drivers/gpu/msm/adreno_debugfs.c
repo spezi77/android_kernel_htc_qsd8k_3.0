@@ -1,4 +1,4 @@
-/* Copyright (c) 2002,2008-2011, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2002,2008-2011, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -24,6 +24,7 @@
 
 unsigned int kgsl_cff_dump_enable;
 int kgsl_pm_regs_enabled;
+int adreno_ib_dump_on_pagef_enabled;
 
 static struct dentry *pm_d_debugfs;
 
@@ -60,6 +61,21 @@ DEFINE_SIMPLE_ATTRIBUTE(pm_regs_enabled_fops,
 			pm_regs_enabled_get,
 			pm_regs_enabled_set, "%llu\n");
 
+static int ib_dump_on_pagef_enabled_get(void *data, u64 *val)
+{
+	*val = adreno_ib_dump_on_pagef_enabled;
+	return 0;
+}
+
+static int ib_dump_on_pagef_enabled_set(void *data, u64 val)
+{
+	adreno_ib_dump_on_pagef_enabled = val ? 1 : 0;
+	return 0;
+}
+
+DEFINE_SIMPLE_ATTRIBUTE(ib_dump_on_pagef_enabled_fops,
+			ib_dump_on_pagef_enabled_get,
+			ib_dump_on_pagef_enabled_set, "%llu\n");
 
 static int kgsl_cff_dump_enable_set(void *data, u64 val)
 {
@@ -128,7 +144,6 @@ static int kgsl_regread_nolock(struct kgsl_device *device,
 	return 0;
 }
 
-#define ADRENO_ISTORE_START 0x5000
 static ssize_t kgsl_istore_read(
 	struct file *file,
 	char __user *buff,
@@ -144,8 +159,7 @@ static ssize_t kgsl_istore_read(
 		return 0;
 
 	adreno_dev = ADRENO_DEVICE(device);
-	count = adreno_dev->istore_size * adreno_dev->instruction_size;
-
+	count = adreno_dev->istore_size * ADRENO_ISTORE_WORDS;
 	remaining = count;
 	for (i = 0; i < count; i += rowc) {
 		unsigned int vals[rowc];
@@ -361,4 +375,7 @@ void adreno_debugfs_init(struct kgsl_device *device)
 			    &pm_dump_fops);
 	debugfs_create_file("regs_enabled", 0644, pm_d_debugfs, device,
 			    &pm_regs_enabled_fops);
+
+	debugfs_create_file("ib_dump_on_pagefault", 0644, device->d_debugfs,
+				device, &ib_dump_on_pagef_enabled_fops);
 }

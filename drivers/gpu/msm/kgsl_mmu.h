@@ -1,4 +1,4 @@
-/* Copyright (c) 2002,2007-2011, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2002,2007-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -76,16 +76,10 @@ struct kgsl_device;
 #define MH_INTERRUPT_MASK__AXI_WRITE_ERROR                 0x00000002L
 #define MH_INTERRUPT_MASK__MMU_PAGE_FAULT                  0x00000004L
 
-#ifdef CONFIG_MSM_KGSL_MMU
 #define KGSL_MMU_INT_MASK \
 	(MH_INTERRUPT_MASK__AXI_READ_ERROR | \
 	 MH_INTERRUPT_MASK__AXI_WRITE_ERROR | \
 	 MH_INTERRUPT_MASK__MMU_PAGE_FAULT)
-#else
-#define KGSL_MMU_INT_MASK \
-	(MH_INTERRUPT_MASK__AXI_READ_ERROR | \
-	 MH_INTERRUPT_MASK__AXI_WRITE_ERROR)
-#endif
 
 enum kgsl_mmutype {
 	KGSL_MMU_TYPE_GPU = 0,
@@ -118,7 +112,8 @@ struct kgsl_mmu_ops {
 	int (*mmu_start) (struct kgsl_device *device);
 	int (*mmu_stop) (struct kgsl_device *device);
 	void (*mmu_setstate) (struct kgsl_device *device,
-		struct kgsl_pagetable *pagetable);
+		struct kgsl_pagetable *pagetable,
+		unsigned int context_id);
 	void (*mmu_device_setstate) (struct kgsl_device *device,
 					uint32_t flags);
 	void (*mmu_pagefault) (struct kgsl_device *device);
@@ -174,20 +169,29 @@ int kgsl_mmu_map_global(struct kgsl_pagetable *pagetable,
 int kgsl_mmu_unmap(struct kgsl_pagetable *pagetable,
 		    struct kgsl_memdesc *memdesc);
 unsigned int kgsl_virtaddr_to_physaddr(void *virtaddr);
-void kgsl_setstate(struct kgsl_device *device, uint32_t flags);
+void kgsl_setstate(struct kgsl_device *device, unsigned int context_id,
+			uint32_t flags);
 void kgsl_mmu_device_setstate(struct kgsl_device *device, uint32_t flags);
 void kgsl_mmu_setstate(struct kgsl_device *device,
-			struct kgsl_pagetable *pt);
+			struct kgsl_pagetable *pt, unsigned int context_id);
 int kgsl_mmu_get_ptname_from_ptbase(unsigned int pt_base);
 int kgsl_mmu_pt_get_flags(struct kgsl_pagetable *pt,
 			enum kgsl_deviceid id);
-
 void kgsl_mmu_ptpool_destroy(void *ptpool);
-void *kgsl_mmu_ptpool_init(int ptsize, int entries);
+void *kgsl_mmu_ptpool_init(int entries);
 int kgsl_mmu_enabled(void);
 int kgsl_mmu_pt_equal(struct kgsl_pagetable *pt,
 			unsigned int pt_base);
 void kgsl_mmu_set_mmutype(char *mmutype);
 unsigned int kgsl_mmu_get_current_ptbase(struct kgsl_device *device);
 enum kgsl_mmutype kgsl_mmu_get_mmutype(void);
+unsigned int kgsl_mmu_get_ptsize(void);
+
+static inline int kgsl_mmu_gpuaddr_in_range(unsigned int gpuaddr)
+{
+	return ((gpuaddr >= KGSL_PAGETABLE_BASE) &&
+		(gpuaddr <
+		 (KGSL_PAGETABLE_BASE + CONFIG_MSM_KGSL_PAGE_TABLE_SIZE)));
+}
+
 #endif /* __KGSL_MMU_H */
