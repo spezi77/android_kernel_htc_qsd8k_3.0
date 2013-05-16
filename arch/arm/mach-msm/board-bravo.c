@@ -2153,6 +2153,8 @@ static void __init bravo_init(void)
 	gpio_request(BRAVO_GPIO_TP_EN, "tp_en");
 	gpio_direction_output(BRAVO_GPIO_TP_EN, 0);
 	gpio_request(BRAVO_GPIO_LS_EN_N, "ls_en");
+	gpio_request(BRAVO_GPIO_COMPASS_RST_N, "compass_rst");
+	gpio_direction_output(BRAVO_GPIO_COMPASS_RST_N, 1);
 	gpio_request(BRAVO_GPIO_COMPASS_INT_N, "compass_int");
 	gpio_direction_input(BRAVO_GPIO_COMPASS_INT_N);
 
@@ -2160,8 +2162,8 @@ static void __init bravo_init(void)
 
 #ifdef CONFIG_SERIAL_MSM_HS
 	msm_device_uart_dm1.dev.platform_data = &msm_uart_dm1_pdata;
-    msm_device_uart_dm1.name = "msm_serial_hs_brcm"; /* for bcm */
-    msm_device_uart_dm1.resource[3].end = 6;
+    	msm_device_uart_dm1.name = "msm_serial_hs_brcm"; /* for bcm */
+    	msm_device_uart_dm1.resource[3].end = 6;
 #endif
 
 	config_gpio_table(bt_gpio_table, ARRAY_SIZE(bt_gpio_table));
@@ -2171,7 +2173,7 @@ static void __init bravo_init(void)
 	platform_add_devices(msm_footswitch_devices,
 			msm_num_footswitch_devices);
 
-    msm_device_i2c_init();
+    	msm_device_i2c_init();
 	msm_qsd_spi_init();
 
 	i2c_register_board_info(0, base_i2c_devices, ARRAY_SIZE(base_i2c_devices));
@@ -2179,7 +2181,7 @@ static void __init bravo_init(void)
 /*
         if (is_cdma_version(system_rev)) {
             i2c_register_board_info(0, rev_CX_i2c_devices,
-                                    ARRAY_SIZE(rev_CX_i2c_devices));
+                                    ARRAY_SIZE(r	platform_device_register(&bravo_timed_gpios);ev_CX_i2c_devices));
 	}
 
 */
@@ -2189,17 +2191,18 @@ static void __init bravo_init(void)
 
 	msm_pm_set_platform_data(msm_pm_data, ARRAY_SIZE(msm_pm_data));
 //	BUG_ON(msm_pm_boot_init(&msm_pm_boot_pdata));
-	//msm_pm_register_irqs();
+//	msm_pm_register_irqs();
 #ifdef CONFIG_USB_G_ANDROID
 	bravo_add_usb_devices();
 #endif
 
 	bravo_audio_init();
+    	bravo_headset_init();
 
-    bravo_headset_init();
+	platform_device_register(&bravo_timed_gpios);
 
-    //ds2784_battery_init();
-    //bravo_reset();
+    	//ds2784_battery_init();
+    	//bravo_reset();
 }
 
 static void __init bravo_fixup(struct machine_desc *desc, struct tag *tags,
@@ -2214,13 +2217,6 @@ static void __init bravo_fixup(struct machine_desc *desc, struct tag *tags,
 
 }
 
-static void __init bravo_init_irq(void)
-{
-    printk("bravo_init_irq()\n");
-    msm_init_irq();
-    msm_init_sirc();
-}
-
 static void __init bravo_map_io(void)
 {
     printk("bravo_map_io()\n");
@@ -2230,6 +2226,7 @@ static void __init bravo_map_io(void)
         pr_err("socinfo_init() failed!\n");
 }
 
+extern struct sys_timer msm_timer;
 
 #ifdef CONFIG_MACH_BRAVO
 MACHINE_START(BRAVO, "bravo")
@@ -2239,8 +2236,8 @@ MACHINE_START(BRAVOC, "bravoc")
     .boot_params = 0x20000100,
     .fixup = bravo_fixup,
     .map_io = bravo_map_io,
-    .reserve	= qsd8x50_reserve,
-    .init_irq = bravo_init_irq,
+    .reserve = qsd8x50_reserve,
+    .init_irq = msm_init_irq,
     .init_machine = bravo_init,
     .timer = &msm_timer,
 MACHINE_END
