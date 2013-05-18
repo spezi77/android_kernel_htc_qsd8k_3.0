@@ -1144,12 +1144,12 @@ unsigned bravo_get_vbus_state(void)
 		return 0;
 }
 
-static int __init board_serialno_setup(char *serialno)
+static int __init bravo_board_serialno_setup(char *serialno)
 {
 	android_usb_pdata.serial_number = serialno;
 	return 1;
 }
-__setup("androidboot.serialno=", board_serialno_setup);
+__setup("androidboot.serialno=", bravo_board_serialno_setup);
 
 static int __capella_cm3602_power(int on)
 {
@@ -2126,7 +2126,7 @@ static void __init bravo_init(void)
 
 	msm_hw_reset_hook = bravo_reset;
 
-	board_serialno_setup(board_serialno());
+	bravo_board_serialno_setup(board_serialno());
 
 	do_grp_reset();
 	do_sdc1_reset();
