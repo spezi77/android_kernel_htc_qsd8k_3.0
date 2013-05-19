@@ -2181,7 +2181,7 @@ static void __init bravo_init(void)
 /*
         if (is_cdma_version(system_rev)) {
             i2c_register_board_info(0, rev_CX_i2c_devices,
-                                    ARRAY_SIZE(r	platform_device_register(&bravo_timed_gpios);ev_CX_i2c_devices));
+                                    ARRAY_SIZE(rev_CX_i2c_devices));
 	}
 
 */
