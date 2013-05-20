@@ -361,7 +361,7 @@ static int hs_pmic_request_irq(unsigned int gpio, unsigned int *irq,
 		return ret;
 	}
 
-	ret = set_irq_wake(*irq, wake);
+	ret = irq_set_irq_wake(*irq, wake);
 	if (ret < 0) {
 		free_irq(*irq, 0);
 		gpio_free(gpio);

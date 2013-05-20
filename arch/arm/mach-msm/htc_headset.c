@@ -1142,11 +1142,11 @@ static int h2w_probe(struct platform_device *pdev)
 	if (ret < 0)
 		goto err_request_h2w_headset_button_irq;
 
-	ret = set_irq_wake(hi->irq, 1);
+	ret = irq_set_irq_wake(hi->irq, 1);
 	if (ret < 0)
 		goto err_request_input_dev;
 
-	ret = set_irq_wake(hi->irq_btn, 1);
+	ret = irq_set_irq_wake(hi->irq_btn, 1);
 	if (ret < 0)
 		goto err_request_input_dev;
 

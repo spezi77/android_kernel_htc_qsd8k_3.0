@@ -118,7 +118,7 @@ static int capella_cm3602_setup(struct capella_cm3602_data *ip)
 		goto fail_free_p_out;
 	}
 
-	rc = set_irq_wake(irq, 1);
+	rc = irq_set_irq_wake(irq, 1);
 	if (rc < 0) {
 		pr_err("%s: failed to set irq %d as a wake interrupt\n",
 			__func__, irq);
