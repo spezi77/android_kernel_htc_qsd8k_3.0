@@ -178,7 +178,9 @@ static unsigned int bravo_sdslot_status(struct device *dev)
 int bravo_microp_sdslot_status_register(void (*cb)(int, void *), void *);
 unsigned int bravo_microp_sdslot_status(struct device *);
 
+static unsigned int bravo_sd_slot_type = MMC_TYPE_SDIO_WIFI;
 static struct mmc_platform_data bravo_sdslot_data = {
+	.slot_type    		= &bravo_sd_slot_type,
 	.ocr_mask		= BRAVO_MMC_VDD,
 	.status			= bravo_microp_sdslot_status,
 	.register_status_notify	= bravo_microp_sdslot_status_register,
@@ -246,7 +248,9 @@ static unsigned int bravo_wifi_status(struct device *dev)
 	return bravo_wifi_cd;
 }
 
+static unsigned int bravo_wifi_slot_type = MMC_TYPE_SDIO_WIFI;
 static struct mmc_platform_data bravo_wifi_data = {
+	.slot_type		= &bravo_wifi_slot_type;
 	.ocr_mask		= MMC_VDD_28_29,
 	.built_in		= 1,
 	.status			= bravo_wifi_status,
