@@ -250,7 +250,7 @@ static unsigned int bravo_wifi_status(struct device *dev)
 
 static unsigned int bravo_wifi_slot_type = MMC_TYPE_SDIO_WIFI;
 static struct mmc_platform_data bravo_wifi_data = {
-	.slot_type		= &bravo_wifi_slot_type;
+	.slot_type		= &bravo_wifi_slot_type,
 	.ocr_mask		= MMC_VDD_28_29,
 	.built_in		= 1,
 	.status			= bravo_wifi_status,
