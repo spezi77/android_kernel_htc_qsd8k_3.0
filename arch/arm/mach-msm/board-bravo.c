@@ -172,17 +172,6 @@ unsigned msm_num_footswitch_devices = ARRAY_SIZE(msm_footswitch_devices);
 #define MSM_PMEM_SF_SIZE	0x1700000
 #define MSM_AUDIO_SIZE		0x80000
 
-static struct android_pmem_platform_data android_pmem_kernel_ebi1_pdata = {
-	.name = PMEM_KERNEL_EBI1_DATA_NAME,
-	/* if no allocator_type, defaults to PMEM_ALLOCATORTYPE_BITMAP,
-	 * the only valid choice at this time. The board structure is
-	 * set to all zeros by the C runtime initialization and that is now
-	 * the enum value of PMEM_ALLOCATORTYPE_BITMAP, now forced to 0 in
-	 * include/linux/android_pmem.h.
-	 */
-	.cached = 0,
-};
-
 #ifdef CONFIG_KERNEL_PMEM_SMI_REGION
 
 static struct android_pmem_platform_data android_pmem_kernel_smi_pdata = {
@@ -231,14 +220,6 @@ static struct platform_device android_pmem_adsp_device = {
 	.dev = { .platform_data = &android_pmem_adsp_pdata },
 };
 
-/*
-static struct platform_device android_pmem_kernel_ebi1_device = {
-	.name = "android_pmem",
-	.id = 3,
-	.dev = { .platform_data = &android_pmem_kernel_ebi1_pdata },
-};
-*/
-
 #ifdef CONFIG_KERNEL_PMEM_SMI_REGION
 static struct platform_device android_pmem_kernel_smi_device = {
 	.name = "android_pmem",
@@ -253,13 +234,6 @@ static struct platform_device android_pmem_venc_device = {
 	.dev = { .platform_data = &android_pmem_venc_pdata },
 };
 
-static unsigned pmem_kernel_ebi1_size = PMEM_KERNEL_EBI1_SIZE;
-static int __init pmem_kernel_ebi1_size_setup(char *p)
-{
-	pmem_kernel_ebi1_size = memparse(p, NULL);
-	return 0;
-}
-early_param("pmem_kernel_ebi1_size", pmem_kernel_ebi1_size_setup);
 
 static unsigned pmem_sf_size = MSM_PMEM_SF_SIZE;
 static int __init pmem_sf_size_setup(char *p)
@@ -317,7 +291,6 @@ static void __init size_pmem_devices(void)
   size_pmem_device(&android_pmem_adsp_pdata, 0, pmem_adsp_size);
   size_pmem_device(&android_pmem_pdata, 0, pmem_mdp_size);
   size_pmem_device(&android_pmem_venc_pdata, 0, pmem_venc_size);
-  //android_pmem_kernel_ebi1_pdata.size = pmem_kernel_ebi1_size;
   qsd8x50_reserve_table[MEMTYPE_EBI1].size += PMEM_KERNEL_EBI1_SIZE;
 #endif
 }
@@ -326,7 +299,6 @@ static void __init size_pmem_devices(void)
 
 static void __init reserve_memory_for(struct android_pmem_platform_data *p)
 {
-  //qsd8x50_reserve_table[p->memory_type].size += p->size;
   pr_info("%s: reserve %lu bytes from memory %d for %s.\n", __func__, p->size, p->memory_type, p->name);
   qsd8x50_reserve_table[p->memory_type].size += p->size;
 }
@@ -337,7 +309,6 @@ static void __init reserve_pmem_memory(void)
 	reserve_memory_for(&android_pmem_adsp_pdata);
 	reserve_memory_for(&android_pmem_pdata);
 	reserve_memory_for(&android_pmem_venc_pdata);
-	//reserve_memory_for(&android_pmem_kernel_ebi1_pdata);
 #endif
 }
 
@@ -1663,10 +1634,6 @@ static struct platform_device *devices[] __initdata = {
 	&android_pmem_device,
 	&android_pmem_adsp_device,
 	&android_pmem_venc_device,
-    //&android_pmem_kernel_ebi1_device,
-#ifdef CONFIG_720P_CAMERA
-	//&android_pmem_venc_device,
-#endif
 	&msm_kgsl_3d0,
 	&msm_device_i2c,
 	&msm_camera_sensor_s5k3e2fx,
@@ -2134,8 +2101,6 @@ static void __init bravo_init(void)
 	msm_clock_init(&qds8x50_clock_init_data);
 	acpuclk_init(&acpuclk_8x50_soc_data);
 
-	//qsd8x50_init_gpiomux(qsd8x50_gpiomux_cfgs);
-
         /* TODO: CDMA version */
 
         msm_gpios_enable(misc_gpio_table, ARRAY_SIZE(misc_gpio_table));
@@ -2190,8 +2155,6 @@ static void __init bravo_init(void)
 		pr_crit("%s: Unable to initialize MMC\n", __func__);
 
 	msm_pm_set_platform_data(msm_pm_data, ARRAY_SIZE(msm_pm_data));
-//	BUG_ON(msm_pm_boot_init(&msm_pm_boot_pdata));
-//	msm_pm_register_irqs();
 #ifdef CONFIG_USB_G_ANDROID
 	bravo_add_usb_devices();
 #endif
@@ -2200,9 +2163,6 @@ static void __init bravo_init(void)
     	bravo_headset_init();
 
 	platform_device_register(&bravo_timed_gpios);
-
-    	//ds2784_battery_init();
-    	//bravo_reset();
 }
 
 static void __init bravo_fixup(struct machine_desc *desc, struct tag *tags,
