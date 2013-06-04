@@ -345,124 +345,6 @@ struct platform_device msm_device_rtc = {
 	.id = -1,
 };
 
-#if 0
-static struct msm_hsusb_platform_data msm_hsusb_pdata = {
-	.phy_init_seq		= bravo_phy_init_seq,
-	.phy_reset		= bravo_usb_phy_reset,
-	.hw_reset		= bravo_usb_hw_reset,
-	.usb_connected		= notify_usb_connected,
-};
-
-static char *usb_functions_ums[] = {
-	"usb_mass_storage",
-};
-
-static char *usb_functions_ums_adb[] = {
-	"usb_mass_storage",
-	"adb",
-};
-
-static char *usb_functions_rndis[] = {
-	"rndis",
-};
-
-static char *usb_functions_rndis_adb[] = {
-	"rndis",
-	"adb",
-};
-
-#ifdef CONFIG_USB_ANDROID_ACCESSORY
-static char *usb_functions_accessory[] = { "accessory" };
-static char *usb_functions_accessory_adb[] = { "accessory", "adb" };
-#endif
-
-#ifdef CONFIG_USB_ANDROID_DIAG
-static char *usb_functions_adb_diag[] = {
-	"usb_mass_storage",
-	"adb",
-	"diag",
-};
-#endif
-
-static char *usb_functions_all[] = {
-#ifdef CONFIG_USB_ANDROID_RNDIS
-	"rndis",
-#endif
-#ifdef CONFIG_USB_ANDROID_ACCESSORY
-	"accessory",
-#endif
-	"usb_mass_storage",
-	"adb",
-#ifdef CONFIG_USB_ANDROID_ACM
-	"acm",
-#endif
-#ifdef CONFIG_USB_ANDROID_DIAG
-	"diag",
-#endif
-};
-
-static struct android_usb_product usb_products[] = {
-	{
-		.product_id	= 0x0ff9,
-		.num_functions	= ARRAY_SIZE(usb_functions_ums),
-		.functions	= usb_functions_ums,
-	},
-	{
-		.product_id	= 0x0c87,
-		.num_functions	= ARRAY_SIZE(usb_functions_ums_adb),
-		.functions	= usb_functions_ums_adb,
-	},
-	{
-		.product_id	= 0x0FFE,
-		.num_functions	= ARRAY_SIZE(usb_functions_rndis),
-		.functions	= usb_functions_rndis,
-	},
-	/*
-	XXX: there isn't a equivalent in htc's kernel
-	{
-		.product_id	= 0x4e14,
-		.num_functions	= ARRAY_SIZE(usb_functions_rndis_adb),
-		.functions	= usb_functions_rndis_adb,
-	}, */
-#ifdef CONFIG_USB_ANDROID_ACCESSORY
-	{
-		.vendor_id  = USB_ACCESSORY_VENDOR_ID,
-		.product_id  = USB_ACCESSORY_PRODUCT_ID,
-		.num_functions  = ARRAY_SIZE(usb_functions_accessory),
-		.functions  = usb_functions_accessory,
-	},
-	{
-		.vendor_id  = USB_ACCESSORY_VENDOR_ID,
-		.product_id  = USB_ACCESSORY_ADB_PRODUCT_ID,
-		.num_functions  = ARRAY_SIZE(usb_functions_accessory_adb),
-		.functions  = usb_functions_accessory_adb,
-	},
-#endif
-#ifdef CONFIG_USB_ANDROID_DIAG
-	{
-		.product_id	= 0x0c07,
-		.num_functions	= ARRAY_SIZE(usb_functions_adb_diag),
-		.functions	= usb_functions_adb_diag,
-	},
-#endif
-};
-
-#ifdef CONFIG_USB_ANDROID_RNDIS
-static struct usb_ether_platform_data rndis_pdata = {
-	/* ethaddr is filled by board_serialno_setup */
-	.vendorID	= 0x0bb4,
-	.vendorDescr	= "HTC",
-};
-
-static struct platform_device rndis_device = {
-	.name	= "rndis",
-	.id	= -1,
-	.dev	= {
-		.platform_data = &rndis_pdata,
-	},
-};
-#endif
-#endif 
 static struct platform_device bravo_rfkill = {
 	.name = "bravo_rfkill",
 	.id = -1,
@@ -974,15 +856,7 @@ void msm_hsusb_8x50_phy_reset(void)
 	return;
 }
 
-#if 0
-static struct msm_otg_platform_data msm_otg_pdata = {
-	.phy_reset		= msm_hsusb_8x50_phy_reset,
-	.pemp_level		= PRE_EMPHASIS_WITH_20_PERCENT,
-	.cdr_autoreset		= CDR_AUTO_RESET_DISABLE,
-	.drv_ampl		= HS_DRV_AMPLITUDE_DEFAULT,
-	.se1_gating		= SE1_GATING_DISABLE,
-};
-#else
+
 static int bravo_phy_init_seq[] ={0x0C, 0x31, 0x30, 0x32, 0x1D, 0x0D, 0x1D, 0x10, -1};
 
 static struct msm_otg_platform_data msm_otg_pdata = {
@@ -990,27 +864,12 @@ static struct msm_otg_platform_data msm_otg_pdata = {
 	.mode			= USB_PERIPHERAL,
 	.otg_control		= OTG_PHY_CONTROL,
 };
-#endif
-
-#if 0
-static struct msm_hsusb_gadget_platform_data msm_gadget_pdata = {
-	.is_phy_status_timer_on = 1,
-};
-#endif
 
 static uint32_t usb_phy_3v3_table[] =
 {
     PCOM_GPIO_CFG(BRAVO_GPIO_USBPHY_3V3_ENABLE, 0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_4MA)
 };
-#if 0
 
-// modified to further reflect bravo kernel code
-static struct msm_hsusb_platform_data msm_hsusb_pdata = {
-	.phy_init_seq		= bravo_phy_init_seq,
-	.phy_reset		= msm_hsusb_8x50_phy_reset,
-	.accessory_detect = 0, /* detect by ID pin gpio */
-};
-#endif
 static struct usb_mass_storage_platform_data mass_storage_pdata = {
 	.nluns		= 1,
 	.vendor		= "HTC",
@@ -1060,31 +919,6 @@ static struct platform_device android_usb_device = {
 		.platform_data = &android_usb_pdata,
 	},
 };
-#if 0
-static void bravo_add_usb_devices(void)
-{
-#if 0
-	android_usb_pdata.products[0].product_id =
-		android_usb_pdata.product_id;
-	android_usb_pdata.serial_number = board_serialno();
-	msm_hsusb_pdata.serial_number = board_serialno();
-	msm_device_hsusb.dev.platform_data = &msm_hsusb_pdata;
-	config_gpio_table(usb_phy_3v3_table, ARRAY_SIZE(usb_phy_3v3_table));
-	gpio_set_value(BRAVO_GPIO_USBPHY_3V3_ENABLE, 1);
-	platform_device_register(&msm_device_hsusb);
-	platform_device_register(&usb_mass_storage_device);
-#ifdef CONFIG_USB_ANDROID_RNDIS
-	platform_device_register(&rndis_device);
-#endif
-#endif
-	msm_device_otg.dev.platform_data = &msm_otg_pdata;
-	//msm_device_gadget_peripheral.dev.platform_data = &msm_gadget_pdata;
-	msm_device_gadget_peripheral.dev.parent = &msm_device_otg.dev;
-	usb_gpio_init();
-	platform_device_register(&msm_device_gadget_peripheral);
-	platform_device_register(&android_usb_device);
-}
-#endif
 
 void bravo_add_usb_devices(void)
 {
@@ -1755,15 +1589,8 @@ static struct perflock_platform_data bravo_perflock_data = {
 
 static void bravo_reset(void)
 {
-		printk("bravo_reset()\n");
-		gpio_set_value(BRAVO_GPIO_PS_HOLD, 0);
-	// 25 - 16 = 9
-	/*while (1)
-	{
-		printk("bravo_reset()\n");
-	        writel(readl(MSM_GPIOCFG2_BASE + 0x504) | (1 << 9), MSM_GPIOCFG2_BASE + 0x504);// owner
-		gpio_set_value(BRAVO_GPIO_PS_HOLD, 0);
-	}*/
+	printk("bravo_reset()\n");
+	gpio_set_value(BRAVO_GPIO_PS_HOLD, 0);
 }
 
 static void do_grp_reset(void)
@@ -1779,50 +1606,15 @@ static void do_sdc1_reset(void)
    	mdelay(1);
 	*sdc1_clk &= ~(1 << 9);
 }
-/*
-static struct smd_config smd_cdma_default_channels[] = {
-	{0, "DS", NULL, SMD_APPS_MODEM},
-	{19, "DATA3", NULL, SMD_APPS_MODEM},
-	{27, "GPSNMEA", NULL, SMD_APPS_MODEM},
-};
-
-static struct smd_config smd_gsm_default_channels[] = {
-	{0, "DS", NULL, SMD_APPS_MODEM},
-	{27, "GPSNMEA", NULL, SMD_APPS_MODEM},
-};
-*/
 
 static struct msm_pm_boot_platform_data msm_pm_boot_pdata __initdata = {
 	.mode = MSM_PM_BOOT_CONFIG_RESET_VECTOR_VIRT,
 	.v_addr = (unsigned int *)PAGE_OFFSET,
 };
-/*
-static struct msm_gpio msm_i2c_gpios_hw[] = {
-	{ GPIO_CFG(95, 1, GPIO_CFG_INPUT, GPIO_CFG_NO_PULL, GPIO_CFG_16MA), "i2c_pri_clk" },
-	{ GPIO_CFG(96, 1, GPIO_CFG_INPUT, GPIO_CFG_NO_PULL, GPIO_CFG_16MA), "i2c_pri_dat" },
-	{ GPIO_CFG(60, 1, GPIO_CFG_INPUT, GPIO_CFG_NO_PULL, GPIO_CFG_16MA), "i2c_sec_clk" },
-	{ GPIO_CFG(61, 1, GPIO_CFG_INPUT, GPIO_CFG_NO_PULL, GPIO_CFG_16MA), "i2c_sec_dat" },
-};
 
-static struct msm_gpio msm_i2c_gpios_io[] = {
-	{ GPIO_CFG(95, 0, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_16MA), "i2c_pri_clk" },
-	{ GPIO_CFG(96, 0, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_16MA), "i2c_pri_dat" },
-	{ GPIO_CFG(60, 0, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_16MA), "i2c_sec_clk" },
-	{ GPIO_CFG(61, 0, GPIO_CFG_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_16MA), "i2c_sec_dat" },
-};
-*/
 ///////////////////////////////////////////////////////////////////////
 // I2C
 ///////////////////////////////////////////////////////////////////////
-
-// Cotulla: old definition can not be used with new msm i2c driver
-#if 0
-static struct msm_i2c_device_platform_data msm_i2c_pdata = {
-	.i2c_clock = 400000,
-	.clock_strength = GPIO_8MA,
-	.data_strength = GPIO_8MA,
-};
-#else
 
 #define GPIO_I2C_CLK 95
 #define GPIO_I2C_DAT 96
@@ -1859,18 +1651,6 @@ static struct msm_i2c_platform_data msm_i2c_pdata =
 	.rmutex  = 0,
 	.msm_i2c_config_gpio = msm_i2c_gpio_config,
 };
-/*
-static struct msm_i2c_platform_data msm_i2c_pdata = {
-	.clk_freq = 
-	.rsl_id = SMEM_SPINLOCK_I2C,
-	.pri_clk = 95,
-	.pri_dat = 96,
-	.aux_clk = 60,
-	.aux_dat = 61,
-	.msm_i2c_config_gpio = msm_i2c_gpio_config,
-};
-*/
-#endif
 
 static void __init msm_device_i2c_init(void)
 {
@@ -1916,20 +1696,6 @@ static struct msm_pm_platform_data msm_pm_data[MSM_PM_SLEEP_MODE_NR] = {
 	},
 };
 
-/*
-static void __init msm_device_i2c_init(void)
-{
-	printk("%s\n", __func__);
-	if (msm_gpios_request(msm_i2c_gpios_hw, ARRAY_SIZE(msm_i2c_gpios_hw)))
-		pr_err("failed to request I2C gpios\n");
-
-	msm_i2c_pdata.rmutex = 1;
-	msm_i2c_pdata.pm_lat =
-		msm_pm_data[MSM_PM_SLEEP_MODE_POWER_COLLAPSE_NO_XO_SHUTDOWN]
-		.latency;
-	msm_device_i2c.dev.platform_data = &msm_i2c_pdata;
-}
-*/
 static struct msm_gpio bma_spi_gpio_config_data[] = {
 	{ GPIO_CFG(22, 0, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA), "bma_irq" },
 };
@@ -2059,13 +1825,7 @@ static void __init bravo_init(void)
 {
 	int ret;
 
-	printk("bravo_init() revision=%d\n", system_rev);
-	/*
-	if (is_cdma_version(system_rev))
-		smd_set_channel_list(smd_cdma_default_channels,
-				ARRAY_SIZE(smd_cdma_default_channels));
-	*/
-
+	pr_info("bravo_init() revision=%d\n", system_rev);
 	msm_hw_reset_hook = bravo_reset;
 
 	bravo_board_serialno_setup(board_serialno());
@@ -2076,18 +1836,8 @@ static void __init bravo_init(void)
 	msm_clock_init(&qds8x50_clock_init_data);
 	acpuclk_init(&acpuclk_8x50_soc_data);
 
-        /* TODO: CDMA version */
+    msm_gpios_enable(misc_gpio_table, ARRAY_SIZE(misc_gpio_table));
 
-        msm_gpios_enable(misc_gpio_table, ARRAY_SIZE(misc_gpio_table));
-/*
-        if (is_cdma_version(system_rev)) {
-            //bcm_bt_lpm_pdata.gpio_wake = BRAVO_CDMA_GPIO_BT_WAKE;
-            //bravo_flashlight_data.torch = BRAVO_CDMA_GPIO_FLASHLIGHT_TORCH;
-            config_gpio_table(bt_gpio_table_rev_CX, ARRAY_SIZE(bt_gpio_table_rev_CX));
-	} else {
-            config_gpio_table(bt_gpio_table, ARRAY_SIZE(bt_gpio_table));
-	}
-*/
 	gpio_request(BRAVO_GPIO_TP_LS_EN, "tp_ls_en");
 	gpio_direction_output(BRAVO_GPIO_TP_LS_EN, 0);
 	gpio_request(BRAVO_GPIO_TP_EN, "tp_en");
@@ -2102,8 +1852,8 @@ static void __init bravo_init(void)
 
 #ifdef CONFIG_SERIAL_MSM_HS
 	msm_device_uart_dm1.dev.platform_data = &msm_uart_dm1_pdata;
-    	msm_device_uart_dm1.name = "msm_serial_hs_brcm"; /* for bcm */
-    	msm_device_uart_dm1.resource[3].end = 6;
+    msm_device_uart_dm1.name = "msm_serial_hs_brcm"; /* for bcm */
+    msm_device_uart_dm1.resource[3].end = 6;
 #endif
 
 	config_gpio_table(bt_gpio_table, ARRAY_SIZE(bt_gpio_table));
@@ -2118,13 +1868,7 @@ static void __init bravo_init(void)
 
 	i2c_register_board_info(0, base_i2c_devices, ARRAY_SIZE(base_i2c_devices));
 	spi_register_board_info(msm_spi_board_info, ARRAY_SIZE(msm_spi_board_info));
-/*
-        if (is_cdma_version(system_rev)) {
-            i2c_register_board_info(0, rev_CX_i2c_devices,
-                                    ARRAY_SIZE(rev_CX_i2c_devices));
-	}
 
-*/
 	ret = bravo_init_mmc(system_rev, debug_uart);
 	if (ret != 0)
 		pr_crit("%s: Unable to initialize MMC\n", __func__);

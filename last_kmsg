@@ -1,5 +1,5 @@
 [    0.000000] Initializing cgroup subsys cpu
-[    0.000000] Linux version 3.0.16-evervolv-turba-jellybean+ (nonamer@ubuntu) (gcc version 4.5.4 20111003 (prerelease) (Linaro GCC 4.5-2011.10) ) #2 PREEMPT Thu May 16 21:34:51 MSK 2013
+[    0.000000] Linux version 3.0.16-evervolv-turba-jellybean+ (nikez@Perfection) (gcc version 4.4.1 (Sourcery G++ Lite 2010q1-188) ) #1 PREEMPT Tue Jun 4 12:11:07 CEST 2013
 [    0.000000] Ignoring unrecognised tag 0x4d534d76
 [    0.000000] Partition (from atag) misc -- Offset:ffb Size:5
 [    0.000000] Partition (from atag) recovery -- Offset:212 Size:24
@@ -11,25 +11,25 @@
 [    0.000000] CAM_AWB_CAL Data size = 514 , 0x59504550, size = 2048
 [    0.000000] Ignoring unrecognised tag 0x41387898
 [    0.000000] parse_tag_ps_calibration: ps_kparam1 = 0x0, ps_kparam2 = 0x0
-[    0.000000] size_pmem_device: pmem pmem_adsp requests 42991616 bytes dynamically.
+[    0.000000] size_pmem_device: pmem pmem_adsp requests 44060672 bytes dynamically.
 [    0.000000] size_pmem_device: pmem pmem requests 33554432 bytes dynamically.
 [    0.000000] size_pmem_device: pmem pmem_venc requests 8388608 bytes dynamically.
-[    0.000000] reserve_memory_for: reserve 42991616 bytes from memory 3 for pmem_adsp.
+[    0.000000] reserve_memory_for: reserve 44060672 bytes from memory 3 for pmem_adsp.
 [    0.000000] reserve_memory_for: reserve 33554432 bytes from memory 3 for pmem.
 [    0.000000] reserve_memory_for: reserve 8388608 bytes from memory 3 for pmem_venc.
-[    0.000000] memory pool 3 (start 36500000 size 5200000) initialized
+[    0.000000] memory pool 3 (start 36400000 size 5300000) initialized
 [    0.000000] smem_find(137, 72): wrong size 56
 [    0.000000] smem_find(137, 64): wrong size 56
 [    0.000000] smem_find(137, 64): wrong size 56
 [    0.000000] socinfo_init: v2, id=36, ver=2.0, raw_id=576, raw_ver=2
-[    0.000000] Kernel command line: board_bravo.disable_uart3=0 board_bravo.usb_h2w_sw=0 board_bravo.disable_sdcard=0 diag.enabled=0 board_bravo.debug_uart=0 smisize=0 userdata_sel=0 androidboot.emmc=false  androidboot.baseband=5.17.05.23 androidboot.cid=HTC__A07 androidboot.carrier=HTC-Russia androidboot.mid=PB9920000 androidboot.keycaps=qwerty androidboot.mode=normal androidboot.serialno=SH0BWPL13225 androidboot.bootloader=6.93.1002 no_console_suspend=1 msmsdcc_sdioirq=1 wire.search_count=5
+[    0.000000] Kernel command line: board_bravo.disable_uart3=0 board_bravo.usb_h2w_sw=0 board_bravo.disable_sdcard=0 diag.enabled=0 board_bravo.debug_uart=0 smisize=0 userdata_sel=0 androidboot.emmc=false  androidboot.baseband=5.17.05.23 androidboot.cid=HTC__Y13 androidboot.carrier=HTC-Nor androidboot.mid=PB9920000 androidboot.keycaps=qwerty androidboot.mode=normal androidboot.serialno=SH08RPL05562 androidboot.bootloader=6.93.1002 no_console_suspend=1 msmsdcc_sdioirq=1 wire.search_count=5
 [    0.000000] board_bootloader_setup: 6.93.1002
 [    0.000000] board_bootloader_setup: MFG BUILD
 [    0.000000] PID hash table entries: 2048 (order: 1, 8192 bytes)
 [    0.000000] Dentry cache hash table entries: 65536 (order: 6, 262144 bytes)
 [    0.000000] Inode-cache hash table entries: 32768 (order: 5, 131072 bytes)
-[    0.000000] Memory: 232MB 101MB = 333MB total
-[    0.000000] Memory: 324060k/324060k available, 100900k reserved, 0K highmem
+[    0.000000] Memory: 232MB 100MB = 332MB total
+[    0.000000] Memory: 323000k/323000k available, 101960k reserved, 0K highmem
 [    0.000000] Virtual kernel memory layout:
 [    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
 [    0.000000]     fixmap  : 0xfff00000 - 0xfffe0000   ( 896 kB)
@@ -38,818 +38,698 @@
 [    0.000000]     lowmem  : 0xc0000000 - 0xdb700000   ( 439 MB)
 [    0.000000]     modules : 0xbf000000 - 0xc0000000   (  16 MB)
 [    0.000000]       .init : 0xc0008000 - 0xc0037000   ( 188 kB)
-[    0.000000]       .text : 0xc0037000 - 0xc05c4000   (5684 kB)
-[    0.000000]       .data : 0xc05c4000 - 0xc061cfc0   ( 356 kB)
-[    0.000000]        .bss : 0xc061cfe4 - 0xc0ca7308   (6697 kB)
+[    0.000000]       .text : 0xc0037000 - 0xc05cb000   (5712 kB)
+[    0.000000]       .data : 0xc05cc000 - 0xc0626140   ( 361 kB)
+[    0.000000]        .bss : 0xc0626164 - 0xc0cb04a8   (6697 kB)
 [    0.000000] SLUB: Genslabs=13, HWalign=32, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
 [    0.000000] NR_IRQS:293
 [    0.000000] sched_clock: 32 bits at 32kHz, resolution 30517ns, wraps every 131071999ms
-[    0.000183] Calibrating delay loop... 511.18 BogoMIPS (lpj=2555904)
+[    0.000213] Calibrating delay loop... 511.18 BogoMIPS (lpj=2555904)
 [    0.050109] pid_max: default: 32768 minimum: 301
-[    0.050598] Mount-cache hash table entries: 512
-[    0.052642] Initializing cgroup subsys cpuacct
-[    0.052703] Initializing cgroup subsys freezer
-[    0.052703] Initializing cgroup subsys blkio
-[    0.052947] CPU: Testing write buffer coherency: ok
-[    0.060913] print_constraints: dummy: 
-[    0.061096] rdev_init_debugfs: Error-Bad Function Input
-[    0.061737] NET: Registered protocol family 16
-[    0.067321] Max ACPU freq from efuse data is 998400 KHz
-[   11.732910] ACPU running at 768000 KHz
-[   11.732910] 5 scaling frequencies supported.
-[   11.734588] ram_console: got buffer at 3a00000, size 40000
-[   11.734802] ram_console: found existing buffer, size 31445, start 31445
-[   11.884826] console [ram0] enabled
-[   11.887451] bravo_init_mmc()+
-[   11.887939] bravo_init_mmc()-
-[   11.888153] bravo_add_usb_devices rev: 132
-[   11.888366] failed to request gpio ulpi_dir
-[   11.891052] print_constraints: fs_gfx3d: normal 
-[   11.907653] bio: create slab <bio-0> at 0
-[   11.909301] msm_i2c_probe
-[   11.909606] msm_i2c_probe: clk_ctl 35d, 100000 Hz
-[   11.913116] print_constraints: dcdc1: 800 <--> 1350 mV at 1300 mV 
-[   11.913604] rdev_init_debugfs: Error-Bad Function Input
-[   11.914123] print_constraints: dcdc2: 1260 mV 
-[   11.914672] rdev_init_debugfs: Error-Bad Function Input
-[   11.915252] print_constraints: dcdc3: 800 <--> 3300 mV at 1800 mV 
-[   11.915649] rdev_init_debugfs: Error-Bad Function Input
-[   11.916748] print_constraints: ldo1: 1000 <--> 3150 mV at 2800 mV 
-[   11.917175] rdev_init_debugfs: Error-Bad Function Input
-[   11.917663] print_constraints: ldo2: 3300 mV 
-[   11.918212] rdev_init_debugfs: Error-Bad Function Input
-[   11.920806] Bluetooth: Core ver 2.16
-[   11.921173] NET: Registered protocol family 31
-[   11.921325] Bluetooth: HCI device and connection manager initialized
-[   11.921600] Bluetooth: HCI socket layer initialized
-[   11.922698] cfg80211: Calling CRDA to update world regulatory domain
-[   11.923950] Switching to clocksource gp_timer
-[   11.926513] [TTY_IO] create tty_wq for smd0
-[   11.926971] spi clk = 0x0
-[   11.927185] spi: SPI_CONFIG=0
-[   11.927337] spi: SPI_IO_CONTROL=0
-[   11.927459] spi: SPI_OPERATIONAL=0
-[   11.927581] spi: SPI_ERROR_FLAGS_EN=0
-[   11.927795] spi: SPI_ERROR_FLAGS=0
-[   11.927917] -msm_spi_probe()
-[   11.928771] NET: Registered protocol family 2
-[   11.929382] IP route cache hash table entries: 4096 (order: 2, 16384 bytes)
-[   11.930541] TCP established hash table entries: 16384 (order: 5, 131072 bytes)
-[   11.931488] TCP bind hash table entries: 16384 (order: 7, 589824 bytes)
-[   11.943542] TCP: Hash tables configured (established 16384 bind 16384)
-[   11.943725] TCP reno registered
-[   11.943878] UDP hash table entries: 256 (order: 2, 20480 bytes)
-[   11.944549] UDP-Lite hash table entries: 256 (order: 2, 20480 bytes)
-[   11.945800] NET: Registered protocol family 1
-[   11.946685] Unpacking initramfs...
-[   11.965393] Freeing initrd memory: 180K
-[   11.965820] PMU: registered new PMU device of type 0
-[   11.984375] Notify: smsm init
-[   11.993988] rpcrouter_smd_remote_notify: smd opened 0x  (null)
-[   11.997344] dma_test_init, minor number 49
-[   11.998474] Registered led device: flashlight
-[   11.998657] [FLT]flashlight_probe: led_count = 0
-[   11.998901] [FLT]flashlight_probe: The Flashlight Driver is ready
-[   11.999725] htc_battery_init
-[   12.000122] Battery Probe
-[   12.009094] htc_battery_core_probe
-[   12.016815] [BATT-DEBUG: DISPLAYING ADDITIONAL BATTERY INFO]
-[   12.017059] [BATT-DEBUG]: Batt ID:0 Batt_vol:0 Batt_temp:0
-[   12.017211] [BATT-DEBUG]: Batt_level:0 Batt_charging_source: 0 Batt_enabled: 0 Full_bat: 0
-[   12.017456] [BATT] err:smem_alloc fail at 343424005 (1970-01-01 00:00:00.343302016 UTC)
-[   12.017822] [BATT] htc_cable_status_update: 0 -> 0
-[   12.019927] mdp_probe: initialized
-[   12.020202] spi: SPI_CONFIG=88
-[   12.020446] spi: SPI_IO_CONTROL=401
-[   12.020568] spi: SPI_OPERATIONAL=85
-[   12.020690] spi: SPI_ERROR_FLAGS_EN=7f
-[   12.020935] spi: SPI_ERROR_FLAGS=7f
-[   12.021057] -bravo_init_spi_hack()
-[   12.021240] bravo_init_panel: tft panel
-[   12.022003] Registered led device: lcd-backlight
-[   12.035247] RPC_TIME_TOD_SET_APPS_BASES:
-[   12.035247] 	tick = 478184
-[   12.035278] 	stamp = 909522464
-[   12.037963] bravo-microp 0-0066: microp version [05][1D]
-[   12.038452] Registered led device: green
-[   12.039154] Registered led device: amber
-[   12.039550] Registered led device: blue
-[   12.039916] Registered led device: button-backlight
-[   12.040557] H2W: htc_35mm_jack driver register
-[   12.042510] input: h2w headset as /devices/virtual/input/input0
-[   12.048583] microp_spi_vote_enable: Changing SPI [1]
-[   12.075347] i2c-core: driver [bravo-microp] using legacy suspend method
-[   12.075592] i2c-core: driver [bravo-microp] using legacy resume method
-[   12.076019] tpa2018d1_init
-[   12.076263] i2c-core: driver [tpa2018d1] using legacy suspend method
-[   12.076507] i2c-core: driver [tpa2018d1] using legacy resume method
-[   12.085418] ashmem: initialized
-[   12.107788] fuse init (API version 7.16)
-[   12.108917] yaffs: yaffs built May 16 2013 21:28:20 Installing.
-[   12.115631] io scheduler noop registered
-[   12.115753] io scheduler deadline registered
-[   12.116394] io scheduler cfq registered
-[   12.117156] io scheduler bfq registered (default)
-[   12.117401] start plist test
-[   12.121673] end plist test
-[   12.125335] [CLK] clk_set_rate: failed to set clk: MDP_LCDC_PAD_PCLK_CLK, rate=24576000, flags=0x200, rc=-5
-[   12.126312] setup_fb_info msmfb->xres 480, msmfb->yres 800
-[   12.127014] msmfb_probe() installing 480 x 800 panel
-[   12.128387] load_565rle_image: Can not open /logo.rle
-[   12.128662] mdp_lcdc_probe: initialized
-[   12.130126] msm_serial: detected port #0
-[   12.130676] msm_serial.0: ttyMSM0 at MMIO 0xa9a00000 (irq = 229) is a MSM
-[   12.132202] msm_serial: driver initialized
-[   12.133209] msm_serial_hs_init failed to load
-[   12.134460] [BT]BRCM chip
-[   12.134826] [CLK] clk_set_rate: failed to set clk: GP_CLK, rate=7372800, flags=0x200, rc=-5
-[   12.135070] [BT]Error setting clock rate on UART
-[   12.135284] msm_serial_hs_brcm: probe of msm_serial_hs_brcm.0 failed with error -5
-[   12.135864] [BT]msm_serial_hs module loaded
-[   12.138458] kgsl kgsl-3d0: |kgsl_gpummu_init| MMU type set for device is GPUMMU
-[   12.147827] loop: module loaded
-[   12.148223] pmem: Initializing pmem as cached
-[   12.149108] allocating 33554432 bytes at 36500000 physical for pmem
-[   12.149444] pmem: Initializing pmem_adsp as cached
-[   12.149993] allocating 42991616 bytes at 38500000 physical for pmem_adsp
-[   12.150299] pmem: Initializing pmem_venc as cached
-[   12.150787] allocating 8388608 bytes at 3ae00000 physical for pmem_venc
-[   12.151275] AKM8973 compass driver: init
-[   12.153289] input: compass as /devices/virtual/input/input1
-[   12.154083] Error: Driver 'tps65023' is already registered, aborting...
-[   12.156158] msm_nand_probe: phys addr 0xa0a00000 
-[   12.156311] msm_nand_probe: dmac 0x7
-[   12.156463] msm_nand_probe: allocated dma buffer at ffdb2000, dma_addr 3630e000
-[   12.158050] ONFI probe : CRC Check failed on ONFI Parameter data 
-[   12.158416] status: c00020
-[   12.158538] nandid: 5510bcad maker ad device bc
-[   12.158752] Found a supported NAND device
-[   12.158996] NAND Id  : 0x5510bcad
-[   12.159118] Buswidth : 16 Bits
-[   12.159240] Density  : 512 MByte
-[   12.159362] Pagesize : 2048 Bytes
-[   12.159606] Erasesize: 131072 Bytes
-[   12.159729] Oobsize  : 64 Bytes
-[   12.159851] CFG0 Init  : 0xa85408c0
-[   12.160095] CFG1 Init  : 0x0004745e
-[   12.160217] ECCBUFCFG  : 0x00000203
-[   12.160339] Creating 6 MTD partitions on "msm_nand":
-[   12.160583] 0x00001ff60000-0x000020000000 : "misc"
-[   12.165191] 0x000004240000-0x0000046c0000 : "recovery"
-[   12.172271] 0x0000046c0000-0x0000049c0000 : "boot"
-[   12.177673] 0x0000049c0000-0x0000143c0000 : "system"
-[   12.428161] 0x0000143c0000-0x000016bc0000 : "cache"
-[   12.470397] 0x000016bc0000-0x00001ff60000 : "userdata"
-[   12.619842] [PPP] ppp_init disable ppp debug msg
-[   12.620086] PPP generic driver version 2.4.2
-[   12.620971] PPP Deflate Compression module registered
-[   12.621124] PPP BSD Compression module registered
-[   12.624633] PPP MPPE Compression module registered
-[   12.625091] NET: Registered protocol family 24
-[   12.628204] tun: Universal TUN/TAP device driver, 1.6
-[   12.628356] tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
-[   12.629608] rmnet_init: SMD devices[8]
-[   12.640716] [USB] msm_otg probe
-[   12.641113] [CLK] clk_set_rate: failed to set clk: USB_HS_CLK, rate=60000000, flags=0x0, rc=-5
-[   12.641510] [USB] OTG regs = db812000
-[   12.643066] [USB] ci13xxx_msm_probe
-[   12.643432] [USBH] peripheral driver registered w/ tranceiver
-[   12.643768] [USBH] msm_otg_sm_work: state:UNDEFINED bit:0x00000000
-[   12.644012] [USB] OTG_STATE_UNDEFINED state
-[   12.644134] [USBH] msm_otg_reset
-[   12.646362] msm_hsusb msm_hsusb: [usb_gadget_probe_driver] hw_ep_max = 32
-[   12.647247] [USB] android_init_functions rndis init
-[   12.647827] [USB] android_init_functions accessory init
-[   12.648803] [USB] android_init_functions mtp init
-[   12.649108] [USB] android_init_functions ptp init
-[   12.649993] android_usb gadget: Mass Storage Function, version: 2009/09/11
-[   12.650146] android_usb gadget: Number of LUNs=3
-[   12.650390]  lun0: LUN: removable file: (no medium)
-[   12.650512]  lun1: LUN: removable file: (no medium)
-[   12.650756]  lun2: LUN: removable read only CD-ROM file: (no medium)
-[   12.650939] [USB] android_init_functions mass_storage init
-[   12.651580] [USB] android_init_functions adb init
-[   12.652008] [USB] android_init_functions diag init
-[   12.652313] [USB] android_init_functions modem init
-[   12.652740] [USB] android_init_functions serial init
-[   12.653411] [USB] android_init_functions projector init
-[   12.653808] android_usb gadget: android_usb ready
-[   12.655609] bravo_ts_power: power 1
-[   12.668853] [USBH] phy_reset: success
-[   12.774902] [USBH] ulpi: write 0x0c to 0x31
-[   12.775054] [USBH] ulpi: write 0x30 to 0x32
-[   12.775177] [USBH] ulpi: write 0x1d to 0x0d
-[   12.775329] [USBH] ulpi: write 0x1d to 0x10
-[   12.775512] [USB] OTG_STATE_B_IDLE state
-[   12.775726] [USBH] b_sess_vld
-[   12.805480] msm_i2c msm_i2c.0: [MSM I2C Err] status = 0x63C8, addr = 0x40, flags = 0x00, last_addr = 40, reg = 0xE4, last_reg = 0xF4, last_flag = 0x00, cnt = 1, pos = 0
-[   12.805786] msm_i2c msm_i2c.0: (0080) Error during data xfer (-5) (E4, 00)
-[   12.875183] [USBH] msm_chg_detect_work: state:CHG_STATE_UNDEFINED
-[   12.915191] synaptics_ts_probe: Product Major Version 1
-[   12.916046] synaptics_ts_probe: Product Minor Version 1
-[   12.916778] synaptics_ts_probe: product property 2
-[   12.917602] synaptics_ts_probe: device control 81
-[   12.918334] synaptics_ts_probe: interrupt enable 1
-[   12.920501] synaptics_ts_probe: 0xe0: 1 1 1 2 1 1 0 0
-[   12.921783] synaptics_ts_probe: Sensor properties 701
-[   12.925476] synaptics_ts_probe: max_x 4024, max_y 6604
-[   12.925720] synaptics_ts_probe: inactive_x -8 -8, inactive_y -41 -41
-[   12.925842] synaptics_ts_probe: snap_x 0-0 0-0, snap_y 0-0 0-0
-[   12.926605] input: synaptics-rmi-touchscreen as /devices/virtual/input/input2
-[   12.928558] synaptics_ts_probe: Start touchscreen synaptics-rmi-touchscreen in interrupt mode
-[   12.929199] capella_cm3602_probe: probe
-[   12.929992] input: proximity as /devices/virtual/input/input3
-[   12.931579] capella_cm3602_setup
-[   12.931823] capella_cm3602_setup: gpio 120 request failed (-16)
-[   12.936096] capella_cm3602: probe of capella_cm3602 failed with error -16
-[   12.937408] GPIO Matrix Keypad Driver: Start keypad matrix for bravo-keypad in interrupt mode
-[   12.938049] GPIO Input Driver: Start gpio inputs for bravo-keypad in interrupt mode
-[   12.938903] input: bravo-keypad as /devices/virtual/input/input4
-[   12.940979] input: lightsensor-level as /devices/virtual/input/input5
-[   12.941650] lightsensor_probe: request_irq(325) failed for (-22)
-[   12.941925] lightsensor_microp: probe of lightsensor_microp.0 failed with error -22
-[   12.942443] using input dev h2w headset for key reset
-[   12.942718] using input dev bravo-keypad for key reset
-[   12.943359] gpio_keys_scan_keys: key 1-74, 0 (94) changed to 0
-[   12.944244] input: curcial-oj as /devices/virtual/input/input6
-[   12.944793] using input dev curcial-oj for key reset
-[   12.946868] curcial_oj_poweron: OJ power enable(1)
-[   12.958557] microp_oj_interrupt_mode: microp_interrupt_enable called
-[   12.958801] microp_spi_vote_enable: Changing OJ interrupt mode [1]
-[   12.960632] microp_spi_vote_enable: already in voted state, [spi_device 4,enable 1], [spi_status 1, spi_devices_vote 5]
-[   12.962493] curcial_oj_shutdown
-[   12.975097] [USBH] msm_chg_detect_work: state:CHG_WAIT_FOR_DCD
-[   13.003692] OpticalJoystick Device ID: 0d
-[   13.007019] OJ Driver: Revision : 02
-[   13.010192] request_irq failed
-[   13.011840] microp_oj_interrupt_mode: microp_interrupt_disable called
-[   13.011962] microp_spi_vote_enable: Changing OJ interrupt mode [0]
-[   13.013885] microp_spi_vote_enable: already in voted state, [spi_device 4,enable 0], [spi_status 1, spi_devices_vote 1]
-[   13.015930] curcial_oj_poweron: OJ power enable(0)
-[   13.016632] curcial_oj: probe of curcial_oj failed with error -12
-[   13.018035] RTC Registering with rs30000048
-[   13.020568] msm_rpc_client_req: RPC call was not successful (3)
-[   13.020843] msmrtc_setup_cb: RPC client registration for PROC:12 failed
-[   13.020965] rs30000048 rs30000048.65536: msmrtc_probe: Could not initialize RPC callback
-[   13.022644] msmrtc_tod_proc_result: 05/16/2013 17:40:24 (03)
-[   13.024261] using rtc device, msm_rtc, for alarms
-[   13.024414] rs30000048 rs30000048.65536: rtc core: registered msm_rtc as rtc0
-[   13.026184] msmrtc_tod_proc_result: 05/16/2013 17:40:24 (03)
-[   13.026550] rs30000048 rs30000048.65536: rtc core: registered msm_rtc_secure as rtc1
-[   13.027893] lirc_dev: IR Remote Control driver registered, major 246 
-[   13.028137] IR NEC protocol handler initialized
-[   13.028381] IR RC5(x) protocol handler initialized
-[   13.028503] IR RC6 protocol handler initialized
-[   13.028747] IR JVC protocol handler initialized
-[   13.028869] IR Sony protocol handler initialized
-[   13.029022] IR RC5 (streamzap) protocol handler initialized
-[   13.029235] IR LIRC bridge handler initialized
-[   13.030792] [CAM]s5k3e2fx_sensor_probe()
-[   13.075012] [USBH] msm_chg_detect_work: state:CHG_WAIT_FOR_DCD
-[   13.125152] Driver for 1-wire Dallas network protocol.
-[   13.126770] msm_i2c msm_i2c.0: [MSM I2C Err] status = 0x63C8, addr = 0x18, flags = 0x00, last_addr = 18, reg = 0xC3, last_reg = 0x00, last_flag = 0x01, cnt = 0, pos = 2
-[   13.127075] msm_i2c msm_i2c.0: (0030) Error during data xfer (-5) (C3, 00)
-[   13.131042] device-mapper: uevent: version 1.0.3
-[   13.132415] device-mapper: ioctl: 4.20.0-ioctl (2011-02-02) initialised: dm-devel@redhat.com
-[   13.132751] Bluetooth: HCI UART driver ver 2.2
-[   13.132904] Bluetooth: HCI H4 protocol initialized
-[   13.133148] Bluetooth: HCILL protocol initialized
-[   13.139923] mmc0: Qualcomm MSM SDCC-core at 0x00000000a0300000 irq 24,0 dma 8 dmacrcri 6
-[   13.140289] mmc0: Platform slot type: N/A
-[   13.140441] mmc0: 8 bit data mode disabled
-[   13.140563] mmc0: 4 bit data mode disabled
-[   13.141052] mmc0: polling status mode disabled
-[   13.141418] mmc0: MMC clock 144000 -> 49152000 Hz, PCLK 64000000 Hz
-[   13.141784] mmc0: Slot eject status = 1
-[   13.141937] mmc0: Power save feature enable = 1
-[   13.142089] mmc0: DM non-cached buffer at ffd80000, dma_addr 0x363c0000
-[   13.142547] mmc0: DM cmd busaddr 0x363c0000, cmdptr busaddr 0x363d7f40
-[   13.148803] mmc1: Qualcomm MSM SDCC-core at 0x00000000a0400000 irq 26,0 dma 8 dmacrcri 7
-[   13.148956] mmc1: Platform slot type: N/A
-[   13.149200] mmc1: 8 bit data mode disabled
-[   13.149566] mmc1: 4 bit data mode disabled
-[   13.149932] mmc1: polling status mode disabled
-[   13.150299] mmc1: MMC clock 144000 -> 49152000 Hz, PCLK 64000000 Hz
-[   13.150451] mmc1: Slot eject status = 0
-[   13.151184] mmc1: Power save feature enable = 1
-[   13.151550] mmc1: DM non-cached buffer at ffd60000, dma_addr 0x363e0000
-[   13.151916] mmc1: DM cmd busaddr 0x363e0000, cmdptr busaddr 0x363f7f40
-[   13.161132] logger: created 256K log 'log_main'
-[   13.166870] logger: created 256K log 'log_events'
-[   13.167999] logger: created 256K log 'log_radio'
-[   13.169006] logger: created 256K log 'log_system'
-[   13.172790] zram: num_devices not specified. Using default: 1
-[   13.172943] zram: Creating 1 devices ...
-[   13.174713] [USBH] msm_chg_detect_work: state:CHG_WAIT_FOR_DCD
-[   13.178314] GACT probability NOT on
-[   13.178588] Mirror/redirect action on
-[   13.178985] u32 classifier
-[   13.179351]     Actions configured
-[   13.179779] Netfilter messages via NETLINK v0.30.
-[   13.181091] nf_conntrack version 0.5.0 (5066 buckets, 20264 max)
-[   13.186798] ctnetlink v0.93: registering with nfnetlink.
-[   13.188110] NF_TPROXY: Transparent proxy support initialized, version 4.1.0
-[   13.188262] NF_TPROXY: Copyright (c) 2006-2007 BalaBit IT Ltd.
-[   13.206787] xt_time: kernel timezone is -0000
-[   13.218750] ip_tables: (C) 2000-2006 Netfilter Core Team
-[   13.225036] arp_tables: (C) 2002 David S. Miller
-[   13.231414] TCP cubic registered
-[   13.239227] NET: Registered protocol family 10
-[   13.248199] Mobile IPv6
-[   13.248748] ip6_tables: (C) 2000-2006 Netfilter Core Team
-[   13.250793] IPv6 over IPv4 tunneling driver
-[   13.260375] NET: Registered protocol family 17
-[   13.260894] NET: Registered protocol family 15
-[   13.262786] Bridge firewalling registered
-[   13.263519] ######## bthid_init: ########
-[   13.264770] ######## bthid_init: done ########
-[   13.265258] lib80211: common routines for IEEE802.11 drivers
-[   13.267456] lib80211_crypt: registered algorithm 'NULL'
-[   13.267700] VFP support v0.3: implementor 51 architecture 64 part 0f variant 0 rev 1
-[   13.268035] ThumbEE CPU extension supported.
-[   13.274780] [USBH] msm_chg_detect_work: state:CHG_WAIT_FOR_DCD
-[   13.307525] clock_late_init() disabled 27 unused clocks
-[   13.309478] [Port list] init()
-[   13.309600] [Port list] Virtual Address for port_list: [f81b2790]
-[   13.309844] [Port list] Physical Address for port_list: [1B2790]
-[   13.316680] bravo_wifi_init: start
-[   13.323699] regulator_init_complete: ldo2: incomplete constraints, leaving on
-[   13.325408] regulator_init_complete: ldo1: incomplete constraints, leaving on
-[   13.326843] regulator_init_complete: dcdc3: incomplete constraints, leaving on
-[   13.328308] regulator_init_complete: dcdc2: incomplete constraints, leaving on
-[   13.329864] regulator_init_complete: dcdc1: incomplete constraints, leaving on
-[   13.333038] msmrtc_tod_proc_result: 05/16/2013 17:40:24 (03)
-[   13.333374] rs30000048 rs30000048.65536: setting system clock to 2013-05-16 17:40:24 UTC (1368726024)
-[   13.336547] BUG: key d584ee8c not in .data!
-[   13.336700] ------------[ cut here ]------------
-[   13.337188] WARNING: at kernel/lockdep.c:2885 lockdep_init_map+0xfc/0x50c()
-[   13.337371] Modules linked in:
-[   13.337951] Backtrace: 
-[   13.338562] [<c003ffac>] (dump_backtrace+0x0/0x110) from [<c0461614>] (dump_stack+0x18/0x1c)
-[   13.338867]  r6:c05455f7 r5:00000b45 r4:00000000 r3:00000002
-[   13.339752] [<c04615fc>] (dump_stack+0x0/0x1c) from [<c00882b8>] (warn_slowpath_common+0x54/0x6c)
-[   13.340026] [<c0088264>] (warn_slowpath_common+0x0/0x6c) from [<c00882f4>] (warn_slowpath_null+0x24/0x2c)
-[   13.340423]  r8:d585b9c0 r7:00000000 r6:00000000 r5:d584ee8c r4:d585ba08
-[   13.341613] r3:00000009
-[   13.342132] [<c00882d0>] (warn_slowpath_null+0x0/0x2c) from [<c00b5b44>] (lockdep_init_map+0xfc/0x50c)
-[   13.342315] [<c00b5a48>] (lockdep_init_map+0x0/0x50c) from [<c0150018>] (sysfs_add_file_mode+0x58/0xb8)
-[   13.342742] [<c014ffc0>] (sysfs_add_file_mode+0x0/0xb8) from [<c0152840>] (internal_create_group+0x110/0x190)
-[   13.343017]  r6:d585b980 r5:d5876384 r4:d5876360
-[   13.343780] [<c0152730>] (internal_create_group+0x0/0x190) from [<c01528f4>] (sysfs_create_group+0x18/0x1c)
-[   13.344024] [<c01528dc>] (sysfs_create_group+0x0/0x1c) from [<c0010140>] (msm_pm_init+0x2ac/0x48c)
-[   13.344451] [<c000fe94>] (msm_pm_init+0x0/0x48c) from [<c0037468>] (do_one_initcall+0x9c/0x170)
-[   13.344940] [<c00373cc>] (do_one_initcall+0x0/0x170) from [<c00089dc>] (kernel_init+0x80/0x124)
-[   13.345214]  r8:00000000 r7:00000013 r6:c008b640 r5:c00326b0 r4:c00326ac
-[   13.346221] [<c000895c>] (kernel_init+0x0/0x124) from [<c008b640>] (do_exit+0x0/0x638)
-[   13.346649]  r5:c000895c r4:00000000
-[   13.347259] ---[ end trace 0e5a27010e5ebd96 ]---
-[   13.347656] BUG: key d584eea8 not in .data!
-[   13.347869] BUG: key d584eec4 not in .data!
-[   13.347991] BUG: key d584eee0 not in .data!
-[   13.348266] BUG: key d584ef0c not in .data!
-[   13.348571] BUG: key d584ef28 not in .data!
-[   13.348876] BUG: key d584ef44 not in .data!
-[   13.349060] BUG: key d584ef60 not in .data!
-[   13.349212] BUG: key d584ef8c not in .data!
-[   13.349639] BUG: key d584efa8 not in .data!
-[   13.349884] BUG: key d584efc4 not in .data!
-[   13.350036] BUG: key d584efe0 not in .data!
-[   13.350463] BUG: key d587700c not in .data!
-[   13.350830] BUG: key d5877028 not in .data!
-[   13.351013] BUG: key d5877044 not in .data!
-[   13.351257] BUG: key d5877060 not in .data!
-[   13.351440] Acquire 'boot-time' no_halt_lock 60s
-[   13.352020] Warning: unable to open an initial console.
-[   13.352691] Freeing init memory: 188K
-[   13.363800] init (1): /proc/1/oom_adj is deprecated, please use /proc/1/oom_score_adj instead.
-[   13.375152] [USBH] msm_chg_detect_work: state:CHG_WAIT_FOR_DCD
-[   13.475341] [USBH] msm_chg_detect_work: state:CHG_WAIT_FOR_DCD
-[   13.515319] [USBH] msm_chg_detect_work: state:CHG_DCD_DONE
-[   13.515563] [USBH] msm_chg_detect_work: state:CHG_DETECTED
-[   13.515655] [USBH] chg_type = USB_SDP_CHARGER
-[   13.515869] [USBH] msm_otg_sm_work: state:b_idle bit:0x00000003
-[   13.515991] [USB] OTG_STATE_B_IDLE state
-[   13.516082] [USBH] b_sess_vld
-[   13.516296] [USBH] Avail curr from USB = 500
-[   13.516387] [USBH] gadget on
-[   13.516510] [USB] CI13XXX_CONTROLLER_RESET_EVENT received
-[   13.519866] [USBH] send connect type -1
-[   13.519989] [BATT] peripheral_cable_update(1) from_owe=0
-[   13.520202] [BATT] err:Update SMEM: allocate fail at 1845679069 (2013-05-16 17:40:24.686736682 UTC)
-[   13.520538] [HTC_BATT] cable change to 1
-[   13.520721] [BATT] ds2784_notify: 0 1 at 1846106062 (2013-05-16 17:40:24.687255173 UTC)
-[   13.520935] [BATT] charger ON (SLOW) at 1846411057 (2013-05-16 17:40:24.687468669 UTC)
-[   13.579681] **********************************************
-[   13.579895] [BATT-DEBUG]: CHECKING IF BATTERY IS SUPPORTED
-[   13.580017] [HTC_BATT]Setting Full mAh values of Stock Battery
-[   13.580200] [HTC_BATT]Full mAh value set as 1500
-[   13.580322] [HTC_BATT]Extended Battery was not detected within BattInfo check
-[   13.580505] [HTC_BATT]RSNSP=67,RARC=48,Vol=3806mV,Current=1mA,Temp=280C(1/10)
-[   13.580627] [BATT] ds2784_notify: 1 48 at 1906041288 (2013-05-16 17:40:24.747129379 UTC)
-[   13.581054] [BATT] power_supply_changed: battery at 1906407324 (2013-05-16 17:40:24.747556421 UTC)
-[   13.581359] batt: charging SLOW
-[   13.620025] keychord: using input dev h2w headset for fevent
-[   13.620269] keychord: using input dev bravo-keypad for fevent
-[   13.620361] keychord: using input dev curcial-oj for fevent
-[   13.625640] yaffs: dev is 32505859 name is "mtdblock3" rw
-[   13.625762] yaffs: passed flags ""
-[   13.625885] yaffs: Attempting MTD mount of 31.3,"mtdblock3"
-[   13.627075] msm_nand_read_oob 4ac0000 0 10 failed -74, corrected 0
-[   13.644866] [USB] android_enable_function: mass_storage enabled
-[   13.645111] [USB] android_enable_function: adb enabled
-[   13.645233] [USB] android_bind_enabled_functions bind name: mass_storage
-[   13.645477] [USB] android_bind_enabled_functions bind name: adb
-[   13.645629] adb_bind_config
-[   13.645935] [USB] ci13xxx_pullup: 1
-[   13.646057] [USB] android_usb_init_work: ret: 0
-[   13.649078] [USB] suspend
-[   13.778472] [USB] reset
-[   13.778686] [USBH] send connect type 1
-[   13.778869] [BATT] peripheral_cable_update(1) from_owe=0
-[   13.779113] [BATT] err:Update SMEM: allocate fail at 2104463449 (2013-05-16 17:40:24.938413480 UTC)
-[   13.779510] [HTC_BATT] cable change to 1
-[   13.780731] [USB] portchange USB_SPEED_HIGH
-[   13.845489] mmc1: host does not support reading read-only switch. assuming write-enable.
-[   13.850860] mmc1: new high speed SDHC card at address 0007
-[   13.851806] mmcblk0: mmc1:0007 SD16G 14.9 GiB 
-[   13.856292]  mmcblk0: p1 p2
-[   13.858520] yaffs: yaffs_read_super: is_checkpointed 1
-[   13.859313] yaffs: dev is 32505861 name is "mtdblock5" rw
-[   13.859558] yaffs: passed flags ""
-[   13.859680] yaffs: Attempting MTD mount of 31.5,"mtdblock5"
-[   13.889343] [USB] USB_STATE=CONNECTED
-[   13.892669] [USB] reset
-[   13.894927] [USB] portchange USB_SPEED_HIGH
-[   14.023071] android_usb gadget: high speed config #1: android
-[   14.024139] [USB] USB_STATE=CONFIGURED
-[   14.024444] [USB] set usb_connect2pc = 1
-[   21.620483] yaffs: yaffs_read_super: is_checkpointed 0
-[   21.621185] yaffs: dev is 32505860 name is "mtdblock4" rw
-[   21.621582] yaffs: passed flags ""
-[   21.621826] yaffs: Attempting MTD mount of 31.4,"mtdblock4"
-[   21.624603] yaffs: yaffs_read_super: is_checkpointed 1
-[   29.809265] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141926, size 80, time=405761 us
-[   30.743560] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29183518, size 8, time=411590 us
-[   31.188323] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29194254, size 72, time=405303 us
-[   31.622741] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29287662, size 32, time=432861 us
-[   32.051635] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141918, size 8, time=427154 us
-[   33.303924] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141910, size 8, time=431671 us
-[   33.306701] EXT4-fs (mmcblk0p2): mounted filesystem without journal. Opts: noauto_da_alloc,data=ordered,commit=15,barrier=1,nouser_xattr,errors=continue
-[   44.549621] init: service 'console' requires console
-[   44.550598] [USB] enable_store, buff: 0
-[   44.550872] [USB] bDeviceClass_store: 0
-[   44.702972] adb_open: adbd(parent:init): tgid=2726
-[   44.839843] warning: `rild' uses 32-bit capabilities (legacy support in use)
-[   45.590789] msmfb: pan_update in state(1)
-[   45.590820] msmfb: full update starting
-[   45.637908] msmfb: full update completed
-[   45.638092] msmfb: turning on panel
-[   45.638214] lcdc_unblank: ()
-[   45.638336] sony_tft_panel_unblank: +()
-[   45.638519] sony_tft_panel_unblank: -() already unblanked
-[   46.672729] htc-acoustic: open
-[   46.674011] htc-acoustic: release
-[   48.657165] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142182, size 8, time=664367 us
-[   48.657409] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29142182, size 8, total time=664611 us
-[   49.274475] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142198, size 8, time=612243 us
-[   49.274536] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29142198, size 8, total time=612335 us
-[   51.098175] NAND boot, writing additional init commands to /dev/smd0
-[   55.652832] lightsensor_ioctl get enabled status: 0
-[   56.763763] audio: init: codecs
-[   56.870086] dal_attach: status = 0, name = 'DAL_AQ_AUD'
-[   56.870300] audio: init: INIT
-[   56.870666] audio: init: OPEN control
-[   57.258392] audio: init: attach ACDB
-[   57.365997] dal_attach: status = 0, name = 'DAL_AM_AUD'
-[   57.366027] audio: init: attach ADIE
-[   57.366394] dal_attach: status = 0, name = 'DAL_AM_AUD'
-[   57.366455] pmic_rpc_req_reply: successfully connected to 0x10001 rpc version
-[   57.381011] acdb: load 'default.acdb'
-[   57.413482] acdb: 588 bytes for device 607, rate 48000.
-[   57.427734] acdb: 871 bytes for device 507, rate 8000.
-[   63.655273] **********************************************
-[   63.655395] [BATT-DEBUG]: CHECKING IF BATTERY IS SUPPORTED
-[   63.655578] [HTC_BATT]Setting Full mAh values of Stock Battery
-[   63.655700] [HTC_BATT]Full mAh value set as 1500
-[   63.655822] [HTC_BATT]Extended Battery was not detected within BattInfo check
-[   63.656036] [HTC_BATT]RSNSP=67,RARC=48,Vol=3796mV,Current=-50mA,Temp=281C(1/10)
-[   66.144256] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141918, size 16, time=438598 us
-[   66.581451] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29175398, size 8, time=432128 us
-[   67.038085] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29145838, size 8, time=423950 us
-[   68.712707] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141910, size 8, time=427062 us
-[   70.134277] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142278, size 8, time=406585 us
-[   70.573364] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142262, size 8, time=426727 us
-[   71.104980] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29311718, size 1024, time=517211 us
-[   71.105010] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29311718, size 1024, total time=517272 us
-[   73.435852] Release 'boot-time' no_halt_lock
-[   73.567962] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141918, size 16, time=433685 us
-[   74.015930] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142294, size 8, time=423126 us
-[   84.752502] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141934, size 16, time=433624 us
-[   85.188629] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29287678, size 8, time=430999 us
-[   86.318969] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141974, size 8, time=425659 us
-[   86.770599] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29456790, size 128, time=438629 us
-[   87.255584] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29670350, size 736, time=480590 us
-[   89.149780] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 30888342, size 1024, time=519592 us
-[   89.150512] sd_blk_issue_rw_rq: ---(sd-qd) start sector=30888342, size 1024, total time=520324 us
-[   90.119567] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 30889366, size 1024, time=513854 us
-[   90.119812] sd_blk_issue_rw_rq: ---(sd-qd) start sector=30889366, size 1024, total time=514129 us
-[   92.046752] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 30891414, size 1024, time=917144 us
-[   92.046997] sd_blk_issue_rw_rq: ---(sd-qd) start sector=30891414, size 1024, total time=917419 us
-[   92.462707] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142302, size 8, time=411132 us
-[   93.203887] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 30892438, size 712, time=484954 us
-[   94.426239] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142334, size 8, time=432922 us
-[   95.552185] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29175158, size 8, time=421875 us
-[   96.258972] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142278, size 8, time=686614 us
-[   96.259216] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29142278, size 8, total time=686859 us
-[   96.876861] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142238, size 8, time=611511 us
-[   96.877105] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29142238, size 8, total time=611785 us
-[   97.381835] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29175358, size 8, time=427001 us
-[   97.807617] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141974, size 8, time=421447 us
-[   98.242858] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141934, size 16, time=430572 us
-[   98.763641] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29693782, size 952, time=507415 us
-[   98.763885] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29693782, size 952, total time=507659 us
-[  103.315277] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141910, size 16, time=429534 us
-[  105.218414] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141934, size 8, time=427856 us
-[  105.674163] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29458118, size 272, time=450836 us
-[  106.100799] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142054, size 8, time=412719 us
-[  107.567687] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141934, size 8, time=418701 us
-[  113.734588] **********************************************
-[  113.734619] [BATT-DEBUG]: CHECKING IF BATTERY IS SUPPORTED
-[  113.734619] [HTC_BATT]Setting Full mAh values of Stock Battery
-[  113.734619] [HTC_BATT]Full mAh value set as 1500
-[  113.734649] [HTC_BATT]Extended Battery was not detected within BattInfo check
-[  113.734649] [HTC_BATT]RSNSP=67,RARC=48,Vol=3815mV,Current=55mA,Temp=282C(1/10)
-[  128.425506] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141910, size 32, time=433380 us
-[  129.254943] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142054, size 8, time=438415 us
-[  131.907806] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29179542, size 1024, time=922790 us
-[  131.908050] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29179542, size 1024, total time=923065 us
-[  132.323547] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141910, size 32, time=401336 us
-[  133.206787] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29180566, size 1024, time=495666 us
-[  135.510864] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29181590, size 1024, time=513549 us
-[  135.511108] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29181590, size 1024, total time=513793 us
-[  136.456481] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29182614, size 904, time=506072 us
-[  136.456726] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29182614, size 904, total time=506347 us
-[  138.859619] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29194302, size 8, time=426849 us
-[  139.428070] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29303038, size 1024, time=517333 us
-[  139.428314] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29303038, size 1024, total time=517608 us
-[  143.053680] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142334, size 8, time=677215 us
-[  143.053833] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29142334, size 8, total time=677398 us
-[  143.676910] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142302, size 8, time=610107 us
-[  143.677154] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29142302, size 8, total time=610382 us
-[  144.959014] [BATT-DEBUG: DISPLAYING ADDITIONAL BATTERY INFO]
-[  144.959136] [BATT-DEBUG]: Batt ID:1 Batt_vol:3815 Batt_temp:282
-[  144.959381] [BATT-DEBUG]: Batt_level:48 Batt_charging_source: 1 Batt_enabled: 1 Full_bat: 652
-[  144.959655] [BATT-DEBUG: DISPLAYING ADDITIONAL BATTERY INFO]
-[  144.959838] [BATT-DEBUG]: Batt ID:1 Batt_vol:3815 Batt_temp:282
-[  144.959960] [BATT-DEBUG]: Batt_level:48 Batt_charging_source: 1 Batt_enabled: 1 Full_bat: 652
-[  144.971191] request_suspend_state: wakeup (3->0) at 133295754198 (2013-05-16 17:42:36.129948213 UTC)
-[  145.912384] EXT4-fs (dm-0): mounted filesystem without journal. Opts: (null)
-[  146.023681] EXT4-fs (dm-0): re-mounted. Opts: (null)
-[  146.060607] EXT4-fs (dm-0): re-mounted. Opts: (null)
-[  147.337829] acc_open
-[  147.337982] acc_release
-[  148.083587] lightsensor_ioctl set value = 1
-[  148.083679] lightsensor_enable
-[  148.085693] microp_write_interrupt: microp_interrupt_enable called
-[  148.122955] sony_tft_set_pwm_val: 102
-[  148.167144] sony_tft_set_pwm_val: 92
-[  148.218231] sony_tft_set_pwm_val: 83
-[  148.236511] sony_tft_set_pwm_val: 80
-[  148.248535] sony_tft_set_pwm_val: 76
-[  148.263519] sony_tft_set_pwm_val: 73
-[  148.279785] sony_tft_set_pwm_val: 70
-[  148.295989] sony_tft_set_pwm_val: 67
-[  148.314300] sony_tft_set_pwm_val: 63
-[  148.327880] sony_tft_set_pwm_val: 60
-[  148.346252] sony_tft_set_pwm_val: 57
-[  148.361389] sony_tft_set_pwm_val: 54
-[  148.382598] sony_tft_set_pwm_val: 49
-[  148.400329] sony_tft_set_pwm_val: 46
-[  148.419738] sony_tft_set_pwm_val: 43
-[  148.432128] sony_tft_set_pwm_val: 40
-[  155.687255] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 30243734, size 8, time=422576 us
-[  163.801971] **********************************************
-[  163.802093] [BATT-DEBUG]: CHECKING IF BATTERY IS SUPPORTED
-[  163.802307] [HTC_BATT]Setting Full mAh values of Stock Battery
-[  163.802398] [HTC_BATT]Full mAh value set as 1500
-[  163.802612] [HTC_BATT]Extended Battery was not detected within BattInfo check
-[  163.802703] [HTC_BATT]RSNSP=67,RARC=48,Vol=3796mV,Current=29mA,Temp=285C(1/10)
-[  168.924468] alloc_fd: slot 232 not NULL!
-[  168.931610] alloc_fd: slot 233 not NULL!
-[  193.602813] rs30000048 rs30000048.65536: msmrtc_timeremote_set_time: 04/16/2013 17:43:24 (04)
-[  194.578155] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142214, size 8, time=433099 us
-[  198.736572] pcm_out: open
-[  198.736785] acdb: 588 bytes for device 607, rate 48000.
-[  203.216186] pcm_out: release
-[  213.870178] **********************************************
-[  213.870391] [BATT-DEBUG]: CHECKING IF BATTERY IS SUPPORTED
-[  213.870513] [HTC_BATT]Setting Full mAh values of Stock Battery
-[  213.870697] [HTC_BATT]Full mAh value set as 1500
-[  213.870788] [HTC_BATT]Extended Battery was not detected within BattInfo check
-[  213.871002] [HTC_BATT]RSNSP=67,RARC=48,Vol=3806mV,Current=9mA,Temp=287C(1/10)
-[  251.826202] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142198, size 8, time=429565 us
-[  259.135131] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29142214, size 8, time=679687 us
-[  259.135467] sd_blk_issue_rw_rq: ---(sd-qd) start sector=29142214, size 8, total time=680084 us
-[  263.941131] **********************************************
-[  263.941284] [BATT-DEBUG]: CHECKING IF BATTERY IS SUPPORTED
-[  263.941558] [HTC_BATT]Setting Full mAh values of Stock Battery
-[  263.941680] [HTC_BATT]Full mAh value set as 1500
-[  263.941833] [HTC_BATT]Extended Battery was not detected within BattInfo check
-[  263.942108] [HTC_BATT]RSNSP=67,RARC=48,Vol=3811mV,Current=7mA,Temp=295C(1/10)
-[  281.049224] init: untracked pid 3951 exited
-[  296.044494] gpio_keys_scan_keys: key 1-74, 0 (94) changed to 1
-[  297.411193] gpio_keys_scan_keys: key 1-74, 0 (94) changed to 0
-[  306.473510] EXT4-fs (dm-1): mounted filesystem without journal. Opts: (null)
-[  310.828186] EXT4-fs (dm-1): re-mounted. Opts: (null)
-[  310.953277] EXT4-fs (dm-1): re-mounted. Opts: (null)
-[  313.251708] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 810561, size 8, time=621063 us
-[  313.251861] sd_blk_issue_rw_rq: ---(sd-qd) start sector=810561, size 8, total time=621246 us
-[  314.018127] **********************************************
-[  314.018341] [BATT-DEBUG]: CHECKING IF BATTERY IS SUPPORTED
-[  314.018432] [HTC_BATT]Setting Full mAh values of Stock Battery
-[  314.018646] [HTC_BATT]Full mAh value set as 1500
-[  314.018737] [HTC_BATT]Extended Battery was not detected within BattInfo check
-[  314.018920] [HTC_BATT]RSNSP=67,RARC=48,Vol=3801mV,Current=-45mA,Temp=302C(1/10)
-[  350.878814] SysRq : Emergency Remount R/O
-[  351.354858] sd_blk_issue_rw_rq:(sd-qd)finish cmd(25) start 29141910, size 8, time=438507 us
-[  351.355346] EXT4-fs (mmcblk0p2): re-mounted. Opts: (null)
-[  351.410675] Emergency Remount complete
-[  351.819396] msm_reboot_call: code 1, cmd recovery
-[  351.819946] msmfb_shutdown
-[  351.820434] lcdc_blank: ()
-[  351.820526] sony_tft_panel_blank: +()
-[  352.047698] sony_tft_panel_blank: -()
-[  352.047729] lcdc_shutdown: ()
-[  352.047943] [USB] ci13xxx_pullup: 0
-[  352.048126] [USB] adb_complete_out: err (-108)
-[  352.048431] adb_release: adbd(parent:init): tgid=2726
-[  352.048950] adb_open: adbd(parent:init): tgid=2726
-[  352.051635] Thread-105(parent:zygote): Restarting system with command 'recovery'.
-[  352.051849] msm_pm_restart: restart_reason 0x77665502, cmd recovery
-[  352.052032] 
-[  352.052154] Restarting Linux version 3.0.16-evervolv-turba-jellybean+ (nonamer@ubuntu) (gcc version 4.5.4 20111003 (prerelease) (Linaro GCC 4.5-2011.10) ) #2 PREEMPT Thu May 16 21:34:51 MSK 2013
-[  352.052154] 
-[  352.052459] DPRINT_INT_CTRL_REGS:
-[  352.052459] 
-[  352.052642]     VIC_INT_SELECT0(0xF8000000) : 0x0
-[  352.052764]     VIC_INT_SELECT1(0xF8000004) : 0x80000000
-[  352.052947]         VIC_INT_EN0(0xF8000010) : 0x47002A1
-[  352.053070]         VIC_INT_EN1(0xF8000014) : 0x84000000
-[  352.053253]    VIC_INT_ENCLEAR0(0xF8000020) : 0x0
-[  352.053344]    VIC_INT_ENCLEAR1(0xF8000024) : 0x0
-[  352.053558]      VIC_INT_ENSET0(0xF8000030) : 0x0
-[  352.053649]      VIC_INT_ENSET1(0xF8000034) : 0x0
-[  352.053771]       VIC_INT_TYPE0(0xF8000040) : 0x4001A1
-[  352.053955]       VIC_INT_TYPE1(0xF8000044) : 0x4
-[  352.054077]   VIC_INT_POLARITY0(0xF8000050) : 0x0
-[  352.054260]   VIC_INT_POLARITY1(0xF8000054) : 0x0
-[  352.054382]     VIC_NO_PEND_VAL(0xF8000060) : 0xFFFFFFFF
-[  352.054565]    VIC_INT_MASTEREN(0xF8000064) : 0xFFFFFFFF
-[  352.054656]      VIC_PROTECTION(0xF800006C) : 0x0
-[  352.054779]          VIC_CONFIG(0xF8000068) : 0x3
-[  352.054962]     VIC_IRQ_STATUS0(0xF8000080) : 0x0
-[  352.055084]     VIC_IRQ_STATUS1(0xF8000084) : 0x0
-[  352.055267]     VIC_FIQ_STATUS0(0xF8000090) : 0x0
-[  352.055389]     VIC_FIQ_STATUS1(0xF8000094) : 0x0
-[  352.055480]     VIC_RAW_STATUS0(0xF80000A0) : 0x10000000
-[  352.055603]     VIC_RAW_STATUS1(0xF80000A4) : 0xC2000
-[  352.055694]      VIC_INT_CLEAR0(0xF80000B0) : 0x0
-[  352.055908]      VIC_INT_CLEAR1(0xF80000B4) : 0x0
-[  352.055999]        VIC_SOFTINT0(0xF80000C0) : 0x0
-[  352.056762]        VIC_SOFTINT1(0xF80000C4) : 0x0
-[  352.056884]      VIC_IRQ_VEC_RD(0xF80000D0) : 0xFFFFFFFF
-[  352.057067] VIC_IRQ_VEC_PEND_RD(0xF80000D4) : 0xFFFFFFFF
-[  352.057189]      VIC_IRQ_VEC_WR(0xF80000D8) : 0x0
-[  352.057281]  VIC_IRQ_IN_SERVICE(0xF80000E0) : 0xFFFFFFFF
-[  352.057495]    VIC_IRQ_IN_STACK(0xF80000E4) : 0x0
-[  352.057586]    VIC_TEST_BUS_SEL(0xF80000E8) : 0x0
-[  352.057769]  VIC_TEST_BUS_SEL_0(0xF8000200) : 0x0
-[  352.057891]  VIC_TEST_BUS_SEL_1(0xF8000204) : 0x0
-[  352.058074]  VIC_TEST_BUS_SEL_2(0xF8000208) : 0x0
-[  352.058197]  VIC_TEST_BUS_SEL_3(0xF800020C) : 0x0
-[  352.058288]  VIC_TEST_BUS_SEL_4(0xF8000210) : 0x0
-[  352.058502]  VIC_TEST_BUS_SEL_5(0xF8000214) : 0x0
-[  352.058593]  VIC_TEST_BUS_SEL_6(0xF8000218) : 0x0
-[  352.058807]  VIC_TEST_BUS_SEL_7(0xF800021C) : 0x0
-[  352.058898]  VIC_TEST_BUS_SEL_8(0xF8000220) : 0x0
-[  352.059020]  VIC_TEST_BUS_SEL_9(0xF8000224) : 0x0
-[  352.059204]  VIC_TEST_BUS_SEL_10(0xF8000228) : 0x0
-[  352.059326]  VIC_TEST_BUS_SEL_11(0xF800022C) : 0x0
-[  352.059509]  VIC_TEST_BUS_SEL_12(0xF8000230) : 0x0
-[  352.059631]  VIC_TEST_BUS_SEL_13(0xF8000234) : 0x0
-[  352.059814]  VIC_TEST_BUS_SEL_14(0xF8000238) : 0x0
-[  352.059906]  VIC_TEST_BUS_SEL_15(0xF800023C) : 0x0
-[  352.060028]  VIC_TEST_BUS_SEL_16(0xF8000240) : 0x0
-[  352.060211]  VIC_TEST_BUS_SEL_17(0xF8000244) : 0x0
-[  352.060333]  VIC_TEST_BUS_SEL_18(0xF8000248) : 0x0
-[  352.060516]  VIC_TEST_BUS_SEL_19(0xF800024C) : 0x0
-[  352.060638]  VIC_TEST_BUS_SEL_20(0xF8000250) : 0x0
-[  352.060729]  VIC_TEST_BUS_SEL_21(0xF8000254) : 0x0
-[  352.060852]  VIC_TEST_BUS_SEL_22(0xF8000258) : 0x0
-[  352.060943]  VIC_TEST_BUS_SEL_23(0xF800025C) : 0x0
-[  352.061157]  VIC_TEST_BUS_SEL_24(0xF8000260) : 0x0
-[  352.061248]  VIC_TEST_BUS_SEL_25(0xF8000264) : 0x0
-[  352.061431]  VIC_TEST_BUS_SEL_26(0xF8000268) : 0x0
-[  352.061553]  VIC_TEST_BUS_SEL_27(0xF800026C) : 0x0
-[  352.061676]  VIC_TEST_BUS_SEL_28(0xF8000270) : 0x0
-[  352.061859]  VIC_TEST_BUS_SEL_29(0xF8000274) : 0x0
-[  352.061981]  VIC_TEST_BUS_SEL_30(0xF8000278) : 0x0
-[  352.062164]  VIC_TEST_BUS_SEL_31(0xF800027C) : 0x0
-[  352.062255]  VIC_TEST_BUS_SEL_32(0xF8000280) : 0x0
-[  352.062469]  VIC_TEST_BUS_SEL_33(0xF8000284) : 0x0
-[  352.062561]  VIC_TEST_BUS_SEL_34(0xF8000288) : 0x0
-[  352.062683]  VIC_TEST_BUS_SEL_35(0xF800028C) : 0x0
-[  352.062866]  VIC_TEST_BUS_SEL_36(0xF8000290) : 0x0
-[  352.062988]  VIC_TEST_BUS_SEL_37(0xF8000294) : 0x0
-[  352.063171]  VIC_TEST_BUS_SEL_38(0xF8000298) : 0x0
-[  352.063262]  VIC_TEST_BUS_SEL_39(0xF800029C) : 0x0
-[  352.063476]  VIC_TEST_BUS_SEL_40(0xF80002A0) : 0x0
-[  352.063568]  VIC_TEST_BUS_SEL_41(0xF80002A4) : 0x0
-[  352.063690]  VIC_TEST_BUS_SEL_42(0xF80002A8) : 0x0
-[  352.063873]  VIC_TEST_BUS_SEL_43(0xF80002AC) : 0x0
-[  352.063995]  VIC_TEST_BUS_SEL_44(0xF80002B0) : 0x0
-[  352.064178]  VIC_TEST_BUS_SEL_45(0xF80002B4) : 0x0
-[  352.064300]  VIC_TEST_BUS_SEL_46(0xF80002B8) : 0x0
-[  352.064392]  VIC_TEST_BUS_SEL_47(0xF80002BC) : 0x0
-[  352.064605]  VIC_TEST_BUS_SEL_48(0xF80002C0) : 0x0
-[  352.064697]  VIC_TEST_BUS_SEL_49(0xF80002C4) : 0x0
-[  352.064910]  VIC_TEST_BUS_SEL_50(0xF80002C8) : 0x0
-[  352.065002]  VIC_TEST_BUS_SEL_51(0xF80002CC) : 0x0
-[  352.065185]  VIC_TEST_BUS_SEL_52(0xF80002D0) : 0x0
-[  352.065307]  VIC_TEST_BUS_SEL_53(0xF80002D4) : 0x0
-[  352.065429]  VIC_TEST_BUS_SEL_54(0xF80002D8) : 0x0
-[  352.065612]  VIC_TEST_BUS_SEL_55(0xF80002DC) : 0x0
-[  352.065704]  VIC_TEST_BUS_SEL_56(0xF80002E0) : 0x0
-[  352.065917]  VIC_TEST_BUS_SEL_57(0xF80002E4) : 0x0
-[  352.066009]  VIC_TEST_BUS_SEL_58(0xF80002E8) : 0x0
-[  352.066253]  VIC_TEST_BUS_SEL_59(0xF80002EC) : 0x0
-[  352.066345]  VIC_TEST_BUS_SEL_60(0xF80002F0) : 0x0
-[  352.066467]  VIC_TEST_BUS_SEL_61(0xF80002F4) : 0x0
-[  352.066650]  VIC_TEST_BUS_SEL_62(0xF80002F8) : 0x0
-[  352.066772]  VIC_TEST_BUS_SEL_63(0xF80002FC) : 0x0
-[  352.066955]   VIC_VECTADDR_0(0xF8000400) : 0x0
-[  352.067077]   VIC_VECTADDR_1(0xF8000404) : 0x0
-[  352.067169]   VIC_VECTADDR_2(0xF8000408) : 0x0
-[  352.067382]   VIC_VECTADDR_3(0xF800040C) : 0x0
-[  352.067474]   VIC_VECTADDR_4(0xF8000410) : 0x0
-[  352.067657]   VIC_VECTADDR_5(0xF8000414) : 0x0
-[  352.067779]   VIC_VECTADDR_6(0xF8000418) : 0x0
-[  352.067901]   VIC_VECTADDR_7(0xF800041C) : 0x0
-[  352.068084]   VIC_VECTADDR_8(0xF8000420) : 0x0
-[  352.068176]   VIC_VECTADDR_9(0xF8000424) : 0x0
-[  352.068389]   VIC_VECTADDR_10(0xF8000428) : 0x0
-[  352.068481]   VIC_VECTADDR_11(0xF800042C) : 0x0
-[  352.068603]   VIC_VECTADDR_12(0xF8000430) : 0x0
-[  352.068786]   VIC_VECTADDR_13(0xF8000434) : 0x0
-[  352.068908]   VIC_VECTADDR_14(0xF8000438) : 0x0
-[  352.069091]   VIC_VECTADDR_15(0xF800043C) : 0x0
-[  352.069213]   VIC_VECTADDR_16(0xF8000440) : 0x0
-[  352.069305]   VIC_VECTADDR_17(0xF8000444) : 0x0
-[  352.069519]   VIC_VECTADDR_18(0xF8000448) : 0x0
-[  352.069610]   VIC_VECTADDR_19(0xF800044C) : 0x0
-[  352.069793]   VIC_VECTADDR_20(0xF8000450) : 0x0
-[  352.069915]   VIC_VECTADDR_21(0xF8000454) : 0x0
-[  352.070007]   VIC_VECTADDR_22(0xF8000458) : 0x0
-[  352.070220]   VIC_VECTADDR_23(0xF800045C) : 0x0
-[  352.070312]   VIC_VECTADDR_24(0xF8000460) : 0x0
-[  352.070526]   VIC_VECTADDR_25(0xF8000464) : 0x0
-[  352.070617]   VIC_VECTADDR_26(0xF8000468) : 0x0
-[  352.070739]   VIC_VECTADDR_27(0xF800046C) : 0x0
-[  352.070922]   VIC_VECTADDR_28(0xF8000470) : 0x0
-[  352.071044]   VIC_VECTADDR_29(0xF8000474) : 0x0
-[  352.071228]   VIC_VECTADDR_30(0xF8000478) : 0x0
-[  352.071350]   VIC_VECTADDR_31(0xF800047C) : 0x0
-[  352.071441]   VIC_VECTADDR_32(0xF8000480) : 0x0
-[  352.071624]   VIC_VECTADDR_33(0xF8000484) : 0x0
-[  352.071746]   VIC_VECTADDR_34(0xF8000488) : 0x0
-[  352.071929]   VIC_VECTADDR_35(0xF800048C) : 0x0
-[  352.072052]   VIC_VECTADDR_36(0xF8000490) : 0x0
-[  352.072143]   VIC_VECTADDR_37(0xF8000494) : 0x0
-[  352.072357]   VIC_VECTADDR_38(0xF8000498) : 0x0
-[  352.072448]   VIC_VECTADDR_39(0xF800049C) : 0x0
-[  352.072570]   VIC_VECTADDR_40(0xF80004A0) : 0x0
-[  352.072662]   VIC_VECTADDR_41(0xF80004A4) : 0x0
-[  352.072784]   VIC_VECTADDR_42(0xF80004A8) : 0x0
-[  352.072967]   VIC_VECTADDR_43(0xF80004AC) : 0x0
-[  352.073089]   VIC_VECTADDR_44(0xF80004B0) : 0x0
-[  352.073181]   VIC_VECTADDR_45(0xF80004B4) : 0x0
-[  352.073364]   VIC_VECTADDR_46(0xF80004B8) : 0x0
-[  352.073486]   VIC_VECTADDR_47(0xF80004BC) : 0x0
-[  352.073669]   VIC_VECTADDR_48(0xF80004C0) : 0x0
-[  352.073791]   VIC_VECTADDR_49(0xF80004C4) : 0x0
-[  352.073883]   VIC_VECTADDR_50(0xF80004C8) : 0x0
-[  352.074096]   VIC_VECTADDR_51(0xF80004CC) : 0x0
-[  352.074188]   VIC_VECTADDR_52(0xF80004D0) : 0x0
-[  352.074401]   VIC_VECTADDR_53(0xF80004D4) : 0x0
-[  352.074493]   VIC_VECTADDR_54(0xF80004D8) : 0x0
-[  352.074615]   VIC_VECTADDR_55(0xF80004DC) : 0x0
-[  352.074798]   VIC_VECTADDR_56(0xF80004E0) : 0x0
-[  352.074920]   VIC_VECTADDR_57(0xF80004E4) : 0x0
-[  352.075103]   VIC_VECTADDR_58(0xF80004E8) : 0x0
-[  352.075195]   VIC_VECTADDR_59(0xF80004EC) : 0x0
-[  352.075317]   VIC_VECTADDR_60(0xF80004F0) : 0x0
-[  352.075500]   VIC_VECTADDR_61(0xF80004F4) : 0x0
-[  352.075622]   VIC_VECTADDR_62(0xF80004F8) : 0x0
-[  352.075805]   VIC_VECTADDR_63(0xF80004FC) : 0x0
+[    0.050628] Mount-cache hash table entries: 512
+[    0.052734] Initializing cgroup subsys cpuacct
+[    0.052764] Initializing cgroup subsys freezer
+[    0.052795] Initializing cgroup subsys blkio
+[    0.053039] CPU: Testing write buffer coherency: ok
+[    0.061157] print_constraints: dummy: 
+[    0.061370] rdev_init_debugfs: Error-Bad Function Input
+[    0.062011] NET: Registered protocol family 16
+[    0.066619] bravo_init() revision=131
+[    0.067779] Max ACPU freq from efuse data is 998400 KHz
+[   12.192382] ACPU running at 768000 KHz
+[   12.192382] 5 scaling frequencies supported.
+[   12.194091] ram_console: got buffer at 3a00000, size 40000
+[   12.194305] ram_console: found existing buffer, size 32879, start 32879
+[   12.359252] console [ram0] enabled
+[   12.361938] bravo_init_mmc()+
+[   12.362426] bravo_init_mmc()-
+[   12.362548] bravo_add_usb_devices rev: 131
+[   12.362762] failed to request gpio ulpi_dir
+[   12.365509] print_constraints: fs_gfx3d: normal 
+[   12.382507] bio: create slab <bio-0> at 0
+[   12.384185] msm_i2c_probe
+[   12.384521] msm_i2c_probe: clk_ctl 35d, 100000 Hz
+[   12.388092] print_constraints: dcdc1: 800 <--> 1350 mV at 1300 mV 
+[   12.388580] rdev_init_debugfs: Error-Bad Function Input
+[   12.389099] print_constraints: dcdc2: 1260 mV 
+[   12.389739] rdev_init_debugfs: Error-Bad Function Input
+[   12.390289] print_constraints: dcdc3: 800 <--> 3300 mV at 1800 mV 
+[   12.390686] rdev_init_debugfs: Error-Bad Function Input
+[   12.391815] print_constraints: ldo1: 1000 <--> 3150 mV at 2800 mV 
+[   12.392242] rdev_init_debugfs: Error-Bad Function Input
+[   12.392761] print_constraints: ldo2: 3300 mV 
+[   12.393310] rdev_init_debugfs: Error-Bad Function Input
+[   12.396057] Bluetooth: Core ver 2.16
+[   12.396362] NET: Registered protocol family 31
+[   12.396484] Bluetooth: HCI device and connection manager initialized
+[   12.396789] Bluetooth: HCI socket layer initialized
+[   12.397918] cfg80211: Calling CRDA to update world regulatory domain
+[   12.399200] Switching to clocksource gp_timer
+[   12.401794] [TTY_IO] create tty_wq for smd0
+[   12.402343] spi clk = 0x0
+[   12.402465] spi: SPI_CONFIG=0
+[   12.402587] spi: SPI_IO_CONTROL=0
+[   12.402740] spi: SPI_OPERATIONAL=0
+[   12.402954] spi: SPI_ERROR_FLAGS_EN=0
+[   12.403106] spi: SPI_ERROR_FLAGS=0
+[   12.403228] -msm_spi_probe()
+[   12.404205] NET: Registered protocol family 2
+[   12.404724] IP route cache hash table entries: 4096 (order: 2, 16384 bytes)
+[   12.405975] TCP established hash table entries: 16384 (order: 5, 131072 bytes)
+[   12.406921] TCP bind hash table entries: 16384 (order: 7, 589824 bytes)
+[   12.418518] TCP: Hash tables configured (established 16384 bind 16384)
+[   12.418701] TCP reno registered
+[   12.418975] UDP hash table entries: 256 (order: 2, 20480 bytes)
+[   12.419525] UDP-Lite hash table entries: 256 (order: 2, 20480 bytes)
+[   12.420806] NET: Registered protocol family 1
+[   12.421722] Unpacking initramfs...
+[   12.440338] Freeing initrd memory: 180K
+[   12.440795] PMU: registered new PMU device of type 0
+[   12.459625] Notify: smsm init
+[   12.469543] rpcrouter_smd_remote_notify: smd opened 0x  (null)
+[   12.472961] dma_test_init, minor number 49
+[   12.474121] Registered led device: flashlight
+[   12.474395] [FLT]flashlight_probe: led_count = 0
+[   12.474548] [FLT]flashlight_probe: The Flashlight Driver is ready
+[   12.475494] htc_battery_init
+[   12.475799] Battery Probe
+[   12.496124] RPC_TIME_TOD_SET_APPS_BASES:
+[   12.496124] 	tick = 12737182
+[   12.496124] 	stamp = 1077339093
+[   12.496948] htc_battery_core_probe
+[   12.499237] [BATT-DEBUG: DISPLAYING ADDITIONAL BATTERY INFO]
+[   12.500305] [BATT-DEBUG]: Batt ID:0 Batt_vol:0 Batt_temp:0
+[   12.500457] [BATT-DEBUG]: Batt_level:0 Batt_charging_source: 0 Batt_enabled: 0 Full_bat: 0
+[   12.500701] [BATT] err:smem_alloc fail at 371353051 (1970-01-01 00:00:00.371231054 UTC)
+[   12.501098] [BATT] htc_cable_status_update: 0 -> 0
+[   12.503356] mdp_probe: initialized
+[   12.503631] spi: SPI_CONFIG=88
+[   12.503845] spi: SPI_IO_CONTROL=401
+[   12.503997] spi: SPI_OPERATIONAL=85
+[   12.504119] spi: SPI_ERROR_FLAGS_EN=7f
+[   12.504333] spi: SPI_ERROR_FLAGS=7f
+[   12.504486] -bravo_init_spi_hack()
+[   12.504669] bravo_init_panel: tft panel
+[   12.505554] Registered led device: lcd-backlight
+[   12.509552] bravo-microp 0-0066: microp version [05][1D]
+[   12.510223] Registered led device: green
+[   12.510955] Registered led device: amber
+[   12.511352] Registered led device: blue
+[   12.511718] Registered led device: button-backlight
+[   12.512390] H2W: htc_35mm_jack driver register
+[   12.514373] input: h2w headset as /devices/virtual/input/input0
+[   12.520568] microp_spi_vote_enable: Changing SPI [1]
+[   12.550628] i2c-core: driver [bravo-microp] using legacy suspend method
+[   12.550872] i2c-core: driver [bravo-microp] using legacy resume method
+[   12.551300] tpa2018d1_init
+[   12.551635] i2c-core: driver [tpa2018d1] using legacy suspend method
+[   12.551788] i2c-core: driver [tpa2018d1] using legacy resume method
+[   12.560852] ashmem: initialized
+[   12.583221] fuse init (API version 7.16)
+[   12.584350] yaffs: yaffs built Jun  4 2013 12:10:11 Installing.
+[   12.591064] io scheduler noop registered
+[   12.591217] io scheduler deadline registered
+[   12.591949] io scheduler cfq registered
+[   12.592590] io scheduler bfq registered (default)
+[   12.592834] start plist test
+[   12.607727] end plist test
+[   12.611358] [CLK] clk_set_rate: failed to set clk: MDP_LCDC_PAD_PCLK_CLK, rate=24576000, flags=0x200, rc=-5
+[   12.612457] setup_fb_info msmfb->xres 480, msmfb->yres 800
+[   12.613159] msmfb_probe() installing 480 x 800 panel
+[   12.614654] load_565rle_image: Can not open /logo.rle
+[   12.614837] mdp_lcdc_probe: initialized
+[   12.616302] msm_serial: detected port #0
+[   12.616851] msm_serial.0: ttyMSM0 at MMIO 0xa9a00000 (irq = 229) is a MSM
+[   12.618377] msm_serial: driver initialized
+[   12.619415] msm_serial_hs_init failed to load
+[   12.620635] [BT]BRCM chip
+[   12.621002] [CLK] clk_set_rate: failed to set clk: GP_CLK, rate=7372800, flags=0x200, rc=-5
+[   12.621246] [BT]Error setting clock rate on UART
+[   12.621459] msm_serial_hs_brcm: probe of msm_serial_hs_brcm.0 failed with error -5
+[   12.622039] [BT]msm_serial_hs module loaded
+[   12.624755] kgsl kgsl-3d0: |kgsl_gpummu_init| MMU type set for device is GPUMMU
+[   12.634124] loop: module loaded
+[   12.634552] pmem: Initializing pmem as cached
+[   12.635437] allocating 33554432 bytes at 36400000 physical for pmem
+[   12.635772] pmem: Initializing pmem_adsp as cached
+[   12.636352] allocating 44060672 bytes at 38400000 physical for pmem_adsp
+[   12.636657] pmem: Initializing pmem_venc as cached
+[   12.637176] allocating 8388608 bytes at 3ae05000 physical for pmem_venc
+[   12.637664] AKM8973 compass driver: init
+[   12.638000] akm8973_probe: request reset gpio failed
+[   12.638153] akm8973: probe of 0-001c failed with error -16
+[   12.638519] Error: Driver 'tps65023' is already registered, aborting...
+[   12.640502] msm_nand_probe: phys addr 0xa0a00000 
+[   12.640777] msm_nand_probe: dmac 0x7
+[   12.640930] msm_nand_probe: allocated dma buffer at ffdb2000, dma_addr 35f14000
+[   12.641998] ONFI probe : Found a nonONFI Compliant device 
+[   12.642242] status: c00020
+[   12.642395] nandid: 5500bcec maker ec device bc
+[   12.642669] Found a supported NAND device
+[   12.642791] NAND Id  : 0x5500bcec
+[   12.642944] Buswidth : 16 Bits
+[   12.643157] Density  : 512 MByte
+[   12.643310] Pagesize : 2048 Bytes
+[   12.643432] Erasesize: 131072 Bytes
+[   12.643676] Oobsize  : 64 Bytes
+[   12.643798] CFG0 Init  : 0xa85408c0
+[   12.643920] CFG1 Init  : 0x0004745e
+[   12.644042] ECCBUFCFG  : 0x00000203
+[   12.644287] Creating 6 MTD partitions on "msm_nand":
+[   12.644439] 0x00001ff60000-0x000020000000 : "misc"
+[   12.649017] 0x000004240000-0x0000046c0000 : "recovery"
+[   12.656219] 0x0000046c0000-0x0000049c0000 : "boot"
+[   12.662078] 0x0000049c0000-0x0000143c0000 : "system"
+[   12.940887] 0x0000143c0000-0x000016bc0000 : "cache"
+[   12.987670] 0x000016bc0000-0x00001ff60000 : "userdata"
+[   13.154174] [PPP] ppp_init disable ppp debug msg
+[   13.154327] PPP generic driver version 2.4.2
+[   13.155334] PPP Deflate Compression module registered
+[   13.155456] PPP BSD Compression module registered
+[   13.158752] PPP MPPE Compression module registered
+[   13.158996] NET: Registered protocol family 24
+[   13.162780] tun: Universal TUN/TAP device driver, 1.6
+[   13.163024] tun: (C) 1999-2004 Max Krasnyansky <maxk@qualcomm.com>
+[   13.164184] rmnet_init: SMD devices[8]
+[   13.175598] [USB] msm_otg probe
+[   13.175994] [CLK] clk_set_rate: failed to set clk: USB_HS_CLK, rate=60000000, flags=0x0, rc=-5
+[   13.176391] [USB] OTG regs = db812000
+[   13.177978] [USB] ci13xxx_msm_probe
+[   13.178222] [USBH] peripheral driver registered w/ tranceiver
+[   13.178680] [USBH] msm_otg_sm_work: state:UNDEFINED bit:0x00000000
+[   13.178802] [USB] OTG_STATE_UNDEFINED state
+[   13.179046] [USBH] msm_otg_reset
+[   13.181732] msm_hsusb msm_hsusb: [usb_gadget_probe_driver] hw_ep_max = 32
+[   13.182617] [USB] android_init_functions rndis init
+[   13.183197] [USB] android_init_functions accessory init
+[   13.184204] [USB] android_init_functions mtp init
+[   13.184600] [USB] android_init_functions ptp init
+[   13.185424] android_usb gadget: Mass Storage Function, version: 2009/09/11
+[   13.185668] android_usb gadget: Number of LUNs=3
+[   13.185821]  lun0: LUN: removable file: (no medium)
+[   13.186065]  lun1: LUN: removable file: (no medium)
+[   13.186187]  lun2: LUN: removable read only CD-ROM file: (no medium)
+[   13.186492] [USB] android_init_functions mass_storage init
+[   13.187042] [USB] android_init_functions adb init
+[   13.187561] [USB] android_init_functions diag init
+[   13.187866] [USB] android_init_functions modem init
+[   13.188171] [USB] android_init_functions serial init
+[   13.188995] [USB] android_init_functions projector init
+[   13.189300] android_usb gadget: android_usb ready
+[   13.191101] bravo_ts_power: power 1
+[   13.202239] [USBH] phy_reset: success
+[   13.310272] [USBH] ulpi: write 0x0c to 0x31
+[   13.310516] [USBH] ulpi: write 0x30 to 0x32
+[   13.310638] [USBH] ulpi: write 0x1d to 0x0d
+[   13.310760] [USBH] ulpi: write 0x1d to 0x10
+[   13.311065] [USB] OTG_STATE_B_IDLE state
+[   13.311187] [USBH] b_sess_vld
+[   13.340545] msm_i2c msm_i2c.0: [MSM I2C Err] status = 0x63C8, addr = 0x40, flags = 0x00, last_addr = 40, reg = 0xE4, last_reg = 0xF4, last_flag = 0x00, cnt = 1, pos = 0
+[   13.340942] msm_i2c msm_i2c.0: (0080) Error during data xfer (-5) (E4, 00)
+[   13.410522] [USBH] msm_chg_detect_work: state:CHG_STATE_UNDEFINED
+[   13.450561] synaptics_ts_probe: Product Major Version 1
+[   13.451293] synaptics_ts_probe: Product Minor Version 1
+[   13.452148] synaptics_ts_probe: product property 2
+[   13.452911] synaptics_ts_probe: device control 81
+[   13.453765] synaptics_ts_probe: interrupt enable 1
+[   13.455841] synaptics_ts_probe: 0xe0: 1 1 1 2 1 1 0 1
+[   13.457244] synaptics_ts_probe: Sensor properties 701
+[   13.460968] synaptics_ts_probe: max_x 4050, max_y 6822
+[   13.461120] synaptics_ts_probe: inactive_x -8 -8, inactive_y -42 -42
+[   13.461334] synaptics_ts_probe: snap_x 0-0 0-0, snap_y 0-0 0-0
+[   13.462127] input: synaptics-rmi-touchscreen as /devices/virtual/input/input1
+[   13.464019] synaptics_ts_probe: Start touchscreen synaptics-rmi-touchscreen in interrupt mode
+[   13.464813] capella_cm3602_probe: probe
+[   13.465484] input: proximity as /devices/virtual/input/input2
+[   13.467315] capella_cm3602_setup
+[   13.467498] capella_cm3602_setup: gpio 120 request failed (-16)
+[   13.471618] capella_cm3602: probe of capella_cm3602 failed with error -16
+[   13.472900] GPIO Matrix Keypad Driver: Start keypad matrix for bravo-keypad in interrupt mode
+[   13.473663] GPIO Input Driver: Start gpio inputs for bravo-keypad in interrupt mode
+[   13.474517] input: bravo-keypad as /devices/virtual/input/input3
+[   13.476470] input: lightsensor-level as /devices/virtual/input/input4
+[   13.477264] lightsensor_probe: request_irq(325) failed for (-22)
+[   13.477416] lightsensor_microp: probe of lightsensor_microp.0 failed with error -22
+[   13.478088] using input dev h2w headset for key reset
+[   13.478271] using input dev bravo-keypad for key reset
+[   13.478973] gpio_keys_scan_keys: key 1-74, 0 (94) changed to 0
+[   13.479766] input: curcial-oj as /devices/virtual/input/input5
+[   13.480377] using input dev curcial-oj for key reset
+[   13.482391] curcial_oj_poweron: OJ power enable(1)
+[   13.494201] microp_oj_interrupt_mode: microp_interrupt_enable called
+[   13.494354] microp_spi_vote_enable: Changing OJ interrupt mode [1]
+[   13.496276] microp_spi_vote_enable: already in voted state, [spi_device 4,enable 1], [spi_status 1, spi_devices_vote 5]
+[   13.498168] curcial_oj_shutdown
+[   13.510437] [USBH] msm_chg_detect_work: state:CHG_WAIT_FOR_DCD
+[   13.539428] OpticalJoystick Device ID: 0d
+[   13.542816] OJ Driver: Revision : 02
+[   13.545898] request_irq failed
+[   13.547546] microp_oj_interrupt_mode: microp_interrupt_disable called
+[   13.547790] microp_spi_vote_enable: Changing OJ interrupt mode [0]
+[   13.549713] microp_spi_vote_enable: already in voted state, [spi_device 4,enable 0], [spi_status 1, spi_devices_vote 1]
+[   13.551757] curcial_oj_poweron: OJ power enable(0)
+[   13.552429] curcial_oj: probe of curcial_oj failed with error -12
+[   13.553863] RTC Registering with rs30000048
+[   13.556579] msm_rpc_client_req: RPC call was not successful (3)
+[   13.556762] msmrtc_setup_cb: RPC client registration for PROC:12 failed
+[   13.557006] rs30000048 rs30000048.65536: msmrtc_probe: Could not initialize RPC callback
+[   13.558654] msmrtc_tod_proc_result: 01/18/1980 11:45:22 (04)
+[   13.560455] using rtc device, msm_rtc, for alarms
+[   13.560729] rs30000048 rs30000048.65536: rtc core: registered msm_rtc as rtc0
+[   13.561981] msmrtc_tod_proc_result: 01/18/1980 11:45:22 (04)
+[   13.562500] rs30000048 rs30000048.65536: rtc core: registered msm_rtc_secure as rtc1
+[   13.563659] lirc_dev: IR Remote Control driver registered, major 246 
+[   13.563995] IR NEC protocol handler initialized
+[   13.564117] IR RC5(x) protocol handler initialized
+[   13.564361] IR RC6 protocol handler initialized
+[   13.564514] IR JVC protocol handler initialized
+[   13.564758] IR Sony protocol handler initialized
+[   13.564880] IR RC5 (streamzap) protocol handler initialized
+[   13.565124] IR LIRC bridge handler initialized
+[   13.566284] sctrl.node 0
+[   13.566406] s5k3e2fx_sensor_probe
+[   13.609954] [USBH] msm_chg_detect_work: state:CHG_WAIT_FOR_DCD
+[   13.710357] [USBH] msm_chg_detect_work: state:CHG_WAIT_FOR_DCD
+[   13.810028] [USBH] msm_chg_detect_work: state:CHG_WAIT_FOR_DCD
+[   13.910034] [USBH] msm_chg_detect_work: state:CHG_WAIT_FOR_DCD
+[   14.010040] [USBH] msm_chg_detect_work: state:CHG_WAIT_FOR_DCD
+[   14.050445] [USBH] msm_chg_detect_work: state:CHG_DCD_DONE
+[   14.050598] [USBH] msm_chg_detect_work: state:CHG_DETECTED
+[   14.050750] [USBH] chg_type = USB_SDP_CHARGER
+[   14.051055] [USBH] msm_otg_sm_work: state:b_idle bit:0x00000003
+[   14.051300] [USB] OTG_STATE_B_IDLE state
+[   14.051452] [USBH] b_sess_vld
+[   14.051574] [USBH] Avail curr from USB = 500
+[   14.051788] [USBH] gadget on
+[   14.051971] [USB] CI13XXX_CONTROLLER_RESET_EVENT received
+[   14.052429] [USBH] send connect type -1
+[   14.052581] [BATT] peripheral_cable_update(1) from_owe=0
+[   14.052734] [BATT] err:Update SMEM: allocate fail at 1923140668 (1970-01-01 00:00:01.922774498 UTC)
+[   14.180358] [USB] android_enable_function: mass_storage enabled
+[   14.180603] [USB] android_enable_function: adb enabled
+[   14.180725] [USB] android_bind_enabled_functions bind name: mass_storage
+[   14.180999] [USB] android_bind_enabled_functions bind name: adb
+[   14.181121] adb_bind_config
+[   14.181579] [USB] ci13xxx_pullup: 1
+[   14.181732] [USB] android_usb_init_work: ret: 0
+[   14.184753] [USB] suspend
+[   14.202270] s5k3e2fx:kobject creat and add
+[   14.202545] s5k3e2fx:sysfs_create_file
+[   14.204681] Driver for 1-wire Dallas network protocol.
+[   14.206329] msm_i2c msm_i2c.0: [MSM I2C Err] status = 0x63C8, addr = 0x18, flags = 0x00, last_addr = 18, reg = 0xC3, last_reg = 0x00, last_flag = 0x01, cnt = 0, pos = 2
+[   14.206634] msm_i2c msm_i2c.0: (0030) Error during data xfer (-5) (C3, 00)
+[   14.210723] device-mapper: uevent: version 1.0.3
+[   14.211822] device-mapper: ioctl: 4.20.0-ioctl (2011-02-02) initialised: dm-devel@redhat.com
+[   14.212188] Bluetooth: HCI UART driver ver 2.2
+[   14.212310] Bluetooth: HCI H4 protocol initialized
+[   14.212554] Bluetooth: HCILL protocol initialized
+[   14.216430] mmc0: Qualcomm MSM SDCC-core at 0x00000000a0300000 irq 24,0 dma 8 dmacrcri 6
+[   14.216705] mmc0: Platform slot type: Unknown type
+[   14.217102] mmc0: 8 bit data mode disabled
+[   14.217346] mmc0: 4 bit data mode disabled
+[   14.217620] mmc0: polling status mode disabled
+[   14.217987] mmc0: MMC clock 144000 -> 49152000 Hz, PCLK 64000000 Hz
+[   14.218475] mmc0: Slot eject status = 1
+[   14.218841] mmc0: Power save feature enable = 1
+[   14.219238] mmc0: DM non-cached buffer at ffd80000, dma_addr 0x35fc0000
+[   14.219726] mmc0: DM cmd busaddr 0x35fc0000, cmdptr busaddr 0x35fd7f40
+[   14.226287] mmc1: Qualcomm MSM SDCC-core at 0x00000000a0400000 irq 26,0 dma 8 dmacrcri 7
+[   14.226440] mmc1: Platform slot type: Unknown type
+[   14.226928] mmc1: 8 bit data mode disabled
+[   14.227691] mmc1: 4 bit data mode disabled
+[   14.227935] mmc1: polling status mode disabled
+[   14.228088] mmc1: MMC clock 144000 -> 49152000 Hz, PCLK 64000000 Hz
+[   14.228485] mmc1: Slot eject status = 0
+[   14.228973] mmc1: Power save feature enable = 1
+[   14.229217] mmc1: DM non-cached buffer at ffd60000, dma_addr 0x35fe0000
+[   14.229492] mmc1: DM cmd busaddr 0x35fe0000, cmdptr busaddr 0x35ff7f40
+[   14.244537] logger: created 256K log 'log_main'
+[   14.245758] logger: created 256K log 'log_events'
+[   14.246795] logger: created 256K log 'log_radio'
+[   14.247833] logger: created 256K log 'log_system'
+[   14.251495] zram: num_devices not specified. Using default: 1
+[   14.251739] zram: Creating 1 devices ...
+[   14.258026] GACT probability NOT on
+[   14.258300] Mirror/redirect action on
+[   14.258453] u32 classifier
+[   14.258697]     Actions configured
+[   14.259643] Netfilter messages via NETLINK v0.30.
+[   14.261016] nf_conntrack version 0.5.0 (5049 buckets, 20196 max)
+[   14.271820] ctnetlink v0.93: registering with nfnetlink.
+[   14.279022] NF_TPROXY: Transparent proxy support initialized, version 4.1.0
+[   14.281585] NF_TPROXY: Copyright (c) 2006-2007 BalaBit IT Ltd.
+[   14.283599] xt_time: kernel timezone is -0000
+[   14.284606] ip_tables: (C) 2000-2006 Netfilter Core Team
+[   14.285369] arp_tables: (C) 2002 David S. Miller
+[   14.285949] TCP cubic registered
+[   14.287963] NET: Registered protocol family 10
+[   14.327667] Mobile IPv6
+[   14.328582] ip6_tables: (C) 2000-2006 Netfilter Core Team
+[   14.330932] IPv6 over IPv4 tunneling driver
+[   14.340423] NET: Registered protocol family 17
+[   14.340698] NET: Registered protocol family 15
+[   14.341369] Bridge firewalling registered
+[   14.341766] ######## bthid_init: ########
+[   14.342254] ######## bthid_init: done ########
+[   14.342407] lib80211: common routines for IEEE802.11 drivers
+[   14.342773] lib80211_crypt: registered algorithm 'NULL'
+[   14.342895] VFP support v0.3: implementor 51 architecture 64 part 0f variant 0 rev 1
+[   14.343322] ThumbEE CPU extension supported.
+[   14.376800] clock_late_init() disabled 27 unused clocks
+[   14.378753] [Port list] init()
+[   14.378906] [Port list] Virtual Address for port_list: [f81b2790]
+[   14.379150] [Port list] Physical Address for port_list: [1B2790]
+[   14.384765] bravo_wifi_init: start
+[   14.394226] regulator_init_complete: ldo2: incomplete constraints, leaving on
+[   14.395599] regulator_init_complete: ldo1: incomplete constraints, leaving on
+[   14.396942] regulator_init_complete: dcdc3: incomplete constraints, leaving on
+[   14.398345] regulator_init_complete: dcdc2: incomplete constraints, leaving on
+[   14.400115] regulator_init_complete: dcdc1: incomplete constraints, leaving on
+[   14.403015] msmrtc_tod_proc_result: 01/18/1980 11:45:23 (04)
+[   14.403167] rs30000048 rs30000048.65536: setting system clock to 1980-01-18 11:45:23 UTC (317043923)
+[   14.405120] BUG: key d5461a8c not in .data!
+[   14.405273] ------------[ cut here ]------------
+[   14.405487] WARNING: at kernel/lockdep.c:2885 lockdep_init_map+0x104/0x4cc()
+[   14.405761] Modules linked in:
+[   14.406097] Backtrace: 
+[   14.406646] [<c0040460>] (dump_backtrace+0x0/0x110) from [<c0465a4c>] (dump_stack+0x18/0x1c)
+[   14.407012]  r6:c054aeca r5:00000b45 r4:00000000 r3:00000000
+[   14.407806] [<c0465a34>] (dump_stack+0x0/0x1c) from [<c008848c>] (warn_slowpath_common+0x54/0x6c)
+[   14.408020] [<c0088438>] (warn_slowpath_common+0x0/0x6c) from [<c00884c8>] (warn_slowpath_null+0x24/0x2c)
+[   14.408233]  r8:d5461a80 r7:d545ff60 r6:00000000 r5:d5461a8c r4:d5469d88
+[   14.409271] r3:00000009
+[   14.409881] [<c00884a4>] (warn_slowpath_null+0x0/0x2c) from [<c00b15e4>] (lockdep_init_map+0x104/0x4cc)
+[   14.410186] [<c00b14e0>] (lockdep_init_map+0x0/0x4cc) from [<c0150bd4>] (sysfs_add_file_mode+0x58/0xb8)
+[   14.410552] [<c0150b7c>] (sysfs_add_file_mode+0x0/0xb8) from [<c015351c>] (internal_create_group+0x11c/0x19c)
+[   14.410797]  r6:d5469d00 r5:d545ff40 r4:00000000
+[   14.411590] [<c0153400>] (internal_create_group+0x0/0x19c) from [<c01535d0>] (sysfs_create_group+0x18/0x1c)
+[   14.411773] [<c01535b8>] (sysfs_create_group+0x0/0x1c) from [<c00101d4>] (msm_pm_init+0x2b4/0x49c)
+[   14.412170] [<c000ff20>] (msm_pm_init+0x0/0x49c) from [<c003737c>] (do_one_initcall+0xa0/0x174)
+[   14.412536] [<c00372dc>] (do_one_initcall+0x0/0x174) from [<c00083e8>] (kernel_init+0x78/0x120)
+[   14.412780]  r9:00000000 r8:00000000 r7:00000013 r6:c008bb10 r5:c0031c14
+[   14.413543] r4:c003253c
+[   14.414093] [<c0008370>] (kernel_init+0x0/0x120) from [<c008bb10>] (do_exit+0x0/0x648)
+[   14.414245]  r5:c0008370 r4:00000000
+[   14.414978] ---[ end trace 9068122e958d62bd ]---
+[   14.415252] BUG: key d5461aa8 not in .data!
+[   14.415435] BUG: key d5461ac4 not in .data!
+[   14.415618] BUG: key d5461ae0 not in .data!
+[   14.415771] BUG: key d5461b0c not in .data!
+[   14.416046] BUG: key d5461b28 not in .data!
+[   14.416290] BUG: key d5461b44 not in .data!
+[   14.416412] BUG: key d5461b60 not in .data!
+[   14.416656] BUG: key d5461b8c not in .data!
+[   14.416931] BUG: key d5461ba8 not in .data!
+[   14.417083] BUG: key d5461bc4 not in .data!
+[   14.417297] BUG: key d5461be0 not in .data!
+[   14.417602] BUG: key d5461c0c not in .data!
+[   14.417846] BUG: key d5461c28 not in .data!
+[   14.418212] BUG: key d5461c44 not in .data!
+[   14.418395] BUG: key d5461c60 not in .data!
+[   14.418548] Acquire 'boot-time' no_halt_lock 60s
+[   14.419006] Warning: unable to open an initial console.
+[   14.419647] Freeing init memory: 188K
+[   14.430175] init (1): /proc/1/oom_adj is deprecated, please use /proc/1/oom_score_adj instead.
+[   14.489166] mmc1: host does not support reading read-only switch. assuming write-enable.
+[   14.495239] mmc1: new high speed SDHC card at address e624
+[   14.499755] mmcblk0: mmc1:e624 SU04G 3.69 GiB 
+[   14.507781]  mmcblk0: p1
+[   14.537506] [USB] reset
+[   14.537719] [USBH] send connect type 1
+[   14.537933] [BATT] peripheral_cable_update(1) from_owe=0
+[   14.538055] [BATT] err:Update SMEM: allocate fail at 2408259861 (1980-01-18 11:45:23.634838529 UTC)
+[   14.538452] [HTC_BATT] cable change to 1
+[   14.538574] [BATT] ds2784_notify: 0 1 at 2408686795 (1980-01-18 11:45:23.635356949 UTC)
+[   14.538879] [BATT] charger ON (SLOW) at 2408900262 (1980-01-18 11:45:23.635661902 UTC)
+[   14.539764] [USB] portchange USB_SPEED_HIGH
+[   14.608215] [USB] USB_STATE=CONNECTED
+[   14.611755] [USB] reset
+[   14.614013] [USB] portchange USB_SPEED_HIGH
+[   14.665496] **********************************************
+[   14.665710] [BATT-DEBUG]: CHECKING IF BATTERY IS SUPPORTED
+[   14.665832] [HTC_BATT]Setting Full mAh values of Stock Battery
+[   14.666015] [HTC_BATT]Full mAh value set as 1500
+[   14.666168] [HTC_BATT]Extended Battery was not detected within BattInfo check
+[   14.666351] [HTC_BATT]RSNSP=67,RARC=100,Vol=4157mV,Current=1mA,Temp=310C(1/10)
+[   14.666473] [BATT] ds2784_notify: 1 100 at 2536540009 (1980-01-18 11:45:23.763179615 UTC)
+[   14.666992] [BATT] power_supply_changed: battery at 2536967048 (1980-01-18 11:45:23.763698162 UTC)
+[   14.667327] batt: charging SLOW
+[   14.697723] keychord: using input dev h2w headset for fevent
+[   14.697937] keychord: using input dev bravo-keypad for fevent
+[   14.698059] keychord: using input dev curcial-oj for fevent
+[   14.701354] android_usb gadget: high speed config #1: android
+[   14.701812] [USB] USB_STATE=CONFIGURED
+[   14.702087] [USB] set usb_connect2pc = 1
+[   14.705596] yaffs: dev is 32505859 name is "mtdblock3" rw
+[   14.705718] yaffs: passed flags ""
+[   14.705932] yaffs: Attempting MTD mount of 31.3,"mtdblock3"
+[   14.934997] yaffs: yaffs_read_super: is_checkpointed 1
+[   14.935668] yaffs: dev is 32505861 name is "mtdblock5" rw
+[   14.935852] yaffs: passed flags ""
+[   14.935974] yaffs: Attempting MTD mount of 31.5,"mtdblock5"
+[   15.157928] yaffs: block 486 is bad
+[   23.668853] yaffs: yaffs_read_super: is_checkpointed 0
+[   23.669494] yaffs: dev is 32505860 name is "mtdblock4" rw
+[   23.669891] yaffs: passed flags ""
+[   23.670135] yaffs: Attempting MTD mount of 31.4,"mtdblock4"
+[   23.673553] yaffs: yaffs_read_super: is_checkpointed 1
+[   24.930725] init: service 'console' requires console
+[   24.934875] [USB] enable_store, buff: 0
+[   24.935150] [USB] bDeviceClass_store: 0
+[   25.076293] adb_open: adbd(parent:init): tgid=132
+[   25.224029] warning: `rild' uses 32-bit capabilities (legacy support in use)
+[   26.034515] msmfb: pan_update in state(1)
+[   26.034515] msmfb: full update starting
+[   26.081237] msmfb: full update completed
+[   26.081420] msmfb: turning on panel
+[   26.081604] lcdc_unblank: ()
+[   26.081726] sony_tft_panel_unblank: +()
+[   26.081817] sony_tft_panel_unblank: -() already unblanked
+[   27.157684] htc-acoustic: open
+[   27.173187] htc-acoustic: release
+[   31.500213] NAND boot, writing additional init commands to /dev/smd0
+[   34.966705] lightsensor_ioctl get enabled status: 0
+[   36.239715] audio: init: codecs
+[   36.345092] dal_attach: status = 0, name = 'DAL_AQ_AUD'
+[   36.345214] audio: init: INIT
+[   36.345550] audio: init: OPEN control
+[   36.732269] audio: init: attach ACDB
+[   36.841186] dal_attach: status = 0, name = 'DAL_AM_AUD'
+[   36.841308] audio: init: attach ADIE
+[   36.841766] dal_attach: status = 0, name = 'DAL_AM_AUD'
+[   36.841888] pmic_rpc_req_reply: successfully connected to 0x10001 rpc version
+[   36.856781] acdb: load 'default.acdb'
+[   36.884399] acdb: 588 bytes for device 607, rate 48000.
+[   36.898986] acdb: 871 bytes for device 507, rate 8000.
+[   39.159912] [BATT-DEBUG: DISPLAYING ADDITIONAL BATTERY INFO]
+[   39.160095] [BATT-DEBUG]: Batt ID:1 Batt_vol:4157 Batt_temp:310
+[   39.160217] [BATT-DEBUG]: Batt_level:100 Batt_charging_source: 1 Batt_enabled: 1 Full_bat: 1459
+[   39.160552] [BATT-DEBUG: DISPLAYING ADDITIONAL BATTERY INFO]
+[   39.160675] [BATT-DEBUG]: Batt ID:1 Batt_vol:4157 Batt_temp:310
+[   39.161071] [BATT-DEBUG]: Batt_level:100 Batt_charging_source: 1 Batt_enabled: 1 Full_bat: 1459
+[   39.169982] request_suspend_state: wakeup (3->0) at 27039171364 (1980-01-18 11:45:48.251046882 UTC)
+[   40.081665] acc_open
+[   40.081695] acc_release
+[   40.311950] lightsensor_ioctl set value = 1
+[   40.312072] lightsensor_enable
+[   40.313964] microp_write_interrupt: microp_interrupt_enable called
+[   40.344848] sony_tft_set_pwm_val: 102
+[   40.361572] sony_tft_set_pwm_val: 99
+[   40.402587] sony_tft_set_pwm_val: 92
+[   40.432434] sony_tft_set_pwm_val: 88
+[   40.433319] sony_tft_set_pwm_val: 85
+[   40.466308] sony_tft_set_pwm_val: 78
+[   40.483184] sony_tft_set_pwm_val: 74
+[   40.502899] sony_tft_set_pwm_val: 70
+[   40.519744] sony_tft_set_pwm_val: 67
+[   40.536987] sony_tft_set_pwm_val: 64
+[   40.553100] sony_tft_set_pwm_val: 60
+[   40.568176] sony_tft_set_pwm_val: 57
+[   40.607757] sony_tft_set_pwm_val: 50
+[   40.626953] sony_tft_set_pwm_val: 46
+[   40.652435] sony_tft_set_pwm_val: 41
+[   40.663940] sony_tft_set_pwm_val: 40
+[   52.312957] SysRq : Emergency Remount R/O
+[   52.317169] Emergency Remount complete
+[   52.414123] msm_reboot_call: code 1, cmd recovery
+[   52.414428] msmfb_shutdown
+[   52.414550] lcdc_blank: ()
+[   52.414733] sony_tft_panel_blank: +()
+[   52.415954] mdp irq already on 4000 4000
+[   52.415985] mdp_dma: busy
+[   52.711547] sony_tft_panel_blank: -()
+[   52.711547] lcdc_shutdown: ()
+[   52.711791] [USB] ci13xxx_pullup: 0
+[   52.711975] [USB] adb_complete_out: err (-108)
+[   52.712249] adb_release: adbd(parent:init): tgid=132
+[   52.712768] adb_open: adbd(parent:init): tgid=132
+[   52.713653] adbd(parent:init): Restarting system with command 'recovery'.
+[   52.713653] msm_pm_restart: restart_reason 0x77665502, cmd recovery
+[   52.713684] 
+[   52.713684] Restarting Linux version 3.0.16-evervolv-turba-jellybean+ (nikez@Perfection) (gcc version 4.4.1 (Sourcery G++ Lite 2010q1-188) ) #1 PREEMPT Tue Jun 4 12:11:07 CEST 2013
+[   52.713714] 
+[   52.817321] msm_restart: Console was locked!
+[   52.817535] DPRINT_INT_CTRL_REGS:
+[   52.817535] 
+[   52.817749]     VIC_INT_SELECT0(0xF8000000) : 0x0
+[   52.817932]     VIC_INT_SELECT1(0xF8000004) : 0x80000000
+[   52.818054]         VIC_INT_EN0(0xF8000010) : 0x45002A1
+[   52.818237]         VIC_INT_EN1(0xF8000014) : 0x84000000
+[   52.818359]    VIC_INT_ENCLEAR0(0xF8000020) : 0x0
+[   52.818450]    VIC_INT_ENCLEAR1(0xF8000024) : 0x0
+[   52.818664]      VIC_INT_ENSET0(0xF8000030) : 0x0
+[   52.818756]      VIC_INT_ENSET1(0xF8000034) : 0x0
+[   52.818969]       VIC_INT_TYPE0(0xF8000040) : 0x4001A1
+[   52.819061]       VIC_INT_TYPE1(0xF8000044) : 0x4
+[   52.819274]   VIC_INT_POLARITY0(0xF8000050) : 0x0
+[   52.819366]   VIC_INT_POLARITY1(0xF8000054) : 0x0
+[   52.819488]     VIC_NO_PEND_VAL(0xF8000060) : 0xFFFFFFFF
+[   52.819671]    VIC_INT_MASTEREN(0xF8000064) : 0xFFFFFFFF
+[   52.819793]      VIC_PROTECTION(0xF800006C) : 0x0
+[   52.819976]          VIC_CONFIG(0xF8000068) : 0x3
+[   52.820098]     VIC_IRQ_STATUS0(0xF8000080) : 0x0
+[   52.820281]     VIC_IRQ_STATUS1(0xF8000084) : 0x0
+[   52.820404]     VIC_FIQ_STATUS0(0xF8000090) : 0x0
+[   52.820526]     VIC_FIQ_STATUS1(0xF8000094) : 0x0
+[   52.820709]     VIC_RAW_STATUS0(0xF80000A0) : 0x10000000
+[   52.820831]     VIC_RAW_STATUS1(0xF80000A4) : 0xC2000
+[   52.821014]      VIC_INT_CLEAR0(0xF80000B0) : 0x0
+[   52.821136]      VIC_INT_CLEAR1(0xF80000B4) : 0x0
+[   52.821319]        VIC_SOFTINT0(0xF80000C0) : 0x0
+[   52.821441]        VIC_SOFTINT1(0xF80000C4) : 0x0
+[   52.821533]      VIC_IRQ_VEC_RD(0xF80000D0) : 0x7
+[   52.821746] VIC_IRQ_VEC_PEND_RD(0xF80000D4) : 0x7
+[   52.821838]      VIC_IRQ_VEC_WR(0xF80000D8) : 0x0
+[   52.822052]  VIC_IRQ_IN_SERVICE(0xF80000E0) : 0xFFFFFFFF
+[   52.822143]    VIC_IRQ_IN_STACK(0xF80000E4) : 0x0
+[   52.822265]    VIC_TEST_BUS_SEL(0xF80000E8) : 0x1
+[   52.822448]  VIC_TEST_BUS_SEL_0(0xF8000200) : 0x0
+[   52.822570]  VIC_TEST_BUS_SEL_1(0xF8000204) : 0x0
+[   52.822753]  VIC_TEST_BUS_SEL_2(0xF8000208) : 0x0
+[   52.822875]  VIC_TEST_BUS_SEL_3(0xF800020C) : 0x0
+[   52.823089]  VIC_TEST_BUS_SEL_4(0xF8000210) : 0x0
+[   52.823181]  VIC_TEST_BUS_SEL_5(0xF8000214) : 0x0
+[   52.823303]  VIC_TEST_BUS_SEL_6(0xF8000218) : 0x0
+[   52.823486]  VIC_TEST_BUS_SEL_7(0xF800021C) : 0x0
+[   52.823608]  VIC_TEST_BUS_SEL_8(0xF8000220) : 0x0
+[   52.823791]  VIC_TEST_BUS_SEL_9(0xF8000224) : 0x0
+[   52.823913]  VIC_TEST_BUS_SEL_10(0xF8000228) : 0x0
+[   52.824035]  VIC_TEST_BUS_SEL_11(0xF800022C) : 0x0
+[   52.824218]  VIC_TEST_BUS_SEL_12(0xF8000230) : 0x0
+[   52.824340]  VIC_TEST_BUS_SEL_13(0xF8000234) : 0x0
+[   52.824523]  VIC_TEST_BUS_SEL_14(0xF8000238) : 0x0
+[   52.824645]  VIC_TEST_BUS_SEL_15(0xF800023C) : 0x0
+[   52.824829]  VIC_TEST_BUS_SEL_16(0xF8000240) : 0x0
+[   52.824951]  VIC_TEST_BUS_SEL_17(0xF8000244) : 0x0
+[   52.825042]  VIC_TEST_BUS_SEL_18(0xF8000248) : 0x0
+[   52.825256]  VIC_TEST_BUS_SEL_19(0xF800024C) : 0x0
+[   52.825347]  VIC_TEST_BUS_SEL_20(0xF8000250) : 0x0
+[   52.825561]  VIC_TEST_BUS_SEL_21(0xF8000254) : 0x0
+[   52.825653]  VIC_TEST_BUS_SEL_22(0xF8000258) : 0x0
+[   52.825866]  VIC_TEST_BUS_SEL_23(0xF800025C) : 0x0
+[   52.825958]  VIC_TEST_BUS_SEL_24(0xF8000260) : 0x0
+[   52.826080]  VIC_TEST_BUS_SEL_25(0xF8000264) : 0x0
+[   52.826293]  VIC_TEST_BUS_SEL_26(0xF8000268) : 0x0
+[   52.826385]  VIC_TEST_BUS_SEL_27(0xF800026C) : 0x0
+[   52.826599]  VIC_TEST_BUS_SEL_28(0xF8000270) : 0x0
+[   52.826690]  VIC_TEST_BUS_SEL_29(0xF8000274) : 0x0
+[   52.826812]  VIC_TEST_BUS_SEL_30(0xF8000278) : 0x0
+[   52.826995]  VIC_TEST_BUS_SEL_31(0xF800027C) : 0x0
+[   52.827117]  VIC_TEST_BUS_SEL_32(0xF8000280) : 0x0
+[   52.827301]  VIC_TEST_BUS_SEL_33(0xF8000284) : 0x0
+[   52.827423]  VIC_TEST_BUS_SEL_34(0xF8000288) : 0x0
+[   52.827606]  VIC_TEST_BUS_SEL_35(0xF800028C) : 0x0
+[   52.827728]  VIC_TEST_BUS_SEL_36(0xF8000290) : 0x0
+[   52.827850]  VIC_TEST_BUS_SEL_37(0xF8000294) : 0x0
+[   52.828033]  VIC_TEST_BUS_SEL_38(0xF8000298) : 0x0
+[   52.828155]  VIC_TEST_BUS_SEL_39(0xF800029C) : 0x0
+[   52.828338]  VIC_TEST_BUS_SEL_40(0xF80002A0) : 0x0
+[   52.828460]  VIC_TEST_BUS_SEL_41(0xF80002A4) : 0x0
+[   52.828643]  VIC_TEST_BUS_SEL_42(0xF80002A8) : 0x0
+[   52.828765]  VIC_TEST_BUS_SEL_43(0xF80002AC) : 0x0
+[   52.828887]  VIC_TEST_BUS_SEL_44(0xF80002B0) : 0x0
+[   52.829071]  VIC_TEST_BUS_SEL_45(0xF80002B4) : 0x0
+[   52.829193]  VIC_TEST_BUS_SEL_46(0xF80002B8) : 0x0
+[   52.829376]  VIC_TEST_BUS_SEL_47(0xF80002BC) : 0x0
+[   52.829498]  VIC_TEST_BUS_SEL_48(0xF80002C0) : 0x0
+[   52.829589]  VIC_TEST_BUS_SEL_49(0xF80002C4) : 0x0
+[   52.829711]  VIC_TEST_BUS_SEL_50(0xF80002C8) : 0x0
+[   52.829833]  VIC_TEST_BUS_SEL_51(0xF80002CC) : 0x0
+[   52.830017]  VIC_TEST_BUS_SEL_52(0xF80002D0) : 0x0
+[   52.830139]  VIC_TEST_BUS_SEL_53(0xF80002D4) : 0x0
+[   52.830322]  VIC_TEST_BUS_SEL_54(0xF80002D8) : 0x0
+[   52.830444]  VIC_TEST_BUS_SEL_55(0xF80002DC) : 0x0
+[   52.830535]  VIC_TEST_BUS_SEL_56(0xF80002E0) : 0x0
+[   52.830749]  VIC_TEST_BUS_SEL_57(0xF80002E4) : 0x0
+[   52.830841]  VIC_TEST_BUS_SEL_58(0xF80002E8) : 0x0
+[   52.831054]  VIC_TEST_BUS_SEL_59(0xF80002EC) : 0x0
+[   52.831176]  VIC_TEST_BUS_SEL_60(0xF80002F0) : 0x0
+[   52.831359]  VIC_TEST_BUS_SEL_61(0xF80002F4) : 0x0
+[   52.831481]  VIC_TEST_BUS_SEL_62(0xF80002F8) : 0x0
+[   52.831573]  VIC_TEST_BUS_SEL_63(0xF80002FC) : 0x0
+[   52.831787]   VIC_VECTADDR_0(0xF8000400) : 0x0
+[   52.831878]   VIC_VECTADDR_1(0xF8000404) : 0x0
+[   52.832092]   VIC_VECTADDR_2(0xF8000408) : 0x0
+[   52.832183]   VIC_VECTADDR_3(0xF800040C) : 0x0
+[   52.832305]   VIC_VECTADDR_4(0xF8000410) : 0x0
+[   52.832489]   VIC_VECTADDR_5(0xF8000414) : 0x0
+[   52.832611]   VIC_VECTADDR_6(0xF8000418) : 0x0
+[   52.832794]   VIC_VECTADDR_7(0xF800041C) : 0x0
+[   52.832916]   VIC_VECTADDR_8(0xF8000420) : 0x0
+[   52.833007]   VIC_VECTADDR_9(0xF8000424) : 0x0
+[   52.833221]   VIC_VECTADDR_10(0xF8000428) : 0x0
+[   52.833312]   VIC_VECTADDR_11(0xF800042C) : 0x0
+[   52.833526]   VIC_VECTADDR_12(0xF8000430) : 0x0
+[   52.833618]   VIC_VECTADDR_13(0xF8000434) : 0x0
+[   52.833740]   VIC_VECTADDR_14(0xF8000438) : 0x0
+[   52.833923]   VIC_VECTADDR_15(0xF800043C) : 0x0
+[   52.834045]   VIC_VECTADDR_16(0xF8000440) : 0x0
+[   52.834228]   VIC_VECTADDR_17(0xF8000444) : 0x0
+[   52.834350]   VIC_VECTADDR_18(0xF8000448) : 0x0
+[   52.834472]   VIC_VECTADDR_19(0xF800044C) : 0x0
+[   52.834655]   VIC_VECTADDR_20(0xF8000450) : 0x0
+[   52.834777]   VIC_VECTADDR_21(0xF8000454) : 0x0
+[   52.834960]   VIC_VECTADDR_22(0xF8000458) : 0x0
+[   52.835083]   VIC_VECTADDR_23(0xF800045C) : 0x0
+[   52.835174]   VIC_VECTADDR_24(0xF8000460) : 0x0
+[   52.835388]   VIC_VECTADDR_25(0xF8000464) : 0x0
+[   52.835479]   VIC_VECTADDR_26(0xF8000468) : 0x0
+[   52.835693]   VIC_VECTADDR_27(0xF800046C) : 0x0
+[   52.835784]   VIC_VECTADDR_28(0xF8000470) : 0x0
+[   52.835906]   VIC_VECTADDR_29(0xF8000474) : 0x0
+[   52.836090]   VIC_VECTADDR_30(0xF8000478) : 0x0
+[   52.836212]   VIC_VECTADDR_31(0xF800047C) : 0x0
+[   52.836303]   VIC_VECTADDR_32(0xF8000480) : 0x0
+[   52.836425]   VIC_VECTADDR_33(0xF8000484) : 0x0
+[   52.836547]   VIC_VECTADDR_34(0xF8000488) : 0x0
+[   52.836730]   VIC_VECTADDR_35(0xF800048C) : 0x0
+[   52.836853]   VIC_VECTADDR_36(0xF8000490) : 0x0
+[   52.836944]   VIC_VECTADDR_37(0xF8000494) : 0x0
+[   52.837158]   VIC_VECTADDR_38(0xF8000498) : 0x0
+[   52.837249]   VIC_VECTADDR_39(0xF800049C) : 0x0
+[   52.837463]   VIC_VECTADDR_40(0xF80004A0) : 0x0
+[   52.837554]   VIC_VECTADDR_41(0xF80004A4) : 0x0
+[   52.837677]   VIC_VECTADDR_42(0xF80004A8) : 0x0
+[   52.837860]   VIC_VECTADDR_43(0xF80004AC) : 0x0
+[   52.837982]   VIC_VECTADDR_44(0xF80004B0) : 0x0
+[   52.838165]   VIC_VECTADDR_45(0xF80004B4) : 0x0
+[   52.838287]   VIC_VECTADDR_46(0xF80004B8) : 0x0
+[   52.838378]   VIC_VECTADDR_47(0xF80004BC) : 0x0
+[   52.838592]   VIC_VECTADDR_48(0xF80004C0) : 0x0
+[   52.838684]   VIC_VECTADDR_49(0xF80004C4) : 0x0
+[   52.838897]   VIC_VECTADDR_50(0xF80004C8) : 0x0
+[   52.838989]   VIC_VECTADDR_51(0xF80004CC) : 0x0
+[   52.839111]   VIC_VECTADDR_52(0xF80004D0) : 0x0
+[   52.839294]   VIC_VECTADDR_53(0xF80004D4) : 0x0
+[   52.839416]   VIC_VECTADDR_54(0xF80004D8) : 0x0
+[   52.839599]   VIC_VECTADDR_55(0xF80004DC) : 0x0
+[   52.839721]   VIC_VECTADDR_56(0xF80004E0) : 0x0
+[   52.839843]   VIC_VECTADDR_57(0xF80004E4) : 0x0
+[   52.840026]   VIC_VECTADDR_58(0xF80004E8) : 0x0
+[   52.840148]   VIC_VECTADDR_59(0xF80004EC) : 0x0
+[   52.840332]   VIC_VECTADDR_60(0xF80004F0) : 0x0
+[   52.840454]   VIC_VECTADDR_61(0xF80004F4) : 0x0
+[   52.840545]   VIC_VECTADDR_62(0xF80004F8) : 0x0
+[   52.840759]   VIC_VECTADDR_63(0xF80004FC) : 0x0
 
 No errors detected
