@@ -27,7 +27,6 @@
 #include <linux/reboot.h>
 #include <linux/msm_kgsl.h>
 #include <linux/spi/spi.h>
-#include <linux/bma150.h>
 #include <linux/platform_device.h>
 #include <linux/usb/composite.h>
 #include <linux/usb/android_composite.h>
@@ -540,7 +539,7 @@ static struct i2c_board_info rev_CX_i2c_devices[] = {
 ///////////////////////////////////////////////////////////////////////
 // USB
 ///////////////////////////////////////////////////////////////////////
-
+/*
 static unsigned ulpi_on_gpio_table[] = {
 	GPIO_CFG(0x68, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_4MA),
 	GPIO_CFG(0x6f, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_2MA),
@@ -629,6 +628,7 @@ static int usb_config_gpio(int config)
 
 	return 0;
 }
+*/
 
 static void usb_phy_shutdown(void)
 {
@@ -647,7 +647,7 @@ int usb_phy_reset(void  __iomem *regs)
 	mdelay(3);
 	gpio_set_value(BRAVO_GPIO_USBPHY_3V3_ENABLE, 1);
 	mdelay(3);
-	usb_config_gpio(1);
+	//usb_config_gpio(1);
 
 	return 0;
 }
@@ -936,7 +936,7 @@ void bravo_add_usb_devices(void)
 	msm_device_otg.dev.platform_data = &msm_otg_pdata;
 	//msm_device_gadget_peripheral.dev.platform_data = &msm_gadget_pdata;
 	msm_device_gadget_peripheral.dev.parent = &msm_device_otg.dev;
-	usb_gpio_init();
+	//usb_gpio_init();
 	platform_device_register(&msm_device_gadget_peripheral);
 	platform_device_register(&android_usb_device);
 }
@@ -1581,11 +1581,6 @@ static struct perflock_platform_data bravo_perflock_data = {
 ///////////////////////////////////////////////////////////////////////
 // Reset
 ///////////////////////////////////////////////////////////////////////
-/*static void (void)
-{
-    printk("bravo_reset()\n");
-	gpio_set_value(BRAVO_GPIO_PS_HOLD, 0);
-};*/
 
 static void bravo_reset(void)
 {
@@ -1695,45 +1690,6 @@ static struct msm_pm_platform_data msm_pm_data[MSM_PM_SLEEP_MODE_NR] = {
 		.residency = 0,
 	},
 };
-
-static struct msm_gpio bma_spi_gpio_config_data[] = {
-	{ GPIO_CFG(22, 0, GPIO_CFG_INPUT,  GPIO_CFG_NO_PULL, GPIO_CFG_2MA), "bma_irq" },
-};
-
-static int msm_bma_gpio_setup(struct device *dev)
-{
-	int rc;
-
-	rc = msm_gpios_enable(bma_spi_gpio_config_data,
-		ARRAY_SIZE(bma_spi_gpio_config_data));
-
-	return rc;
-}
-
-static void msm_bma_gpio_teardown(struct device *dev)
-{
-	msm_gpios_disable_free(bma_spi_gpio_config_data,
-		ARRAY_SIZE(bma_spi_gpio_config_data));
-}
-
-static struct bma150_platform_data bma_pdata = {
-	.setup    = msm_bma_gpio_setup,
-	.teardown = msm_bma_gpio_teardown,
-};
-
-
-static struct spi_board_info msm_spi_board_info[] __initdata = {
-	{
-		.modalias	= "bma150",
-		.mode		= SPI_MODE_3,
-		.irq		= MSM_GPIO_TO_INT(22),
-		.bus_num	= 0,
-		.chip_select	= 0,
-		.max_speed_hz	= 10000000,
-		.platform_data	= &bma_pdata,
-	},
-};
-
 #define CT_CSR_PHYS		0xA8700000
 #define TCSR_SPI_MUX		(ct_csr_base + 0x54)
 static int msm_qsd_spi_dma_config(void)
@@ -1836,15 +1792,13 @@ static void __init bravo_init(void)
 	msm_clock_init(&qds8x50_clock_init_data);
 	acpuclk_init(&acpuclk_8x50_soc_data);
 
-    msm_gpios_enable(misc_gpio_table, ARRAY_SIZE(misc_gpio_table));
+	msm_gpios_enable(misc_gpio_table, ARRAY_SIZE(misc_gpio_table));
 
 	gpio_request(BRAVO_GPIO_TP_LS_EN, "tp_ls_en");
 	gpio_direction_output(BRAVO_GPIO_TP_LS_EN, 0);
 	gpio_request(BRAVO_GPIO_TP_EN, "tp_en");
 	gpio_direction_output(BRAVO_GPIO_TP_EN, 0);
 	gpio_request(BRAVO_GPIO_LS_EN_N, "ls_en");
-	gpio_request(BRAVO_GPIO_COMPASS_RST_N, "compass_rst");
-	gpio_direction_output(BRAVO_GPIO_COMPASS_RST_N, 1);
 	gpio_request(BRAVO_GPIO_COMPASS_INT_N, "compass_int");
 	gpio_direction_input(BRAVO_GPIO_COMPASS_INT_N);
 
@@ -1852,8 +1806,8 @@ static void __init bravo_init(void)
 
 #ifdef CONFIG_SERIAL_MSM_HS
 	msm_device_uart_dm1.dev.platform_data = &msm_uart_dm1_pdata;
-    msm_device_uart_dm1.name = "msm_serial_hs_brcm"; /* for bcm */
-    msm_device_uart_dm1.resource[3].end = 6;
+	msm_device_uart_dm1.name = "msm_serial_hs_brcm"; /* for bcm */
+	msm_device_uart_dm1.resource[3].end = 6;
 #endif
 
 	config_gpio_table(bt_gpio_table, ARRAY_SIZE(bt_gpio_table));
@@ -1867,7 +1821,6 @@ static void __init bravo_init(void)
 	msm_qsd_spi_init();
 
 	i2c_register_board_info(0, base_i2c_devices, ARRAY_SIZE(base_i2c_devices));
-	spi_register_board_info(msm_spi_board_info, ARRAY_SIZE(msm_spi_board_info));
 
 	ret = bravo_init_mmc(system_rev, debug_uart);
 	if (ret != 0)
@@ -1879,7 +1832,7 @@ static void __init bravo_init(void)
 #endif
 
 	bravo_audio_init();
-    	bravo_headset_init();
+	bravo_headset_init();
 
 	platform_device_register(&bravo_timed_gpios);
 }

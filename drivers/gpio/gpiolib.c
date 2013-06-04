@@ -1175,13 +1175,15 @@ EXPORT_SYMBOL_GPL(gpiochip_find);
  */
 int gpio_request(unsigned gpio, const char *label)
 {
+
 	struct gpio_desc	*desc;
 	struct gpio_chip	*chip;
 	int			status = -EINVAL;
 	unsigned long		flags;
 
+	/*pr_info("DEBUG gpio=%u label=%s\n", gpio, label); use this to debug gpio_request's */
+	
 	spin_lock_irqsave(&gpio_lock, flags);
-
 	if (!gpio_is_valid(gpio))
 		goto done;
 	desc = &gpio_desc[gpio];
@@ -1217,7 +1219,6 @@ int gpio_request(unsigned gpio, const char *label)
 			clear_bit(FLAG_REQUESTED, &desc->flags);
 		}
 	}
-
 done:
 	if (status)
 		pr_debug("gpio_request: gpio-%d (%s) status %d\n",
