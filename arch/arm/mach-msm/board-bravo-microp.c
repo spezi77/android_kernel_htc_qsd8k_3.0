@@ -1852,8 +1852,34 @@ static void microp_irq_unmask(unsigned int irq)
 	;
 }
 
+static void microp_irq_set_wake(unsigned int irq)
+{
+    ;
+}
+
+static void microp_irq_set_type(unsigned int irq)
+{
+    ;
+}
+
+static struct irq_chip microp_irq_chip = {
+	.name = "microp",
+	.irq_ack = microp_irq_ack,
+	.irq_mask = microp_irq_mask,
+	.irq_unmask = microp_irq_unmask,
+    .irq_set_wake = microp_irq_set_wake,
+    .irq_set_type = microp_irq_set_type,
+};
+
 static int __init microp_i2c_init(void)
 {
+	int n, MICROP_IRQ_END = FIRST_MICROP_IRQ + NR_MICROP_IRQS;
+	for (n = FIRST_MICROP_IRQ; n < MICROP_IRQ_END; n++) {
+		irq_set_chip_and_handler(n, &microp_irq_chip,
+					 handle_level_irq);
+		set_irq_flags(n, IRQF_VALID);
+	}
+
 	return i2c_add_driver(&microp_i2c_driver);
 }
 
