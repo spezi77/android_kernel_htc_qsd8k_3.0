@@ -664,6 +664,7 @@ static int __devinit msm_gpio_probe(struct platform_device *dev)
 			msm_gpio_chips[j].chip.ngpio)
 			j++;
 		irq_set_chip_data(i, &msm_gpio_chips[j]);
+		irq_set_chip(i, &msm_gpio_irq_chip);
 		irq_set_chip_and_handler(i, &msm_gpio_irq_chip,
 					 handle_edge_irq);
 		set_irq_flags(i, IRQF_VALID);
@@ -683,6 +684,11 @@ static int __devinit msm_gpio_probe(struct platform_device *dev)
 		__raw_writel(0, msm_gpio_chips[i].regs.int_en);
 		gpiochip_add(&msm_gpio_chips[i].chip);
 	}
+
+	irq_set_chained_handler(INT_GPIO_GROUP1, msm_gpio_irq_handler);
+	irq_set_chained_handler(INT_GPIO_GROUP2, msm_gpio_irq_handler);
+	irq_set_irq_wake(INT_GPIO_GROUP1, 1);
+	irq_set_irq_wake(INT_GPIO_GROUP2, 2);
 
 	mb();
 	return 0;
