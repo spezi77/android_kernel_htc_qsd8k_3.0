@@ -168,7 +168,6 @@ unsigned msm_num_footswitch_devices = ARRAY_SIZE(msm_footswitch_devices);
 // Memory
 ///////////////////////////////////////////////////////////////////////
 
-#define MSM_PMEM_SF_SIZE	0x1700000
 #define MSM_AUDIO_SIZE		0x80000
 
 #ifdef CONFIG_KERNEL_PMEM_SMI_REGION
@@ -232,15 +231,6 @@ static struct platform_device android_pmem_venc_device = {
 	.id = 5,
 	.dev = { .platform_data = &android_pmem_venc_pdata },
 };
-
-
-static unsigned pmem_sf_size = MSM_PMEM_SF_SIZE;
-static int __init pmem_sf_size_setup(char *p)
-{
-	pmem_sf_size = memparse(p, NULL);
-	return 0;
-}
-early_param("pmem_sf_size", pmem_sf_size_setup);
 
 static unsigned pmem_mdp_size = MSM_PMEM_MDP_SIZE;
 static int __init pmem_mdp_size_setup(char *p)
@@ -307,7 +297,6 @@ static void __init reserve_pmem_memory(void)
 #ifdef CONFIG_ANDROID_PMEM
 	reserve_memory_for(&android_pmem_adsp_pdata);
 	reserve_memory_for(&android_pmem_pdata);
-	reserve_memory_for(&android_pmem_venc_pdata);
 #endif
 }
 
