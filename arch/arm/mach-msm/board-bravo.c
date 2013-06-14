@@ -48,7 +48,9 @@
 #include <mach/msm_serial_debugger.h>
 #include <mach/system.h>
 #include <mach/msm_serial_hs.h>
+#ifdef CONFIG_SERIAL_BCM_BT_LPM
 #include <mach/bcm_bt_lpm.h>
+#endif
 
 #include <mach/board.h>
 #include <mach/dma.h>
@@ -1802,8 +1804,6 @@ static void __init bravo_init(void)
 
 #ifdef CONFIG_SERIAL_MSM_HS
 	msm_device_uart_dm1.dev.platform_data = &msm_uart_dm1_pdata;
-	msm_device_uart_dm1.name = "msm_serial_hs_brcm"; /* for bcm */
-	msm_device_uart_dm1.resource[3].end = 6;
 #endif
 
 	config_gpio_table(bt_gpio_table, ARRAY_SIZE(bt_gpio_table));
