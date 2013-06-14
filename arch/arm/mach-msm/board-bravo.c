@@ -1178,12 +1178,15 @@ static struct platform_device bravo_timed_gpios = {
 	},
 };
 
+#ifdef CONFIG_SERIAL_MSM_HS
 static struct msm_serial_hs_platform_data msm_uart_dm1_pdata = {
 	.rx_wakeup_irq = -1,
 	.inject_rx_on_wakeup = 0,
+#ifdef CONFIG_SERIAL_BCM_BT_LPM
 	.exit_lpm_cb = bcm_bt_lpm_exit_lpm_locked,
+#endif
 };
-
+#ifdef CONFIG_SERIAL_BCM_BT_LPM
 static struct bcm_bt_lpm_platform_data bcm_bt_lpm_pdata = {
 	.gpio_wake = BRAVO_GPIO_BT_WAKE,
 	.gpio_host_wake = BRAVO_GPIO_BT_HOST_WAKE,
@@ -1199,6 +1202,8 @@ struct platform_device bcm_bt_lpm_device = {
 	},
 };
 
+#endif
+#endif
 static int ds2784_charge(int on, int fast)
 {
 	if (is_cdma_version(system_rev)) {
@@ -1443,7 +1448,9 @@ static struct platform_device *devices[] __initdata = {
 #endif
 	&qsd_device_spi,
 	&msm_device_otg,
+#ifdef CONFIG_SERIAL_BCM_BT_LPM
 	&bcm_bt_lpm_device,
+#endif
 	&msm_device_uart_dm1,
 	&ram_console_device,
 	&bravo_rfkill,
