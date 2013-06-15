@@ -1914,7 +1914,7 @@ static void msm_pm_restart(char str, const char *cmd)
 {
 	pr_info("%s: restart_reason 0x%x, cmd %s\n", __func__, restart_reason, (cmd) ? cmd : "NULL");
 	msm_pm_flush_console();
-	dprint_int_ctrl_regs();
+	//dprint_int_ctrl_regs();
 	//if (in_panic)
 	//	smd_ch(2);
 	msm_rpcrouter_close();
