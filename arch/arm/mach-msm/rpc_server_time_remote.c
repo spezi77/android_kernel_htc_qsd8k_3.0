@@ -117,8 +117,8 @@ static int handle_rpc_call(struct msm_rpc_server *server,
 		       "\tstamp = %lld\n",
 		       args->tick, args->stamp);
 		getnstimeofday(&ts);
-		//msmrtc_updateatsuspend(&ts);
-		//rtc_hctosys();
+		msmrtc_updateatsuspend(&ts);
+		rtc_hctosys();
 		getnstimeofday(&tv);
 		/* Update the alarm information with the new time info. */
 		//alarm_update_timedelta(ts, tv);
