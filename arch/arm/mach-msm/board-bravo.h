@@ -155,6 +155,8 @@
 #define BRAVO_GPIO_BATTERY_OVER_CHG		147
 #define BRAVO_GPIO_POWER_USB     		109
 #define BRAVO_GPIO_USBPHY_3V3_ENABLE		104
+#define BRAVO_GPIO_USB_ID_PIN                   142/*for BRAVO USB ID pin*/
+#define BRAVO_GPIO_USB_ID1_PIN          	36/*for BRAVO USB ID pin*/
 
 /* display relative */
 #define BRAVO_LCD_SPI_CLK            (17)
