@@ -133,12 +133,12 @@ struct htc_battery_info {
 	int gpio_adp_9v;
 	unsigned int option_flag;
 	int (*func_battery_charging_ctrl)(enum batt_ctl_t ctl);
+	int charger_re_enable;
 };
 
 static struct msm_rpc_endpoint *endpoint;
 
 static struct htc_battery_info htc_batt_info;
-static int phone_call_flag = 0;
 
 /* Remove cache mechanism to prevent cable status not sync. */
 static unsigned int cache_time;
@@ -157,12 +157,19 @@ static unsigned int charger_ctrl_stat;
 static unsigned int g_audio_stat = 0;	/* 1: playing */
 static unsigned int g_owe_docked = 0;	/* 1: one-wire device docked */
 
+#if defined(CONFIG_MACH_PRIMODD) || defined(CONFIG_MACH_PRIMOTD)
+/* For switch battery timer between 30s and 5min by phone status */
+static int htc_batt_phone_call;
+static int is_phone_call_set;
+#endif
+
 static enum power_supply_property htc_battery_properties[] = {
 	POWER_SUPPLY_PROP_STATUS,
 	POWER_SUPPLY_PROP_HEALTH,
 	POWER_SUPPLY_PROP_PRESENT,
 	POWER_SUPPLY_PROP_TECHNOLOGY,
 	POWER_SUPPLY_PROP_CAPACITY,
+	POWER_SUPPLY_PROP_OVERLOAD,
 };
 
 static enum power_supply_property htc_power_properties[] = {
@@ -537,7 +544,7 @@ static int htc_battery_status_update(u32 curr_level)
 
 	mutex_lock(&htc_batt_info.lock);
 	notify = (htc_batt_info.rep.level != curr_level);
-#if (defined(CONFIG_MACH_POPC))
+#if defined(CONFIG_MACH_POPC) || defined(CONFIG_MACH_SPADE)
 	htc_batt_info.rep.level = 60; /* temporarily fake capacity */
 #else
 	htc_batt_info.rep.level = curr_level;
@@ -655,14 +662,7 @@ static int htc_cable_status_update(int status)
 		with source = 1.
 	*/
 
-	if (htc_batt_info.guage_driver == GUAGE_DS2746) {
-		/* DS2746: It's not necessary to send uevent here. Just to let
-			userspace to know charging_source changes asap to
-			switch charging led indicator */
-		power_supply_changed(&htc_power_supplies[BATTERY_SUPPLY]);
-		if (htc_batt_debug_mask & HTC_BATT_DEBUG_UEVT)
-		BATT_LOG("(htc_cable_status_update)power_supply_changed: battery");
-	} else if (status == CHARGER_BATTERY) {
+	if (status == CHARGER_BATTERY) {
 		htc_set_smem_cable_type(CHARGER_BATTERY);
 		power_supply_changed(&htc_power_supplies[BATTERY_SUPPLY]);
 		if (htc_batt_debug_mask & HTC_BATT_DEBUG_UEVT)
@@ -957,6 +957,11 @@ struct htc_batt_info_full {
 	u32 vchg;	/* VCHG => 0: Not, 1: In */
 	u32 over_vchg;	/*over voltage charger detection, 0:VCHG normal(below 6V) 1:VCHG over(upper 6V)*/
 	u32 reserve4;
+#ifdef CONFIG_MACH_GOLFC
+  u32 voltage_adc;
+  u32 current_adc;
+  u32 temp_adc;
+#endif /* Add smem to show adc values for debug */
 };
 
 /* SMEM_BATT_INFO is allocated by A9 after first A2M RPC is sent. */
@@ -999,6 +1004,7 @@ static int htc_get_batt_info_smem(struct battery_info_reply *buffer)
 	buffer->charging_enabled = smem_batt_info->charging_enabled;
 	buffer->full_bat = smem_batt_info->full_bat;
 	buffer->over_vchg = smem_batt_info->over_vchg;
+	htc_batt_info.rep.overloading_charge = smem_batt_info->overloading_charge;
 	mutex_unlock(&htc_batt_info.lock);
 
 	if (htc_batt_debug_mask & HTC_BATT_DEBUG_SMEM)
@@ -1039,6 +1045,11 @@ static ssize_t htc_battery_show_smem(struct device *dev,
 		memcpy(buf, smem_batt_info, len);
 	} else if (!strcmp(attr->attr.name, "smem_text")) {
 		len += scnprintf(buf + len, PAGE_SIZE - len,
+#ifdef CONFIG_MACH_GOLFC
+      "voltage_adc: %d\n"
+      "current_adc: %d\n"
+      "temp_adc: %d\n"
+#endif /* Add smem to show adc values for debug */
 			"batt_id: %d\n"
 			"batt_vol: %d\n"
 			"batt_vol_last: %d\n"
@@ -1079,6 +1090,11 @@ static ssize_t htc_battery_show_smem(struct device *dev,
 			"a2m_cable_type: %d\n"
 			"vchg: %d\n"
 			"over_vchg: %d\n",
+#ifdef CONFIG_MACH_GOLFC
+      smem_batt_info->voltage_adc,
+      smem_batt_info->current_adc,
+      smem_batt_info->temp_adc,
+#endif /* Add smem to show adc values for debug */
 			smem_batt_info->batt_id,
 			smem_batt_info->batt_vol,
 			smem_batt_info->batt_vol_last,
@@ -1242,6 +1258,10 @@ static int htc_battery_get_charging_status(void)
 	/* ARM9 decides charging_enabled value by battery id */
 	/* if (htc_batt_info.rep.batt_id == 255)
 		charger = CHARGER_UNKNOWN;*/
+#ifdef CONFIG_BATTERY_DS2746
+  if (htc_batt_info.rep.batt_id == 255 || htc_batt_info.rep.batt_id == BATTERY_ID_UNKNOWN)
+    charger = CHARGER_UNKNOWN;
+#endif
 
 	switch (charger) {
 	case CHARGER_BATTERY:
@@ -1334,6 +1354,11 @@ static int htc_battery_get_property(struct power_supply *psy,
 		if (htc_batt_debug_mask & HTC_BATT_DEBUG_USER_QUERY)
 			BATT_LOG("%s: %s: capacity=%d", __func__, psy->name, val->intval);
 		break;
+	case POWER_SUPPLY_PROP_OVERLOAD:
+		val->intval = htc_batt_info.rep.overloading_charge;
+		if (htc_batt_debug_mask & HTC_BATT_DEBUG_USER_QUERY)
+		      	BATT_LOG("%s: %s: overloading_charge=%d", __func__, psy->name, val->intval);
+   		break;
 	default:
 		return -EINVAL;
 	}
@@ -1403,22 +1428,10 @@ static int htc_rpc_charger_switch(unsigned enable)
 	} req;
 
 	BATT_LOG("%s: switch charger to mode: %u", __func__, enable);
-	if (enable == ENABLE_LIMIT_CHARGER) {
-		#if (!defined(CONFIG_MACH_PRIMOU))
-			ret = tps_set_charger_ctrl(ENABLE_LIMITED_CHG);
-		#else
-			phone_call_flag = PHONE_CALL_IN;
-			BATT_LOG("phone_call_flag:%d\n",phone_call_flag);
-		#endif
-	}
-	else if (enable == DISABLE_LIMIT_CHARGER) {
-		#if (!defined(CONFIG_MACH_PRIMOU))
-			ret = tps_set_charger_ctrl(CLEAR_LIMITED_CHG);
-		#else
-			phone_call_flag = PHONE_CALL_STOP;
-			BATT_LOG("phone_call_flag:%d\n",phone_call_flag);
-		#endif
-	}
+	if (enable == ENABLE_LIMIT_CHARGER)
+	    ret = tps_set_charger_ctrl(ENABLE_LIMITED_CHG);
+	else if (enable == DISABLE_LIMIT_CHARGER)
+	    ret = tps_set_charger_ctrl(CLEAR_LIMITED_CHG);
 	else {
 		if (htc_batt_info.guage_driver == GUAGE_MODEM) {
 			/* For Mecha, this should be enabled. */
@@ -1654,6 +1667,28 @@ static ssize_t htc_battery_set_audio_stat(struct device *dev,
 	return count;
 }
 
+#if defined(CONFIG_MACH_PRIMODD) || defined(CONFIG_MACH_PRIMOTD)
+static ssize_t htc_battery_set_phone_call(struct device *dev,
+        struct device_attribute *attr,
+        const char *buf, size_t count)
+{
+  unsigned long phone_call = 0;
+  int rc = 0;
+
+  rc = strict_strtoul(buf, 10, &phone_call);
+  if (rc)
+    return rc;
+
+  if (phone_call)
+    htc_batt_phone_call = 1;
+  else
+    htc_batt_phone_call = 0;
+
+  BATT_LOG("set context phone_call=%lu\n", phone_call);
+  return count;
+}
+#endif
+
 static struct device_attribute htc_set_delta_attrs[] = {
 	__ATTR(delta, S_IWUSR | S_IWGRP, NULL, htc_battery_set_delta),
 	__ATTR(full_level, S_IWUSR | S_IWGRP, NULL,
@@ -1666,6 +1701,9 @@ static struct device_attribute htc_set_delta_attrs[] = {
 						htc_battery_charger_timer),
 	__ATTR(audio_stat, S_IWUSR | S_IWGRP | S_IRUSR, htc_battery_get_audio_stat,
 						htc_battery_set_audio_stat),
+#if defined(CONFIG_MACH_PRIMODD) ||defined(CONFIG_MACH_PRIMOTD)
+  	__ATTR(phone_call, S_IWUGO, NULL, htc_battery_set_phone_call),
+#endif
 };
 
 static int htc_battery_create_attrs(struct device * dev)
@@ -1847,6 +1885,46 @@ int htc_battery_core_update(enum power_supplies_type supply)
 	return 0;
 }
 #endif
+
+#if CONFIG_HAS_EARLYSUSPEND && (defined(CONFIG_MACH_PRIMODD) || defined(CONFIG_MACH_PRIMOTD))
+static void htc_battery_early_suspend(struct early_suspend * h)
+{
+  int rc;
+
+  if (htc_batt_phone_call) {
+    mutex_lock(&htc_batt_info.rpc_lock);
+    rc = htc_rpc_charger_switch(PHONE_CALL_IN);
+    mutex_unlock(&htc_batt_info.rpc_lock);
+    if (rc)
+      BATT_ERR("A2M PHONE CALL IN Failed!\n");
+    else {
+      BATT_LOG("A2M PHONE CALL IN Successful!\n");
+      is_phone_call_set = 1;
+    }
+  }
+}
+static void htc_battery_late_resume(struct early_suspend * h)
+{
+  int rc;
+
+  if (is_phone_call_set) {
+    mutex_lock(&htc_batt_info.rpc_lock);
+    rc = htc_rpc_charger_switch(PHONE_CALL_STOP);
+    mutex_unlock(&htc_batt_info.rpc_lock);
+    if (rc)
+      BATT_ERR("A2M PHONE CALL STOP Failed!\n");
+    else {
+      BATT_LOG("A2M PHONE CALL STOP Successful!\n");
+      is_phone_call_set = 0;
+    }
+  }
+}
+static struct early_suspend htc_battery_suspend = {
+  .suspend = htc_battery_early_suspend,
+  .resume = htc_battery_late_resume,
+};
+#endif
+
 static int htc_battery_core_probe(struct platform_device *pdev)
 {
 	int i, rc;
@@ -1914,7 +1992,9 @@ static int htc_battery_core_probe(struct platform_device *pdev)
 
 	if (htc_batt_info.charger == SWITCH_CHARGER_TPS65200)
 		tps_register_notifier(&tps_int_notifier);
-
+#if CONFIG_HAS_EARLYSUSPEND && (defined(CONFIG_MACH_PRIMODD) || defined(CONFIG_MACH_PRIMOTD))
+  register_early_suspend(&htc_battery_suspend);
+#endif
 	return 0;
 }
 
@@ -1968,8 +2048,13 @@ static int handle_battery_call(struct msm_rpc_server *server,
 		}
 		if (htc_batt_debug_mask & HTC_BATT_DEBUG_M2A_RPC)
 			BATT_LOG("M2A_RPC: set_charging: %d", args->enable);
-		if (htc_batt_info.charger == SWITCH_CHARGER_TPS65200)
-			tps_set_charger_ctrl(args->enable);
+		if (htc_batt_info.charger == SWITCH_CHARGER_TPS65200) {
+		       tps_set_charger_ctrl(args->enable);
+		      if (args->enable == CHECK_CHG && htc_batt_info.charger_re_enable) {
+		        BATT_LOG("re-enable charger-> %d", htc_batt_info.rep.charging_enabled);
+		        tps_set_charger_ctrl(htc_batt_info.rep.charging_enabled);
+		      }
+		}
 		else if (htc_batt_info.charger == SWITCH_CHARGER)
 			blocking_notifier_call_chain(&cable_status_notifier_list,
 				args->enable, NULL);
@@ -1988,6 +2073,9 @@ static int handle_battery_call(struct msm_rpc_server *server,
 		/* FIXME: work arround for usb function, remove it after battery driver ready */
 		if (machine_is_incrediblec() && args->status == CHARGER_AC)
 			args->status = CHARGER_USB;
+#endif
+#if (defined(CONFIG_TPS65200) && defined(CONFIG_MACH_PRIMODS))
+		tps65200_mask_interrupt_register(args->status);
 #endif
 		htc_cable_status_update(args->status);
 #if defined(CONFIG_TROUT_BATTCHG_DOCK)
@@ -2086,19 +2174,19 @@ static struct notifier_block ds2746_notifier = {
 
 #if defined(CONFIG_BATTERY_DS2746)
 /* this function is called by ds2746_battery.c to update batt_info */
-int htc_battery_update_change(void)
+int htc_battery_update_change(int force_update)
 {
 	struct battery_info_reply new_batt_info_rep;
 	int is_send_batt_uevent = 0, is_send_acusb_uevent = 0;
 	/*
 	 * Do not run this function if battery init hasn't been ran yet
 	 * Marc Alexander (c) 2013
-	 */
+	 
 	if (!htc_battery_initial) {
 		pr_info("[BATT] %s() called before init\n", __func__);
 		return 0;
 	}
-
+	*/
 	pr_info("[BATT] %s()\n", __func__);
 	/* MATT: this is not good to update batt_info like this */
 	ds2746_get_battery_info(&new_batt_info_rep);
@@ -2107,9 +2195,9 @@ int htc_battery_update_change(void)
 	if (htc_batt_info.rep.charging_enabled != new_batt_info_rep.charging_enabled) {
 		htc_batt_info.rep.charging_enabled = new_batt_info_rep.charging_enabled;
 		if(new_batt_info_rep.charging_enabled > 0)
-			is_send_acusb_uevent = 1;
+		      is_send_acusb_uevent = 1;
 		else
-			is_send_batt_uevent = 1;
+		      is_send_batt_uevent = 1;
 	}
 	if ((htc_batt_info.rep.level != new_batt_info_rep.level) ||
 		(htc_batt_info.rep.batt_temp != new_batt_info_rep.batt_temp)) {
@@ -2117,6 +2205,10 @@ int htc_battery_update_change(void)
 		htc_batt_info.rep.batt_temp = new_batt_info_rep.batt_temp;
 		htc_batt_info.rep.temp_fault = new_batt_info_rep.temp_fault;
 		is_send_batt_uevent = 1;
+	}
+	if (force_update) {
+	    is_send_acusb_uevent = 1;
+	    is_send_batt_uevent = 1;
 	}
 	htc_batt_info.rep.batt_id = new_batt_info_rep.batt_id;
 	htc_batt_info.rep.batt_vol = new_batt_info_rep.batt_vol;
@@ -2163,6 +2255,7 @@ static int htc_battery_probe(struct platform_device *pdev)
 	htc_batt_info.charger = pdata->charger;
 	htc_batt_info.option_flag = pdata->option_flag;
 	htc_batt_info.rep.full_level = 100;
+	htc_batt_info.charger_re_enable = pdata->charger_re_enable;
 
 	if (htc_batt_info.charger == LINEAR_CHARGER) {
 		htc_batt_info.gpio_mbat_in = pdata->gpio_mbat_in;
@@ -2214,58 +2307,11 @@ int get_cable_status(void)
 */	return htc_batt_info.rep.charging_source;
 }
 
-static int htc_batt_suspend(struct device *dev)
-{
-	int ret = 0;
-	struct charger_switch_req {
-		struct rpc_request_hdr hdr;
-		uint32_t data;
-	} req;
-
-	/* If we are on battery, reduce our update rate until
-	 * we next resume.*/
-	if (phone_call_flag == PHONE_CALL_IN) {
-	req.data = cpu_to_be32(phone_call_flag);
-	ret = msm_rpc_call(endpoint,
-			HTC_PROCEDURE_CHARGER_SWITCH,
-			&req, sizeof(req), 5 * HZ);
-	BATT_LOG("%s : Phone call in:%d\n", __func__, phone_call_flag);
-	if (ret < 0)
-		BATT_ERR("%s: msm_rpc_call failed (%d)!", __func__, ret);
-	}
-
-	return 0;
-}
-static void htc_batt_resume(struct device *dev)
-{
-	int ret = 0;
-	struct charger_switch_req {
-		struct rpc_request_hdr hdr;
-		uint32_t data;
-	} req;
-
-	if (phone_call_flag == PHONE_CALL_IN) {
-	req.data = cpu_to_be32(PHONE_CALL_STOP);
-	ret = msm_rpc_call(endpoint,
-			HTC_PROCEDURE_CHARGER_SWITCH,
-			&req, sizeof(req), 5 * HZ);
-	BATT_LOG("%s : Phone call stop:%d\n", __func__, phone_call_flag);
-	if (ret < 0)
-		BATT_ERR("%s: msm_rpc_call failed (%d)!", __func__, ret);
-	}
-}
-
-static struct dev_pm_ops htc_batt_pm_ops = {
-       .prepare = htc_batt_suspend,
-       .complete  = htc_batt_resume,
-};
-
 static struct platform_driver htc_battery_driver = {
 	.probe	= htc_battery_probe,
 	.driver	= {
 		.name	= "htc_battery",
 		.owner	= THIS_MODULE,
-		.pm = &htc_batt_pm_ops,
 	},
 };
 
@@ -2289,6 +2335,33 @@ int batt_notifier_call_chain(unsigned long val, void *v)
 	return blocking_notifier_call_chain(&battery_notifier_list, val, v);
 }
 
+#ifdef CONFIG_BATTERY_DS2746
+#ifdef CONFIG_MACH_PRIMODS
+int get_batt_id(void)
+{
+  if (smem_batt_info) {
+    if (smem_batt_info->batt_id == 255) {
+      return BATTERY_ID_UNKNOWN;
+    }
+    return smem_batt_info->batt_id;
+  } else {
+    return BATTERY_ID_UNKNOWN;
+  }
+}
+void set_smem_chg_avalible(int chg_avalible)
+{
+       smem_batt_info->charging_enabled =  chg_avalible;
+}
+#endif
+int get_cable_type(void)
+{
+  if (smem_batt_info)
+    return smem_batt_info->a2m_cable_type;
+  else
+    return -EINVAL;
+}
+#endif
+
 static int __init htc_battery_init(void)
 {
 	pr_info("%s\n", __func__);
@@ -2311,14 +2384,6 @@ static int __init htc_battery_init(void)
 	return 0;
 }
 
-static int inited;
-static struct work_struct vbus_work;
-/*void notify_vbus_change_intr(void)  
-{  
-    if (!inited)    return;  
-    schedule_work(&vbus_work);  
-}
-*/
 module_init(htc_battery_init);
 MODULE_DESCRIPTION("HTC Battery Driver");
 MODULE_LICENSE("GPL");

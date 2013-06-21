@@ -65,6 +65,7 @@ struct battery_info_reply {
 	u32 over_vchg;		/* 0:normal, 1:over voltage charger */
 	s32 eval_current;	/* System loading current from ADC */
 	u32 temp_fault;		/* Battery temperature fault */
+	u32 overloading_charge; /*Charging but Overloading*/
 };
 
 struct htc_battery_platform_data {
@@ -82,6 +83,7 @@ struct htc_battery_platform_data {
 	int (*func_is_support_super_charger)(void);
 	int (*func_battery_charging_ctrl)(enum batt_ctl_t ctl);
 	int (*func_battery_gpio_init)(void);
+	int charger_re_enable;
 };
 
 extern int register_notifier_cable_status(struct notifier_block *nb);
@@ -103,7 +105,12 @@ extern int get_cable_status(void);
 extern unsigned int batt_get_status(enum power_supply_property psp);
 
 #ifdef CONFIG_BATTERY_DS2746
-int htc_battery_update_change(void);
+int htc_battery_update_change(int force_update);
+#ifdef CONFIG_MACH_PRIMODS
+extern int get_batt_id(void); // This is for PrimoDS, use gauge ic but without id register
+extern void set_smem_chg_avalible(int chg_avalible);
+#endif
+extern int get_cable_type(void); // for cable_status_handler_func wrong issue, henc update from share memory
 #endif
 
 #endif
