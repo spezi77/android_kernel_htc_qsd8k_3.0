@@ -329,8 +329,8 @@ Let algorithm machine to judge latest state */
 
 	if (cable_type <= 2) {
 		htc_batt_info.rep.charging_source = cable_type;
-		ds2784_blocking_notify(DS2784_CHARGING_CONTROL,
-			(void*)&cable_type);
+		/*ds2784_blocking_notify(DS2784_CHARGING_CONTROL,
+			(void*)&cable_type);*/
 		return NOTIFY_OK;
 	}
 	return NOTIFY_OK;
