@@ -1237,7 +1237,7 @@ static struct htc_battery_platform_data htc_battery_pdev_data = {
 	.guage_driver = GUAGE_DS2784,
 	.charger = LINEAR_CHARGER,
 	.m2a_cable_detect = 0,
-//	.force_no_rpc = 1,
+	.force_no_rpc = 1,
 /*	.int_data = {
 		.chg_int = HTCLEO_GPIO_BATTERY_OVER_CHG,
 	},*/

@@ -84,6 +84,7 @@ struct htc_battery_platform_data {
 	int (*func_battery_charging_ctrl)(enum batt_ctl_t ctl);
 	int (*func_battery_gpio_init)(void);
 	int charger_re_enable;
+	int force_no_rpc;
 };
 
 extern int register_notifier_cable_status(struct notifier_block *nb);
