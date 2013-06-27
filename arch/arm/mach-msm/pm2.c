@@ -360,7 +360,7 @@ static int __init msm_pm_mode_sysfs_add(void)
 			if ((k == MSM_PM_MODE_ATTR_IDLE) &&
 				(!msm_pm_modes[i].idle_supported))
 				continue;
-
+            sysfs_attr_init(&kobj_attrs[j].attr);
 			kobj_attrs[j].attr.mode = 0644;
 			kobj_attrs[j].show = msm_pm_mode_attr_show;
 			kobj_attrs[j].store = msm_pm_mode_attr_store;
