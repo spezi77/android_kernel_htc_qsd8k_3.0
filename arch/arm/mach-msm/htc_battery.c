@@ -1982,14 +1982,14 @@ static int htc_battery_core_probe(struct platform_device *pdev)
 		htc_batt_info.update_time = jiffies;
 		mutex_unlock(&htc_batt_info.rpc_lock);
 	}
-
+#ifdef CONFIG_HTC_BATTCHG_SMEM
 	if (!smem_batt_info) {
 		smem_batt_info = smem_alloc(SMEM_BATT_INFO,
 			sizeof(struct htc_batt_info_full));
 		if (!smem_batt_info)
 			BATT_ERR("smem_alloc fail");
 	}
-
+#endif
 	if (htc_batt_info.charger == SWITCH_CHARGER_TPS65200)
 		tps_register_notifier(&tps_int_notifier);
 #if CONFIG_HAS_EARLYSUSPEND && (defined(CONFIG_MACH_PRIMODD) || defined(CONFIG_MACH_PRIMOTD))
