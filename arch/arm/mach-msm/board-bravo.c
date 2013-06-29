@@ -536,118 +536,6 @@ static struct i2c_board_info rev_CX_i2c_devices[] = {
 ///////////////////////////////////////////////////////////////////////
 // USB
 ///////////////////////////////////////////////////////////////////////
-/*
-static unsigned ulpi_on_gpio_table[] = {
-	GPIO_CFG(0x68, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_4MA),
-	GPIO_CFG(0x6f, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_2MA),
-	GPIO_CFG(0x70, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_2MA),
-	GPIO_CFG(0x71, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_2MA),
-	GPIO_CFG(0x72, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_2MA),
-	GPIO_CFG(0x73, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_2MA),
-	GPIO_CFG(0x74, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_2MA),
-	GPIO_CFG(0x75, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_2MA),
-	GPIO_CFG(0x76, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_2MA),
-	GPIO_CFG(0x77, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_2MA),
-	GPIO_CFG(0x78, 1, GPIO_INPUT, GPIO_NO_PULL, GPIO_2MA),
-	GPIO_CFG(0x79, 1, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_2MA),
-};
-
-static unsigned ulpi_off_gpio_table[] = {
-	GPIO_CFG(0x68, 1, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_4MA),
-	GPIO_CFG(0x6f, 1, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA),
-	GPIO_CFG(0x70, 1, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA),
-	GPIO_CFG(0x71, 1, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA),
-	GPIO_CFG(0x72, 1, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA),
-	GPIO_CFG(0x73, 1, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA),
-	GPIO_CFG(0x74, 1, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA),
-	GPIO_CFG(0x75, 1, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA),
-	GPIO_CFG(0x76, 1, GPIO_OUTPUT, GPIO_PULL_DOWN, GPIO_2MA),
-	GPIO_CFG(0x77, 1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA),
-	GPIO_CFG(0x78, 1, GPIO_INPUT, GPIO_PULL_DOWN, GPIO_2MA),
-	GPIO_CFG(0x79, 1, GPIO_OUTPUT, GPIO_PULL_UP, GPIO_2MA),
-};
-
-static void usb_gpio_init(void)
-{
-	if (gpio_request(0x68, "bravo_3v3_enable"))
-		pr_err("failed to request gpio bravo_3v3_enable\n");
-	if (gpio_request(0x6f, "ulpi_data_0"))
-		pr_err("failed to request gpio ulpi_data_0\n");
-	if (gpio_request(0x70, "ulpi_data_1"))
-		pr_err("failed to request gpio ulpi_data_1\n");
-	if (gpio_request(0x71, "ulpi_data_2"))
-		pr_err("failed to request gpio ulpi_data_2\n");
-	if (gpio_request(0x72, "ulpi_data_3"))
-		pr_err("failed to request gpio ulpi_data_3\n");
-	if (gpio_request(0x73, "ulpi_data_4"))
-		pr_err("failed to request gpio ulpi_data_4\n");
-	if (gpio_request(0x74, "ulpi_data_5"))
-		pr_err("failed to request gpio ulpi_data_5\n");
-	if (gpio_request(0x75, "ulpi_data_6"))
-		pr_err("failed to request gpio ulpi_data_6\n");
-	if (gpio_request(0x76, "ulpi_data_7"))
-		pr_err("failed to request gpio ulpi_data_7\n");
-	if (gpio_request(0x77, "ulpi_dir"))
-		pr_err("failed to request gpio ulpi_dir\n");
-	if (gpio_request(0x78, "ulpi_next"))
-		pr_err("failed to request gpio ulpi_next\n");
-	if (gpio_request(0x79, "ulpi_stop"))
-		pr_err("failed to request gpio ulpi_stop\n");
-}
-
-static int usb_config_gpio(int config)
-{
-	int pin, rc;
-
-	if (config) {
-		for (pin = 0; pin < ARRAY_SIZE(ulpi_on_gpio_table); pin++) {			
-			rc = gpio_tlmm_config(ulpi_on_gpio_table[pin],
-					      GPIO_CFG_ENABLE);
-			if (rc) {
-				printk(KERN_ERR
-				       "%s: gpio_tlmm_config(%#x)=%d\n",
-				       __func__, ulpi_off_gpio_table[pin], rc);
-				return -EIO;
-			}
-		}
-	} else {
-		for (pin = 0; pin < ARRAY_SIZE(ulpi_off_gpio_table); pin++) {
-			rc = gpio_tlmm_config(ulpi_off_gpio_table[pin],
-					      GPIO_CFG_ENABLE);
-			if (rc) {
-				printk(KERN_ERR
-				       "%s: gpio_tlmm_config(%#x)=%d\n",
-				       __func__, ulpi_on_gpio_table[pin], rc);
-				return -EIO;
-			}
-		}
-	}
-
-	return 0;
-}
-*/
-
-static void usb_phy_shutdown(void)
-{
-	printk("%s: %s\n", __FILE__, __func__);
-	gpio_set_value(BRAVO_GPIO_USBPHY_3V3_ENABLE, 1); 
-	mdelay(3);
-	gpio_set_value(BRAVO_GPIO_USBPHY_3V3_ENABLE, 0);
-	mdelay(3);
-}
-
-int usb_phy_reset(void  __iomem *regs)
-{
-	printk("%s: %s\n", __FILE__, __func__);
-	usb_phy_shutdown();
-	gpio_set_value(BRAVO_GPIO_USBPHY_3V3_ENABLE, 0); 
-	mdelay(3);
-	gpio_set_value(BRAVO_GPIO_USBPHY_3V3_ENABLE, 1);
-	mdelay(3);
-	//usb_config_gpio(1);
-
-	return 0;
-}
 
 #define USB_LINK_RESET_TIMEOUT      (msecs_to_jiffies(10))
 #define CLKRGM_APPS_RESET_USBH      37
@@ -861,11 +749,6 @@ static struct msm_otg_platform_data msm_otg_pdata = {
 	.otg_control		= OTG_PHY_CONTROL,
 };
 
-static uint32_t usb_phy_3v3_table[] =
-{
-    PCOM_GPIO_CFG(BRAVO_GPIO_USBPHY_3V3_ENABLE, 0, GPIO_OUTPUT, GPIO_NO_PULL, GPIO_4MA)
-};
-
 static struct usb_mass_storage_platform_data mass_storage_pdata = {
 	.nluns		= 1,
 	.vendor		= "HTC",
@@ -1047,6 +930,18 @@ static struct platform_device bravo_flashlight_device = {
 	},
 };
 
+static int flashlight_control(int mode)
+{
+        return aat1271_flashlight_control(mode);
+}
+
+static struct camera_flash_cfg msm_camera_sensor_flash_cfg = {
+	.camera_flash		= flashlight_control,
+	.num_flash_levels	= FLASHLIGHT_NUM,
+	.low_temp_limit		= 5,
+	.low_cap_limit		= 15,
+};
+
 ///////////////////////////////////////////////////////////////////////
 // Camera
 ///////////////////////////////////////////////////////////////////////
@@ -1127,18 +1022,6 @@ static struct msm_camera_device_platform_data msm_camera_device_data =
 	.ioext.appsz  = MSM_CLK_CTL_SIZE,
 };
 
-static int flashlight_control(int mode)
-{
-        return aat1271_flashlight_control(mode);
-}
-
-static struct camera_flash_cfg msm_camera_sensor_flash_cfg = {
-	.camera_flash		= flashlight_control,
-	.num_flash_levels	= FLASHLIGHT_NUM,
-	.low_temp_limit		= 5,
-	.low_cap_limit		= 15,
-};
-
 static struct msm_camera_sensor_info msm_camera_sensor_s5k3e2fx_data =
 {
 	.sensor_name = "s5k3e2fx",
@@ -1188,6 +1071,10 @@ static struct platform_device bravo_timed_gpios = {
 	},
 };
 
+///////////////////////////////////////////////////////////////////////
+// Bluetooth
+///////////////////////////////////////////////////////////////////////
+
 #ifdef CONFIG_SERIAL_MSM_HS
 static struct msm_serial_hs_platform_data msm_uart_dm1_pdata = {
 	.rx_wakeup_irq = -1,
@@ -1214,6 +1101,73 @@ struct platform_device bcm_bt_lpm_device = {
 
 #endif
 #endif
+
+#define ATAG_BDADDR 0x43294329  /* bravo bluetooth address tag */
+#define ATAG_BDADDR_SIZE 4
+#define BDADDR_STR_SIZE 18
+
+static char bdaddr[BDADDR_STR_SIZE];
+
+module_param_string(bdaddr, bdaddr, sizeof(bdaddr), 0400);
+MODULE_PARM_DESC(bdaddr, "bluetooth address");
+
+static int __init parse_tag_bdaddr(const struct tag *tag)
+{
+	unsigned char *b = (unsigned char *)&tag->u;
+
+	if (tag->hdr.size != ATAG_BDADDR_SIZE)
+		return -EINVAL;
+
+	snprintf(bdaddr, BDADDR_STR_SIZE, "%02X:%02X:%02X:%02X:%02X:%02X",
+			b[0], b[1], b[2], b[3], b[4], b[5]);
+
+	return 0;
+}
+
+__tagtable(ATAG_BDADDR, parse_tag_bdaddr);
+
+static uint32_t bt_gpio_table[] = {
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_RTS, 2, GPIO_OUTPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_CTS, 2, GPIO_INPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_RX, 2, GPIO_INPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_TX, 2, GPIO_OUTPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_RESET_N, 0, GPIO_OUTPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_SHUTDOWN_N, 0, GPIO_OUTPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_WAKE, 0, GPIO_OUTPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_HOST_WAKE, 0, GPIO_INPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+};
+
+static uint32_t bt_gpio_table_rev_CX[] = {
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_RTS, 2, GPIO_OUTPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_CTS, 2, GPIO_INPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_RX, 2, GPIO_INPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_TX, 2, GPIO_OUTPUT,
+		      GPIO_PULL_UP, GPIO_8MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_RESET_N, 0, GPIO_OUTPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_SHUTDOWN_N, 0, GPIO_OUTPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+	PCOM_GPIO_CFG(BRAVO_CDMA_GPIO_BT_WAKE, 0, GPIO_OUTPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+	PCOM_GPIO_CFG(BRAVO_GPIO_BT_HOST_WAKE, 0, GPIO_INPUT,
+		      GPIO_PULL_DOWN, GPIO_4MA),
+};
+
+///////////////////////////////////////////////////////////////////////
+// Battery
+///////////////////////////////////////////////////////////////////////
+
 static int ds2784_charge(int on, int fast)
 {
 	if (is_cdma_version(system_rev)) {
@@ -1252,6 +1206,10 @@ static struct platform_device htc_battery_pdev = {
 		.platform_data = &htc_battery_pdev_data,
 	},
 };
+
+///////////////////////////////////////////////////////////////////////
+// SPI
+///////////////////////////////////////////////////////////////////////
 
 static struct resource qsd_spi_resources[] = {
 	{
@@ -1330,6 +1288,9 @@ struct platform_device qsd_device_spi = {
 	},
 };
 
+///////////////////////////////////////////////////////////////////////
+// Optical Joystick
+///////////////////////////////////////////////////////////////////////
 
 #ifdef CONFIG_OPTICALJOYSTICK_CRUCIAL
 static void curcial_oj_shutdown(int enable)
@@ -1452,6 +1413,10 @@ static struct platform_device bravo_oj = {
 };
 #endif
 
+///////////////////////////////////////////////////////////////////////
+// Devices
+///////////////////////////////////////////////////////////////////////
+
 static struct platform_device *devices[] __initdata = {
 #if !defined(CONFIG_MSM_SERIAL_DEBUGGER)
 	&msm_device_uart1,
@@ -1485,44 +1450,6 @@ static struct platform_device *devices[] __initdata = {
 	&capella_cm3602,
 };
 
-static uint32_t bt_gpio_table[] = {
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_RTS, 2, GPIO_OUTPUT,
-		      GPIO_PULL_UP, GPIO_8MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_CTS, 2, GPIO_INPUT,
-		      GPIO_PULL_UP, GPIO_8MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_RX, 2, GPIO_INPUT,
-		      GPIO_PULL_UP, GPIO_8MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_TX, 2, GPIO_OUTPUT,
-		      GPIO_PULL_UP, GPIO_8MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_RESET_N, 0, GPIO_OUTPUT,
-		      GPIO_PULL_DOWN, GPIO_4MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_SHUTDOWN_N, 0, GPIO_OUTPUT,
-		      GPIO_PULL_DOWN, GPIO_4MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_WAKE, 0, GPIO_OUTPUT,
-		      GPIO_PULL_DOWN, GPIO_4MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_HOST_WAKE, 0, GPIO_INPUT,
-		      GPIO_PULL_DOWN, GPIO_4MA),
-};
-
-static uint32_t bt_gpio_table_rev_CX[] = {
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_RTS, 2, GPIO_OUTPUT,
-		      GPIO_PULL_UP, GPIO_8MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_CTS, 2, GPIO_INPUT,
-		      GPIO_PULL_UP, GPIO_8MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_RX, 2, GPIO_INPUT,
-		      GPIO_PULL_UP, GPIO_8MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_UART1_TX, 2, GPIO_OUTPUT,
-		      GPIO_PULL_UP, GPIO_8MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_RESET_N, 0, GPIO_OUTPUT,
-		      GPIO_PULL_DOWN, GPIO_4MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_SHUTDOWN_N, 0, GPIO_OUTPUT,
-		      GPIO_PULL_DOWN, GPIO_4MA),
-	PCOM_GPIO_CFG(BRAVO_CDMA_GPIO_BT_WAKE, 0, GPIO_OUTPUT,
-		      GPIO_PULL_DOWN, GPIO_4MA),
-	PCOM_GPIO_CFG(BRAVO_GPIO_BT_HOST_WAKE, 0, GPIO_INPUT,
-		      GPIO_PULL_DOWN, GPIO_4MA),
-};
-
 static struct msm_gpio misc_gpio_table[] = {
     { GPIO_CFG(BRAVO_GPIO_LCD_RST_N, 0, GPIO_CFG_OUTPUT,
                GPIO_CFG_NO_PULL, GPIO_CFG_2MA)},
@@ -1547,29 +1474,6 @@ static void bravo_headset_init(void)
 }
 
 
-#define ATAG_BDADDR 0x43294329  /* bravo bluetooth address tag */
-#define ATAG_BDADDR_SIZE 4
-#define BDADDR_STR_SIZE 18
-
-static char bdaddr[BDADDR_STR_SIZE];
-
-module_param_string(bdaddr, bdaddr, sizeof(bdaddr), 0400);
-MODULE_PARM_DESC(bdaddr, "bluetooth address");
-
-static int __init parse_tag_bdaddr(const struct tag *tag)
-{
-	unsigned char *b = (unsigned char *)&tag->u;
-
-	if (tag->hdr.size != ATAG_BDADDR_SIZE)
-		return -EINVAL;
-
-	snprintf(bdaddr, BDADDR_STR_SIZE, "%02X:%02X:%02X:%02X:%02X:%02X",
-			b[0], b[1], b[2], b[3], b[4], b[5]);
-
-	return 0;
-}
-
-__tagtable(ATAG_BDADDR, parse_tag_bdaddr);
 
 #ifdef CONFIG_PERFLOCK
 static unsigned bravo_perf_acpu_table[] = {
