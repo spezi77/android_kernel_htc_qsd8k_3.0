@@ -24,7 +24,7 @@
 #define VMALLOC_END       (PAGE_OFFSET + 0x3E000000)
 #elif defined(CONFIG_MACH_HTCLEO)
 #define VMALLOC_END       0xF8000000
-#elif defined(CONFIG_MACH_BRAVO)
+#elif defined(CONFIG_ARCH_QSD8X50)
 #define VMALLOC_END	  0xf8000000UL
 #elif defined(CONFIG_ARCH_MSM7X30)
 #ifdef CONFIG_DEBUG_LL

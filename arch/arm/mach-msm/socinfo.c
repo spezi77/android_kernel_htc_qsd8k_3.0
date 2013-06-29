@@ -588,7 +588,7 @@ arch_initcall(socinfo_init_sysdev);
 
 void *setup_dummy_socinfo(void)
 {
-#ifdef CONFIG_MACH_BRAVO
+#ifdef CONFIG_ARCH_QSD8X50
 
 	dummy_socinfo.id = 30; // look above: [30] = MSM_CPU_8X50,
 	return (void *) &dummy_socinfo;

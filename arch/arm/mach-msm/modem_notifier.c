@@ -218,7 +218,7 @@ static int __init init_modem_notifier_list(void)
 // SOLUTION:
 //   change init call order
 //
-#ifdef CONFIG_MACH_BRAVO
+#ifdef CONFIG_ARCH_QSD8X50
 subsys_initcall(init_modem_notifier_list);
 #else
 module_init(init_modem_notifier_list);

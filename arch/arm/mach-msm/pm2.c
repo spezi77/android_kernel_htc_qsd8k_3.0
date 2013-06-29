@@ -1864,7 +1864,7 @@ static void msm_pm_power_off(void)
 		;
 }
 
-#if defined(CONFIG_MACH_BRAVO)
+#if defined(CONFIG_ARCH_QSD8X50)
 static void bravo_save_reset_reason(void)
 {
 	/* save restart_reason to be accesible in bootloader @ ramconsole - 0x1000*/
@@ -1884,7 +1884,7 @@ static void msm_pm_restart(char str, const char *cmd)
 {
 	pr_info("%s: restart_reason 0x%x, cmd %s\n", __func__, restart_reason, (cmd) ? cmd : "NULL");
 
-#if defined(CONFIG_MACH_BRAVO)
+#if defined(CONFIG_ARCH_QSD8X50)
 	bravo_save_reset_reason();
 #endif
 

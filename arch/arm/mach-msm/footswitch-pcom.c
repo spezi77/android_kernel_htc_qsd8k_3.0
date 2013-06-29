@@ -22,7 +22,7 @@
 #include "proc_comm.h"
 
 /* PCOM power rail IDs */
-#if defined(CONFIG_MACH_BRAVO)
+#if defined(CONFIG_ARCH_QSD8X50)
 #define PCOM_FS_GRP		0
 #else
 #define PCOM_FS_GRP		8
@@ -206,7 +206,7 @@ static int get_clocks(struct device *dev, struct footswitch *fs)
 	 * rate-setting instead.
 	 */
 	if (fs->has_src_clk) {
-#ifdef CONFIG_MACH_BRAVO
+#ifdef CONFIG_ARCH_QSD8X50
 		fs->src_clk = clk_get(dev, "core_clk");
 #else
 		fs->src_clk = clk_get(dev, "src_clk");
@@ -249,7 +249,7 @@ static void put_clocks(struct footswitch *fs)
 {
 	clk_put(fs->src_clk);
 	clk_put(fs->core_clk);
-#ifndef CONFIG_MACH_BRAVO
+#ifndef CONFIG_ARCH_QSD8X50
 	clk_put(fs->ahb_clk);
 #endif
 }

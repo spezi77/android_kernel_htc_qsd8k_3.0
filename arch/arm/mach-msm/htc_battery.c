@@ -105,7 +105,7 @@ tm.tm_hour, tm.tm_min, tm.tm_sec, ts.tv_nsec); \
 #define HTC_PROCEDURE_SET_FULL_LEVEL	7
 #define HTC_PROCEDURE_GET_USB_ACCESSORY_ADC_LEVEL	10
 
-#if CONFIG_MACH_BRAVO
+#if CONFIG_ARCH_QSD8X50
 #define FORCE_NO_RPC 1
 #endif
 
@@ -282,7 +282,7 @@ int unregister_notifier_cable_rpc(struct notifier_block *nb)
 
 /* -------------------------------------------------------------------------- */
 /* HTCLeo Dex Functions. */
-#if defined(CONFIG_MACH_BRAVO)
+#if defined(CONFIG_ARCH_QSD8X50)
 
 static int get_vbus_state(void)
 {

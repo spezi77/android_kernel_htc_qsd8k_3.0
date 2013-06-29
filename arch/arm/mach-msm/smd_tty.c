@@ -35,6 +35,9 @@
 #ifdef CONFIG_MACH_BRAVO
 #include "board-bravo.h"
 #endif
+#ifdef CONFIG_MACH_MAHIMAHI
+#include "board-mahimahi.h"
+#endif
 
 #include "smd_private.h"
 
@@ -380,7 +383,7 @@ static int smd_tty_write(struct tty_struct *tty, const unsigned char *buf, int l
 {
 	struct smd_tty_info *info = tty->driver_data;
 	int avail, ret, runfix = 0;
-#ifdef CONFIG_MACH_BRAVO
+#ifdef CONFIG_ARCH_QSD8X50
 	static int init = 0;
 	// seems to start the modem
 	const unsigned char* firstcall ="AT@BRIC=0\r";
@@ -398,7 +401,7 @@ static int smd_tty_write(struct tty_struct *tty, const unsigned char *buf, int l
 	if (is_in_reset(info))
 		return -ENETRESET;
 
-#ifdef CONFIG_MACH_BRAVO
+#ifdef CONFIG_ARCH_QSD8X50
 	if(len>7 && !init) {
 		pr_info("NAND boot, writing additional init commands to /dev/smd0");
 
