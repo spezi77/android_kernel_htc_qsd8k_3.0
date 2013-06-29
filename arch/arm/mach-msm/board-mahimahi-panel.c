@@ -954,7 +954,7 @@ int __init mahimahi_init_panel(void)
 		mahimahi_lcdc_fb_data.output_format = MSM_MDP_OUT_IF_FMT_RGB666;
 	}
 
-	ret = platform_device_register(&msm_device_mdp);
+	ret = platform_device_register(&msm_mdp_device);
 	if (ret != 0)
 		return ret;
 

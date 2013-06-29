@@ -57,6 +57,7 @@
 #include <mach/socinfo.h>
 #include <mach/msm_memtypes.h>
 
+#include "acpuclock.h"
 #include "board-mahimahi.h"
 #include "devices.h"
 #include "proc_comm.h"
@@ -726,10 +727,11 @@ static uint32_t camera_on_gpio_table[] = {
 	PCOM_GPIO_CFG(15, 1, GPIO_OUTPUT, GPIO_PULL_UP, GPIO_8MA), /* MCLK */
 };
 
-void config_camera_on_gpios(void)
+int config_camera_on_gpios(void)
 {
 	config_gpio_table(camera_on_gpio_table,
 		ARRAY_SIZE(camera_on_gpio_table));
+    return 0;
 }
 
 void config_camera_off_gpios(void)
@@ -1101,6 +1103,7 @@ static int __init mahimahi_board_serialno_setup(char *serialno)
 }
 __setup("androidboot.serialno=", mahimahi_board_serialno_setup);
 
+/*
 static struct msm_acpu_clock_platform_data mahimahi_clock_data = {
 	.acpu_switch_time_us	= 20,
 	.max_speed_delta_khz	= 256000,
@@ -1118,6 +1121,7 @@ static struct msm_acpu_clock_platform_data mahimahi_cdma_clock_data = {
 	.wait_for_irq_khz	= 235930,
 	.mpll_khz		= 235930
 };
+*/
 
 #ifdef CONFIG_PERFLOCK
 static unsigned mahimahi_perf_acpu_table[] = {
@@ -1195,7 +1199,7 @@ static void __init mahimahi_init(void)
 		smd_set_channel_list(smd_cdma_default_channels,
 					ARRAY_SIZE(smd_cdma_default_channels));
 
-	msm_hw_reset_hook = mahimahi_reset;
+	//msm_hw_reset_hook = mahimahi_reset;
 
 	mahimahi_board_serialno_setup(board_serialno());
 
@@ -1207,7 +1211,9 @@ static void __init mahimahi_init(void)
 #ifdef CONFIG_PERFLOCK
 	perflock_init(&mahimahi_perflock_data);
 #endif
-
+	msm_clock_init(&qds8x50_clock_init_data);
+	acpuclk_init(&acpuclk_8x50_soc_data);
+	
 	msm_serial_debug_init(MSM_UART1_PHYS, INT_UART1,
 			      &msm_device_uart1.dev, 1, MSM_GPIO_TO_INT(139));
 
@@ -1305,7 +1311,7 @@ static void __init mahimahi_fixup(struct machine_desc *desc, struct tag *tags,
 static void __init mahimahi_map_io(void)
 {
 	msm_map_qsd8x50_io();
-	msm_clock_init(msm_clocks_8x50, msm_num_clocks_8x50);
+	//msm_clock_init(msm_clocks_8x50, msm_num_clocks_8x50);
 	if (socinfo_init() < 0)
 		printk(KERN_ERR "%s: socinfo_init() failed!\n",__func__);
 }
@@ -1318,6 +1324,7 @@ MACHINE_START(MAHIMAHI, "mahimahi")
 	.boot_params	= 0x20000100,
 	.fixup		= mahimahi_fixup,
 	.map_io		= mahimahi_map_io,
+	.reserve   	= qsd8x50_reserve,
 	.init_irq	= msm_init_irq,
 	.init_machine	= mahimahi_init,
 	.timer		= &msm_timer,
