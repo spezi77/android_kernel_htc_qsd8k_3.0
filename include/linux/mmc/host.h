@@ -215,15 +215,15 @@ struct mmc_host {
 
 	mmc_pm_flag_t		pm_caps;	/* supported pm features */
 
-#ifdef CONFIG_MMC_CLKGATE
 	int			clk_requests;	/* internal reference counter */
 	unsigned int		clk_delay;	/* number of MCI clk hold cycles */
 	bool			clk_gated;	/* clock gated */
-	struct work_struct	clk_gate_work; /* delayed clock gate */
+	struct delayed_work	clk_gate_work; /* delayed clock gate */
 	unsigned int		clk_old;	/* old clock value cache */
 	spinlock_t		clk_lock;	/* lock for clk fields */
-	struct mutex clk_gate_mutex; /* mutex for clock gating */
-#endif
+	struct mutex		clk_gate_mutex;	/* mutex for clock gating */
+	struct device_attribute clkgate_delay_attr;
+	unsigned long		clkgate_delay;
 
 	/* host specific block data */
 	unsigned int		max_seg_size;	/* see blk_queue_max_segment_size */
@@ -263,7 +263,6 @@ struct mmc_host {
 	int			claim_cnt;	/* "claim" nesting count */
 
 	struct delayed_work	detect;
-	struct delayed_work	remove;
 	struct wake_lock	detect_wake_lock;
 	int                     detect_change;  /* card detect flag */
 
@@ -273,11 +272,9 @@ struct mmc_host {
 	unsigned int		bus_resume_flags;
 #define MMC_BUSRESUME_MANUAL_RESUME	(1 << 0)
 #define MMC_BUSRESUME_NEEDS_RESUME	(1 << 1)
-#define MMC_BUSRESUME_FAILS_RESUME	(1 << 2)
 
 	unsigned int		sdio_irqs;
 	struct task_struct	*sdio_irq_thread;
-
 	atomic_t		sdio_irq_thread_abort;
 
 	mmc_pm_flag_t		pm_flags;	/* requested pm features */
@@ -314,6 +311,7 @@ struct mmc_host {
 		ktime_t wtime_drv;	   /* Wr time  MMC Host  */
 		ktime_t start;
 	} perf;
+	bool perf_enable;
 #endif
 	unsigned long		private[0] ____cacheline_aligned;
 };
@@ -343,8 +341,6 @@ static inline void *mmc_priv(struct mmc_host *host)
 #define mmc_hostname(x)	(dev_name(&(x)->class_dev))
 #define mmc_bus_needs_resume(host) ((host)->bus_resume_flags & MMC_BUSRESUME_NEEDS_RESUME)
 #define mmc_bus_manual_resume(host) ((host)->bus_resume_flags & MMC_BUSRESUME_MANUAL_RESUME)
-#define mmc_bus_fails_resume(host)  \
-	((host)->bus_resume_flags & MMC_BUSRESUME_FAILS_RESUME)
 
 static inline void mmc_set_bus_resume_policy(struct mmc_host *host, int manual)
 {
@@ -352,11 +348,6 @@ static inline void mmc_set_bus_resume_policy(struct mmc_host *host, int manual)
 		host->bus_resume_flags |= MMC_BUSRESUME_MANUAL_RESUME;
 	else
 		host->bus_resume_flags &= ~MMC_BUSRESUME_MANUAL_RESUME;
-}
-
-static inline void mmc_init_bus_resume_flags(struct mmc_host *host)
-{
-	host->bus_resume_flags = 0;
 }
 
 extern int mmc_resume_bus(struct mmc_host *host);

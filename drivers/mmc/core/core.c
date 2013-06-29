@@ -41,7 +41,6 @@
 #include "sdio_ops.h"
 
 static struct workqueue_struct *workqueue;
-static struct wake_lock mmc_removal_work_wake_lock;
 
 /*
  * Enabling software CRCs on the data blocks can be a significant (30%)
@@ -67,13 +66,6 @@ module_param_named(removable, mmc_assume_removable, bool, 0644);
 MODULE_PARM_DESC(
 	removable,
 	"MMC/SD cards are removable and may be removed during suspend");
-
-int mmc_schedule_card_removal_work(struct delayed_work *work,
-				     unsigned long delay)
-{
-	wake_lock(&mmc_removal_work_wake_lock);
-	return queue_delayed_work(workqueue, work, delay);
-}
 
 /*
  * Internal function. Schedule delayed work in the MMC work queue.
@@ -121,9 +113,8 @@ void mmc_request_done(struct mmc_host *host, struct mmc_request *mrq)
 		cmd->error = 0;
 		host->ops->request(host, mrq);
 	} else {
-#if 0          /* 2011-11-14 FIR ITS#55, may cause kernel panic */
 		led_trigger_event(host->led, LED_OFF);
-#endif
+
 		pr_debug("%s: req done (CMD%u): %d: %08x %08x %08x %08x\n",
 			mmc_hostname(host), cmd->opcode, err,
 			cmd->resp[0], cmd->resp[1],
@@ -131,17 +122,21 @@ void mmc_request_done(struct mmc_host *host, struct mmc_request *mrq)
 
 		if (mrq->data) {
 #ifdef CONFIG_MMC_PERF_PROFILING
-			diff = ktime_sub(ktime_get(), host->perf.start);
-			if (mrq->data->flags == MMC_DATA_READ) {
-				host->perf.rbytes_drv +=
+			if (host->perf_enable) {
+				diff = ktime_sub(ktime_get(), host->perf.start);
+				if (mrq->data->flags == MMC_DATA_READ) {
+					host->perf.rbytes_drv +=
+							mrq->data->bytes_xfered;
+					host->perf.rtime_drv =
+						ktime_add(host->perf.rtime_drv,
+							diff);
+				} else {
+					host->perf.wbytes_drv +=
 						mrq->data->bytes_xfered;
-				host->perf.rtime_drv =
-					ktime_add(host->perf.rtime_drv, diff);
-			} else {
-				host->perf.wbytes_drv +=
-						 mrq->data->bytes_xfered;
-				host->perf.wtime_drv =
-					ktime_add(host->perf.wtime_drv, diff);
+					host->perf.wtime_drv =
+						ktime_add(host->perf.wtime_drv,
+							diff);
+				}
 			}
 #endif
 			pr_debug("%s:     %d bytes transferred: %d\n",
@@ -219,13 +214,12 @@ mmc_start_request(struct mmc_host *host, struct mmc_request *mrq)
 			mrq->stop->mrq = mrq;
 		}
 #ifdef CONFIG_MMC_PERF_PROFILING
-		host->perf.start = ktime_get();
+		if (host->perf_enable)
+			host->perf.start = ktime_get();
 #endif
 	}
 	mmc_host_clk_hold(host);
-#if 0  /* 2011-11-14 FIR ITS#55, may cause kernel panic */
 	led_trigger_event(host->led, LED_FULL);
-#endif
 	host->ops->request(host, mrq);
 }
 
@@ -517,13 +511,6 @@ int __mmc_claim_host(struct mmc_host *host, atomic_t *abort)
 	might_sleep();
 
 	add_wait_queue(&host->wq, &wait);
-#ifdef CONFIG_PM_RUNTIME
-	while (mmc_dev(host)->power.runtime_status == RPM_SUSPENDING) {
-		if (host->suspend_task == current)
-			break;
-		msleep(15);
-	}
-#endif
 
 	spin_lock_irqsave(&host->lock, flags);
 	while (1) {
@@ -663,7 +650,7 @@ EXPORT_SYMBOL(mmc_release_host);
  * Internal function that does the actual ios call to the host driver,
  * optionally printing some debug output.
  */
-static inline void mmc_set_ios(struct mmc_host *host)
+void mmc_set_ios(struct mmc_host *host)
 {
 	struct mmc_ios *ios = &host->ios;
 
@@ -677,6 +664,7 @@ static inline void mmc_set_ios(struct mmc_host *host)
 		mmc_set_ungated(host);
 	host->ops->set_ios(host, ios);
 }
+EXPORT_SYMBOL(mmc_set_ios);
 
 /*
  * Control chip select pin on a host.
@@ -703,7 +691,6 @@ static void __mmc_set_clock(struct mmc_host *host, unsigned int hz)
 	host->ios.clock = hz;
 	mmc_set_ios(host);
 }
-EXPORT_SYMBOL(mmc_set_clock);
 
 void mmc_set_clock(struct mmc_host *host, unsigned int hz)
 {
@@ -719,6 +706,8 @@ void mmc_set_clock(struct mmc_host *host, unsigned int hz)
 void mmc_gate_clock(struct mmc_host *host)
 {
 	unsigned long flags;
+
+	WARN_ON(!host->ios.clock);
 
 	spin_lock_irqsave(&host->clk_lock, flags);
 	host->clk_old = host->ios.clock;
@@ -742,7 +731,7 @@ void mmc_ungate_clock(struct mmc_host *host)
 	 * we just ignore the call.
 	 */
 	if (host->clk_old) {
-		BUG_ON(host->ios.clock);
+		WARN_ON(host->ios.clock);
 		/* This call will also set host->clk_gated to false */
 		__mmc_set_clock(host, host->clk_old);
 	}
@@ -1042,7 +1031,6 @@ void mmc_set_timing(struct mmc_host *host, unsigned int timing)
 	mmc_set_ios(host);
 	mmc_host_clk_release(host);
 }
-EXPORT_SYMBOL(mmc_set_timing);
 
 /*
  * Select appropriate driver type for host.
@@ -1178,7 +1166,7 @@ static inline void mmc_bus_put(struct mmc_host *host)
 int mmc_resume_bus(struct mmc_host *host)
 {
 	unsigned long flags;
-	int ret = 0;
+
 	if (!mmc_bus_needs_resume(host))
 		return -EINVAL;
 
@@ -1191,25 +1179,16 @@ int mmc_resume_bus(struct mmc_host *host)
 	mmc_bus_get(host);
 	if (host->bus_ops && !host->bus_dead) {
 		mmc_power_up(host);
-		if (host->bus_ops->awake && mmc_card_can_sleep(host)) {
-			ret = host->bus_ops->awake(host);
-			if (ret) {
-				BUG_ON(!host->bus_ops->resume);
-				ret = host->bus_ops->resume(host);
-			}
-		} else {
-			BUG_ON(!host->bus_ops->resume);
-			ret = host->bus_ops->resume(host);
-		}
+		BUG_ON(!host->bus_ops->resume);
+		host->bus_ops->resume(host);
 	}
 
 	if (host->bus_ops->detect && !host->bus_dead)
 		host->bus_ops->detect(host);
 
 	mmc_bus_put(host);
-	pr_info("%s: Deferred resume %s\n", mmc_hostname(host),
-		(ret == 0 ? "completed" : "Fail"));
-	return ret;
+	printk("%s: Deferred resume completed\n", mmc_hostname(host));
+	return 0;
 }
 
 EXPORT_SYMBOL(mmc_resume_bus);
@@ -1285,51 +1264,6 @@ void mmc_detect_change(struct mmc_host *host, unsigned long delay)
 }
 
 EXPORT_SYMBOL(mmc_detect_change);
-
-int mmc_reinit_card(struct mmc_host *host)
-{
-	int err = 0;
-	printk(KERN_INFO "%s: %s\n", mmc_hostname(host),
-		__func__);
-
-	mmc_bus_get(host);
-	if (host->bus_ops && !host->bus_dead &&
-		host->bus_ops->resume) {
-		if (host->card && mmc_card_sd(host->card)) {
-			mmc_power_off(host);
-			mdelay(5);
-		}
-		mmc_power_up(host);
-		err = host->bus_ops->resume(host);
-	}
-
-	mmc_bus_put(host);
-	printk(KERN_INFO "%s: %s return %d\n", mmc_hostname(host),
-		__func__, err);
-	return err;
-}
-
-void mmc_remove_sd_card(struct work_struct *work)
-{
-	struct mmc_host *host =
-		container_of(work, struct mmc_host, remove.work);
-
-	printk(KERN_INFO "%s: %s\n", mmc_hostname(host),
-		__func__);
-	mmc_bus_get(host);
-	if (host->bus_ops && !host->bus_dead) {
-		if (host->bus_ops->remove)
-			host->bus_ops->remove(host);
-		mmc_claim_host(host);
-		mmc_detach_bus(host);
-		mmc_power_off(host);
-		mmc_release_host(host);
-	}
-	mmc_bus_put(host);
-	wake_unlock(&mmc_removal_work_wake_lock);
-	printk(KERN_INFO "%s: %s exit\n", mmc_hostname(host),
-		__func__);
-}
 
 void mmc_init_erase(struct mmc_card *card)
 {
@@ -1663,10 +1597,8 @@ EXPORT_SYMBOL(mmc_can_trim);
 
 int mmc_can_secure_erase_trim(struct mmc_card *card)
 {
-	/*
 	if (card->ext_csd.sec_feature_support & EXT_CSD_SEC_ER_EN)
 		return 1;
-	*/
 	return 0;
 }
 EXPORT_SYMBOL(mmc_can_secure_erase_trim);
@@ -1957,7 +1889,7 @@ int mmc_card_can_sleep(struct mmc_host *host)
 {
 	struct mmc_card *card = host->card;
 
-	if (card && mmc_card_mmc(card) && (card->ext_csd.rev >= 3) && (host->caps & MMC_CAP_NONREMOVABLE))
+	if (card && mmc_card_mmc(card) && card->ext_csd.rev >= 3)
 		return 1;
 	return 0;
 }
@@ -2023,10 +1955,6 @@ int mmc_suspend_host(struct mmc_host *host)
 			}
 		}
 	}
-#ifdef CONFIG_PM_RUNTIME
-	if (mmc_bus_manual_resume(host))
-		host->bus_resume_flags |= MMC_BUSRESUME_NEEDS_RESUME;
-#endif
 	mmc_bus_put(host);
 
 	if (!err && !mmc_card_keep_power(host))
@@ -2047,9 +1975,7 @@ int mmc_resume_host(struct mmc_host *host)
 
 	mmc_bus_get(host);
 	if (mmc_bus_manual_resume(host)) {
-#ifndef CONFIG_PM_RUNTIME
 		host->bus_resume_flags |= MMC_BUSRESUME_NEEDS_RESUME;
-#endif
 		mmc_bus_put(host);
 		return 0;
 	}
@@ -2170,8 +2096,6 @@ static int __init mmc_init(void)
 	if (!workqueue)
 		return -ENOMEM;
 
-	wake_lock_init(&mmc_removal_work_wake_lock, WAKE_LOCK_SUSPEND,
-		       "mmc_removal_work");
 	ret = mmc_register_bus();
 	if (ret)
 		goto destroy_workqueue;
@@ -2192,7 +2116,6 @@ unregister_bus:
 	mmc_unregister_bus();
 destroy_workqueue:
 	destroy_workqueue(workqueue);
-	wake_lock_destroy(&mmc_removal_work_wake_lock);
 
 	return ret;
 }
@@ -2203,7 +2126,6 @@ static void __exit mmc_exit(void)
 	mmc_unregister_host_class();
 	mmc_unregister_bus();
 	destroy_workqueue(workqueue);
-	wake_lock_destroy(&mmc_removal_work_wake_lock);
 }
 
 subsys_initcall(mmc_init);

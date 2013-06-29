@@ -168,9 +168,7 @@ struct mmc_card {
 #define MMC_TYPE_MMC		0		/* MMC card */
 #define MMC_TYPE_SD		1		/* SD card */
 #define MMC_TYPE_SDIO		2		/* SDIO card */
-#define MMC_TYPE_SDIO_WIMAX	3		/* SDIO card of WIMAX */
-#define MMC_TYPE_SDIO_SVLTE	4		/* SDIO card of SVLTE*/
-#define MMC_TYPE_SD_COMBO	5		/* SD combo (IO+mem) card */
+#define MMC_TYPE_SD_COMBO	3		/* SD combo (IO+mem) card */
 #define MMC_TYPE_SDIO_WIFI	6		/* SDIO card of wifi */
 	unsigned int		state;		/* (our) card state */
 #define MMC_STATE_PRESENT	(1<<0)		/* present in sysfs */
@@ -212,7 +210,6 @@ struct mmc_card {
 	struct sdio_cccr	cccr;		/* common card info */
 	struct sdio_cis		cis;		/* common tuple info */
 	struct sdio_func	*sdio_func[SDIO_MAX_FUNCS]; /* SDIO functions (devices) */
-	struct sdio_func	*sdio_single_irq; /* SDIO function when only one IRQ active */
 	unsigned		num_info;	/* number of info strings */
 	const char		**info;		/* info strings */
 	struct sdio_func_tuple	*tuples;	/* unknown common tuples */
@@ -220,7 +217,6 @@ struct mmc_card {
 	unsigned int		sd_bus_speed;	/* Bus Speed Mode set for the card */
 
 	struct dentry		*debugfs_root;
-	unsigned int		removed;
 };
 
 /*

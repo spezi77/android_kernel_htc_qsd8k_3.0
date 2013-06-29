@@ -1813,8 +1813,8 @@ static void __init bravo_init(void)
 
 	platform_add_devices(devices, ARRAY_SIZE(devices));
 
-	platform_add_devices(msm_footswitch_devices,
-			msm_num_footswitch_devices);
+	/* platform_add_devices(msm_footswitch_devices,
+			msm_num_footswitch_devices); */
 
     	msm_device_i2c_init();
 	msm_qsd_spi_init();
