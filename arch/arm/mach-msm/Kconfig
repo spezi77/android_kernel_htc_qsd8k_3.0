@@ -384,18 +384,18 @@ config MACH_PRIMODD
 		help
 			Support for Primodd_ct (PDA phone).
 config MACH_MAHIMAHI
-    depends on ARCH_QSD8X50
-    default y
-    bool "Mahi-Mahi"
-    help
-      Select this to support the Mahi-Mahi device
+		depends on ARCH_QSD8X50
+		default n
+		bool "Mahi-Mahi"
+		help
+			Select this to support the Mahi-Mahi device
 
 config MACH_BRAVO
-    depends on ARCH_QSD8X50
-    default y
-    bool "HTC Bravo"
-    help
-      Select this to support the HTC Bravo device
+		depends on ARCH_QSD8X50
+		default n
+		bool "HTC Bravo"
+		help
+			Select this to support the HTC Bravo device
 
 config MACH_PRIMODS
 		depends on ARCH_MSM7X27A

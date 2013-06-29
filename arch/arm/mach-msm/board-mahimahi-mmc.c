@@ -26,7 +26,7 @@
 #include <asm/gpio.h>
 #include <asm/io.h>
 #include <asm/mach-types.h>
-#include <mach/mmc.h>
+#include <asm/mach/mmc.h>
 
 #include <mach/vreg.h>
 
@@ -165,11 +165,16 @@ static unsigned int mahimahi_sdslot_status_rev0(struct device *dev)
 int mahimahi_microp_sdslot_status_register(void (*cb)(int, void *), void *);
 unsigned int mahimahi_microp_sdslot_status(struct device *);
 
-static struct msm_mmc_platform_data mahimahi_sdslot_data = {
+static unsigned int mahimahi_sd_slot_type = MMC_TYPE_SDIO_WIFI;
+static struct mmc_platform_data mahimahi_sdslot_data = {
+	.slot_type      	= &mahimahi_sd_slot_type,
 	.ocr_mask		= MAHIMAHI_MMC_VDD,
 	.status			= mahimahi_microp_sdslot_status,
 	.register_status_notify	= mahimahi_microp_sdslot_status_register,
 	.translate_vdd		= mahimahi_sdslot_switchvdd,
+	.msmsdcc_fmin  		= 144000,
+	.msmsdcc_fmid  		= 25000000,
+	.msmsdcc_fmax  		= 49152000,
 };
 
 static uint32_t wifi_on_gpio_table[] = {
@@ -230,12 +235,17 @@ static unsigned int mahimahi_wifi_status(struct device *dev)
 	return mahimahi_wifi_cd;
 }
 
-static struct msm_mmc_platform_data mahimahi_wifi_data = {
+static unsigned int mahimahi_wifi_slot_type = MMC_TYPE_SDIO_WIFI;
+static struct mmc_platform_data mahimahi_wifi_data = {
+	.slot_type    		= &mahimahi_wifi_slot_type,
 	.ocr_mask		= MMC_VDD_28_29,
 	.built_in		= 1,
 	.status			= mahimahi_wifi_status,
 	.register_status_notify	= mahimahi_wifi_status_register,
 	.embedded_sdio		= &mahimahi_wifi_emb_data,
+	.msmsdcc_fmin  = 144000,
+	.msmsdcc_fmid  = 25000000,
+	.msmsdcc_fmax  = 49152000,
 };
 
 int mahimahi_wifi_set_carddetect(int val)
@@ -328,7 +338,7 @@ int __init mahimahi_init_mmc(unsigned int sys_rev, unsigned debug_uart)
 	else {
 		mahimahi_sdslot_data.status = mahimahi_sdslot_status_rev0;
 		mahimahi_sdslot_data.register_status_notify = NULL;
-		set_irq_wake(MSM_GPIO_TO_INT(MAHIMAHI_GPIO_SDMC_CD_REV0_N), 1);
+		irq_set_irq_wake(MSM_GPIO_TO_INT(MAHIMAHI_GPIO_SDMC_CD_REV0_N), 1);
 		msm_add_sdcc(2, &mahimahi_sdslot_data,
 			     MSM_GPIO_TO_INT(MAHIMAHI_GPIO_SDMC_CD_REV0_N),
 			     IORESOURCE_IRQ_LOWEDGE | IORESOURCE_IRQ_HIGHEDGE);
