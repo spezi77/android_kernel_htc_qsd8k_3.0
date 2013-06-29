@@ -71,8 +71,8 @@ static struct gpio_event_matrix_info mahimahi_keypad_matrix_info = {
 	.input_gpios = mahimahi_row_gpios,
 	.noutputs = ARRAY_SIZE(mahimahi_col_gpios),
 	.ninputs = ARRAY_SIZE(mahimahi_row_gpios),
-	.settle_time.tv.nsec = 40 * NSEC_PER_USEC,
-	.poll_time.tv.nsec = 20 * NSEC_PER_MSEC,
+	.settle_time.tv_nsec = 40 * NSEC_PER_USEC,
+	.poll_time.tv_nsec = 20 * NSEC_PER_MSEC,
 	.flags = (GPIOKPF_LEVEL_TRIGGERED_IRQ |
 		  GPIOKPF_REMOVE_PHANTOM_KEYS |
 		  GPIOKPF_PRINT_UNMAPPED_KEYS),
@@ -88,7 +88,7 @@ static struct gpio_event_direct_entry mahimahi_keypad_key_map[] = {
 static struct gpio_event_input_info mahimahi_keypad_key_info = {
 	.info.func = gpio_event_input_func,
 	.info.no_suspend = true,
-	.debounce_time.tv.nsec = 5 * NSEC_PER_MSEC,
+	.debounce_time.tv64 = 5 * NSEC_PER_MSEC,
 	.flags = 0,
 	.type = EV_KEY,
 	.keymap = mahimahi_keypad_key_map,

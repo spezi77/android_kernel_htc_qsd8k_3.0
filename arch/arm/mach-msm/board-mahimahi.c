@@ -42,6 +42,7 @@
 #include <asm/setup.h>
 
 #include <mach/board.h>
+#include <mach/board_htc.h>
 #include <mach/hardware.h>
 #include <mach/msm_hsusb.h>
 #include <mach/msm_iomap.h>
@@ -73,7 +74,6 @@ static uint debug_uart;
 module_param_named(debug_uart, debug_uart, uint, 0);
 
 extern void notify_usb_connected(int);
-extern void msm_init_pmic_vibrator(void);
 extern void __init mahimahi_audio_init(void);
 
 extern int microp_headset_has_mic(void);
@@ -1199,14 +1199,14 @@ static void __init mahimahi_init(void)
 		smd_set_channel_list(smd_cdma_default_channels,
 					ARRAY_SIZE(smd_cdma_default_channels));
 
-	//msm_hw_reset_hook = mahimahi_reset;
+	msm_hw_reset_hook = mahimahi_reset;
 
 	mahimahi_board_serialno_setup(board_serialno());
 
-	if (is_cdma_version(system_rev))
+	/*if (is_cdma_version(system_rev))
 		msm_acpu_clock_init(&mahimahi_cdma_clock_data);
 	else
-		msm_acpu_clock_init(&mahimahi_clock_data);
+		msm_acpu_clock_init(&mahimahi_clock_data);*/
 
 #ifdef CONFIG_PERFLOCK
 	perflock_init(&mahimahi_perflock_data);
