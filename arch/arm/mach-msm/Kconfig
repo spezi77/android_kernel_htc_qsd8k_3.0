@@ -383,6 +383,12 @@ config MACH_PRIMODD
 		bool "Primodd_ct"
 		help
 			Support for Primodd_ct (PDA phone).
+config MACH_MAHIMAHI
+    depends on ARCH_QSD8X50
+    default y
+    bool "Mahi-Mahi"
+    help
+      Select this to support the Mahi-Mahi device
 
 config MACH_BRAVO
     depends on ARCH_QSD8X50

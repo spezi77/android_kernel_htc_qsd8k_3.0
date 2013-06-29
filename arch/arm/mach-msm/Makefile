@@ -320,6 +320,17 @@ obj-$(CONFIG_HTCLEO_BACKLIGHT) += board-htcleo-bl.o
 obj-$(CONFIG_HTCLEO_BACKLIGHT_LED) += board-htcleo-bl-led.o
 obj-$(CONFIG_HTCLEO_BTN_BACKLIGHT_MANAGER) += board-htcleo-btn_backlight-manager.o
 
+obj-$(CONFIG_MACH_MAHIMAHI) += board-mahimahi.o board-mahimahi-panel.o
+obj-$(CONFIG_MACH_MAHIMAHI) += board-mahimahi-keypad.o board-mahimahi-mmc.o
+obj-$(CONFIG_MACH_MAHIMAHI) += board-mahimahi-rfkill.o htc_wifi_nvs.o htc_awb_cal.o
+obj-$(CONFIG_MACH_MAHIMAHI) += board-mahimahi-wifi.o board-mahimahi-audio.o
+obj-$(CONFIG_MACH_MAHIMAHI) += msm_vibrator.o
+obj-$(CONFIG_MACH_MAHIMAHI) += devices_htc.o
+obj-$(CONFIG_MACH_MAHIMAHI) += board-mahimahi-microp.o
+obj-$(CONFIG_MACH_MAHIMAHI) += htc_acoustic_qsd.o
+obj-$(CONFIG_MACH_MAHIMAHI) += board-mahimahi-tpa2018d1.o
+obj-$(CONFIG_MACH_MAHIMAHI) += board-mahimahi-smb329.o
+
 obj-$(CONFIG_MACH_BRAVO) += board-bravo.o board-bravo-panel.o
 obj-$(CONFIG_MACH_BRAVO) += board-bravo-keypad.o board-bravo-mmc.o
 obj-$(CONFIG_MACH_BRAVO) += board-bravo-rfkill.o htc_wifi_nvs.o htc_awb_cal.o
@@ -563,7 +574,7 @@ ifeq ($(CONFIG_ARCH_MSM7X30),y)
 obj-$(CONFIG_MSM_RMT_STORAGE_CLIENT) += rmt_storage_client-7x30.o
 obj-$(CONFIG_MSM_SSBI) += ssbi.o
 else
-ifneq ($(CONFIG_MACH_BRAVO),y)
+ifneq ($(CONFIG_ARCH_QSD8X50),y)
 obj-$(CONFIG_MSM_RMT_STORAGE_CLIENT) += rmt_storage_client.o
 endif
 endif
