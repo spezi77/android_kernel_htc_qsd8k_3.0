@@ -1098,7 +1098,6 @@ CONFIG_MTD_CFI_I2=y
 # Self-contained MTD device drivers
 #
 CONFIG_MTD_MSM_NAND=y
-CONFIG_MTD_HTCLEO_NAND=y
 # CONFIG_MTD_DATAFLASH is not set
 # CONFIG_MTD_M25P80 is not set
 # CONFIG_MTD_SST25L is not set
@@ -1111,7 +1110,7 @@ CONFIG_MTD_HTCLEO_NAND=y
 # Disk-On-Chip Device Drivers
 #
 CONFIG_MTD_NAND_IDS=y
-# CONFIG_MTD_NAND is not set
+CONFIG_MTD_NAND=y
 # CONFIG_MTD_ONENAND is not set
 
 #
