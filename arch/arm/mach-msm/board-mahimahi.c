@@ -104,6 +104,10 @@ extern void __init mahimahi_audio_init(void);
 
 extern int microp_headset_has_mic(void);
 
+///////////////////////////////////////////////////////////////////////
+// KGSL (HW3D support)#include <linux/android_pmem.h>
+///////////////////////////////////////////////////////////////////////
+
 /* start kgsl */
 static struct resource kgsl_3d0_resources[] = {
 	{
@@ -158,7 +162,6 @@ struct platform_device msm_kgsl_3d0 = {
 struct platform_device *msm_footswitch_devices[] = {
 	FS_PCOM(FS_GFX3D,  "fs_gfx3d"),
 };
-
 unsigned msm_num_footswitch_devices = ARRAY_SIZE(msm_footswitch_devices);
 /* end footswitch regulator */
 
@@ -341,7 +344,6 @@ static struct platform_device mahimahi_rfkill = {
 	.name = "mahimahi_rfkill",
 	.id = -1,
 };
-
 
 static struct resource ram_console_resources[] = {
 	{
@@ -789,6 +791,9 @@ static struct android_usb_platform_data android_usb_pdata = {
 	.products = usb_products,
 	.num_functions = ARRAY_SIZE(usb_functions_all),
 	.functions = usb_functions_all,
+	.fserial_init_string = "tty:modem,tty:autobot,tty:serial,tty:autobot",
+	.nluns = 1,
+	.usb_id_pin_gpio = MAHIMAHI_GPIO_USB_ID_PIN,
 };
 
 static struct platform_device android_usb_device = {
@@ -1022,13 +1027,16 @@ static struct camera_flash_cfg msm_camera_sensor_flash_cfg = {
 
 static struct msm_camera_sensor_info msm_camera_sensor_s5k3e2fx_data = {
 	.sensor_name = "s5k3e2fx",
-	.sensor_reset = 144, /* CAM1_RST */
-	.sensor_pwd = 143,  /* CAM1_PWDN, enabled in a9 */
-	/*.vcm_pwd = 31, */  /* CAM1_VCM_EN, enabled in a9 */
+	.sensor_reset = 144,
+	/* CAM1_PWDN, enabled in a9 */
+	//.sensor_pwd = 143,
+	/* CAM1_VCM_EN, enabled in a9 */
+	//.vcm_pwd = 31,
 	.pdata = &msm_camera_device_data,
+	.flash_type = MSM_CAMERA_FLASH_LED,
 	.resource = msm_camera_resources,
 	.num_resources = ARRAY_SIZE(msm_camera_resources),
-	.flash_cfg      = &msm_camera_sensor_flash_cfg,
+	.flash_cfg = &msm_camera_sensor_flash_cfg,
 };
 
 static struct platform_device msm_camera_sensor_s5k3e2fx = {
@@ -1309,6 +1317,7 @@ static struct platform_device *devices[] __initdata = {
 	&capella_cm3602,
 	&msm_camera_sensor_s5k3e2fx,
 	&mahimahi_flashlight_device,
+	&htc_battery_pdev,
 };
 
 
@@ -1702,6 +1711,8 @@ static void __init mahimahi_init(void)
 		platform_device_register(&mahimahi_timed_gpios);
 	else
 		msm_init_pmic_vibrator();
+    pr_info("Everything should be up n running");
+    mahimahi_reset();
 }
 
 static void __init mahimahi_fixup(struct machine_desc *desc, struct tag *tags,
