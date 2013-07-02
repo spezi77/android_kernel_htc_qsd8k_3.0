@@ -29,7 +29,7 @@
 #include <linux/spi/spi.h>
 #include <linux/platform_device.h>
 #include <linux/usb/composite.h>
-#include <linux/usb/android_composite.h>
+//#include <linux/usb/android_composite.h>
 //#include <linux/usb/f_accessory.h>
 #include <linux/android_pmem.h>
 #include <../../../drivers/staging/android/timed_gpio.h>
@@ -58,7 +58,12 @@
 #include <mach/system.h>
 #include <mach/socinfo.h>
 #include <mach/msm_spi.h>
+#ifdef CONFIG_USB_G_ANDROID
 #include <mach/htc_usb.h>
+#include <linux/usb/android_composite.h>
+#include <linux/usb/android.h>
+#include <mach/usbdiag.h>
+#endif
 #ifdef CONFIG_USB_MSM_OTG_72K
 #include <mach/msm_hsusb.h>
 #else
@@ -94,6 +99,9 @@
 #ifdef CONFIG_OPTICALJOYSTICK_CRUCIAL
 #include <linux/curcial_oj.h>
 #endif
+
+int htc_get_usb_accessory_adc_level(uint32_t *buffer);
+#include <mach/cable_detect.h>
 
 static uint debug_uart;
 
@@ -546,6 +554,51 @@ static void *usb_base;
 #ifndef MSM_USB_BASE
 #define MSM_USB_BASE              ((unsigned)usb_base)
 #endif
+
+#define PM8058ADC_16BIT(adc) ((adc * 2200) / 65535) /* vref=2.2v, 16-bits resolution */
+int64_t bravo_get_usbid_adc(void)
+{
+	uint32_t adc_value = 0xffffffff;
+	htc_get_usb_accessory_adc_level(&adc_value);
+	adc_value = PM8058ADC_16BIT(adc_value);
+	return adc_value;
+}
+
+static uint32_t usb_ID_PIN_input_table[] = {
+	GPIO_CFG(BRAVO_GPIO_USB_ID1_PIN, 0, GPIO_INPUT, GPIO_CFG_NO_PULL, GPIO_CFG_4MA),
+};
+
+static uint32_t usb_ID_PIN_ouput_table[] = {
+	GPIO_CFG(BRAVO_GPIO_USB_ID1_PIN, 0, GPIO_OUTPUT, GPIO_CFG_NO_PULL, GPIO_CFG_4MA),
+};
+
+void config_bravo_usb_id_gpios(bool output)
+{
+	if (output) {
+		config_gpio_table(usb_ID_PIN_ouput_table, ARRAY_SIZE(usb_ID_PIN_ouput_table));
+		gpio_set_value(BRAVO_GPIO_USB_ID1_PIN, 1);
+		printk(KERN_INFO "%s %d output high\n",  __func__, BRAVO_GPIO_USB_ID1_PIN);
+	} else {
+		config_gpio_table(usb_ID_PIN_input_table, ARRAY_SIZE(usb_ID_PIN_input_table));
+		printk(KERN_INFO "%s %d input none pull\n",  __func__, BRAVO_GPIO_USB_ID1_PIN);
+	}
+}
+
+static struct cable_detect_platform_data cable_detect_pdata = {
+	.detect_type 		= CABLE_TYPE_PMIC_ADC,
+	.usb_id_pin_gpio 	= BRAVO_GPIO_USB_ID1_PIN,
+	.config_usb_id_gpios 	= config_bravo_usb_id_gpios,
+	.get_adc_cb		= bravo_get_usbid_adc,
+};
+
+static struct platform_device cable_detect_device = {
+	.name	= "cable_detect",
+	.id	= -1,
+	.dev	= {
+		.platform_data = &cable_detect_pdata,
+	},
+};
+
 static unsigned bravo_ulpi_read(void __iomem *usb_base, unsigned reg)
 {
 	unsigned timeout = 100000;
@@ -814,11 +867,10 @@ void bravo_add_usb_devices(void)
 		android_usb_pdata.nluns = 3;
 		android_usb_pdata.cdrom_lun = 0x4;
 	}
-
+	
+	config_bravo_usb_id_gpios(0);
 	msm_device_otg.dev.platform_data = &msm_otg_pdata;
-	//msm_device_gadget_peripheral.dev.platform_data = &msm_gadget_pdata;
 	msm_device_gadget_peripheral.dev.parent = &msm_device_otg.dev;
-	//usb_gpio_init();
 	platform_device_register(&msm_device_gadget_peripheral);
 	platform_device_register(&android_usb_device);
 }
@@ -1433,8 +1485,7 @@ static struct platform_device *devices[] __initdata = {
 	&msm_device_smd,
 	&msm_device_nand,
 	&msm_device_rtc,
-#ifdef CONFIG_USB_G_ANDROID
-	&usb_mass_storage_device,
+#ifdef CONFIG_USB_ANDROID_RNDIS
 	&rndis_device,
 #endif
 	&android_pmem_device,
