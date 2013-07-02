@@ -178,16 +178,20 @@ static unsigned int bravo_sdslot_status(struct device *dev)
 int bravo_microp_sdslot_status_register(void (*cb)(int, void *), void *);
 unsigned int bravo_microp_sdslot_status(struct device *);
 
-static unsigned int bravo_sd_slot_type = MMC_TYPE_SDIO_WIFI;
+static unsigned int bravo_sd_slot_type = MMC_TYPE_SD;
 static struct mmc_platform_data bravo_sdslot_data = {
 	.slot_type    		= &bravo_sd_slot_type,
 	.ocr_mask		= BRAVO_MMC_VDD,
+	.mmc_bus_width  	= MMC_CAP_4_BIT_DATA,
 	.status			= bravo_microp_sdslot_status,
 	.register_status_notify	= bravo_microp_sdslot_status_register,
 	.translate_vdd		= bravo_sdslot_switchvdd,
-	.msmsdcc_fmin	= 144000,
-	.msmsdcc_fmid	= 25000000,
-	.msmsdcc_fmax	= 49152000,
+	.msmsdcc_fmin		= 144000,
+	.msmsdcc_fmid		= 25000000,
+	.msmsdcc_fmax		= 49152000,
+	.xpc_cap       		= 0,
+	.nonremovable  		= 0,
+	.uhs_caps	    	= (MMC_CAP_UHS_SDR12 | MMC_CAP_UHS_SDR25 | MMC_CAP_UHS_SDR50),
 };
 
 static uint32_t wifi_on_gpio_table[] = {
