@@ -351,10 +351,10 @@ int __init bravo_init_mmc(unsigned int sys_rev, unsigned debug_uart)
 			return PTR_ERR(sdslot_vreg);
 	}
 
-	if (system_rev > 0) {
+	//if (system_rev > 0) {
 		bravo_sdslot_data.status = bravo_sdslot_status;
 		msm_add_sdcc(2, &bravo_sdslot_data, 0, 0);
-    }
+    /*}
 	else {
 		bravo_sdslot_data.status = bravo_sdslot_status;
 		bravo_sdslot_data.register_status_notify = NULL;
@@ -362,7 +362,7 @@ int __init bravo_init_mmc(unsigned int sys_rev, unsigned debug_uart)
 		msm_add_sdcc(2, &bravo_sdslot_data,
 			     MSM_GPIO_TO_INT(BRAVO_GPIO_SDMC_CD_N),
 			     IORESOURCE_IRQ_LOWEDGE | IORESOURCE_IRQ_HIGHEDGE);
-	}
+	}*/
 
 done:
 	printk("%s()-\n", __func__);
