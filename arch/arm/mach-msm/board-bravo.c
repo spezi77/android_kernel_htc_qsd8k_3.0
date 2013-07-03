@@ -1500,7 +1500,6 @@ static struct platform_device *devices[] __initdata = {
 	&bravo_oj,
 #endif
 	&capella_cm3602,
-        &cable_detect_device,
 };
 
 static struct msm_gpio misc_gpio_table[] = {
