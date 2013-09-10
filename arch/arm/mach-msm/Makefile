@@ -167,8 +167,6 @@ obj-$(CONFIG_MSM_DALRPC_TEST) += dal_remotetest.o
 obj-$(CONFIG_ARCH_MSM7X30) += dal_axi.o htc_drm.o htc_sdservice.o
 obj-$(CONFIG_ARCH_MSM7X27A) += dal_axi.o
 obj-$(CONFIG_MSM_ADSP) += qdsp5/
-#obj-$(CONFIG_MSM7KV2_AUDIO) += qdsp5v2/
-obj-$(CONFIG_MSM7KV2_AUDIO) += qdsp5v2_2x/
 obj-$(CONFIG_MSM7KV2_AUDIO) += htc_acoustic_7x30.o htc_acdb_7x30.o
 
 ifndef CONFIG_MACH_HTCLEO
