@@ -385,12 +385,18 @@ config MACH_PRIMODD
 			Support for Primodd_ct (PDA phone).
 
 config MACH_HTCLEO
-	depends on ARCH_QSD8X50
-	default y
-	bool "HTC Leo"
-	help
-	  Select this to support the HTC Leo device
+                depends on ARCH_QSD8X50
+                default n
+                bool "HTC Leo"
+                help
+                        Select this to support the HTC Leo device
 
+config MACH_BRAVO
+                depends on ARCH_QSD8X50
+                default n
+                bool "HTC Bravo"
+                help
+                        Select this to support the HTC Bravo device
 config MACH_PRIMODS
 		depends on ARCH_MSM7X27A
 		depends on !MSM_STACKED_MEMORY
@@ -1890,21 +1896,21 @@ config MSM_IDLE_WAIT_ON_MODEM
 
 config HTCLEO_ENABLE_MULTI_TOUCH
 	bool "Support for multitouch"
-	default y
+	default n
 	depends on MACH_HTCLEO
 	help
 		Add multitouch support for touchscreen
 
 config HTCLEO_TOUCHSCREEN_FILTER
 	bool "Enable touchscreen filter"
-	default y
+	default n
 	depends on MACH_HTCLEO
 	help
 		Enable input filtering for touchscreen
 
 choice
 	prompt "HTCLEO Keymapping"
-	default HTCLEO_KEYMAP_ANDROID
+	default n
 
 	config HTCLEO_KEYMAP_ANDROID
 		bool "Keymapping for Android"
@@ -1920,7 +1926,7 @@ endchoice
 
 choice
 	prompt "HTCLEO Backlight API type"
-	default HTCLEO_BACKLIGHT_LED
+	default n
 
 	config HTCLEO_BACKLIGHT_LED
 		bool "Backlight control via LED API"
@@ -1936,7 +1942,7 @@ endchoice
 
 config HTCLEO_BTN_BACKLIGHT_MANAGER
 	depends on MACH_HTCLEO
-	default y
+	default n
 	bool "Use button backlight manager"
 	help
 	  Use kernel button backlight manager to turn on/off backlight
