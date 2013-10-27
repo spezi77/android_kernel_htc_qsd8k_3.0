@@ -762,8 +762,12 @@ remove_finished_td:
 		/* Otherwise ring the doorbell(s) to restart queued transfers */
 		ring_doorbell_for_active_rings(xhci, slot_id, ep_index);
 	}
-	ep->stopped_td = NULL;
-	ep->stopped_trb = NULL;
+
+	/* Clear stopped_td and stopped_trb if endpoint is not halted */
+	if (!(ep->ep_state & EP_HALTED)) {
+		ep->stopped_td = NULL;
+		ep->stopped_trb = NULL;
+	}
 
 	/*
 	 * Drop the lock and complete the URBs in the cancelled TD list.
@@ -1089,6 +1093,28 @@ static void handle_cmd_completion(struct xhci_hcd *xhci,
 		xhci->error_bitmask |= 1 << 5;
 		return;
 	}
+
+	if ((GET_COMP_CODE(le32_to_cpu(event->status)) == COMP_CMD_ABORT) ||
+		(GET_COMP_CODE(le32_to_cpu(event->status)) == COMP_CMD_STOP)) {
+		/* If the return value is 0, we think the trb pointed by
+		 * command ring dequeue pointer is a good trb. The good
+		 * trb means we don't want to cancel the trb, but it have
+		 * been stopped by host. So we should handle it normally.
+		 * Otherwise, driver should invoke inc_deq() and return.
+		 */
+		if (handle_stopped_cmd_ring(xhci,
+				GET_COMP_CODE(le32_to_cpu(event->status)))) {
+			inc_deq(xhci, xhci->cmd_ring, false);
+			return;
+		}
+		/* There is no command to handle if we get a stop event when the
+		 * command ring is empty, event->cmd_trb points to the next
+		 * unset command
+		 */
+		if (xhci->cmd_ring->dequeue == xhci->cmd_ring->enqueue)
+			return;
+	}
+
 	switch (le32_to_cpu(xhci->cmd_ring->dequeue->generic.field[3])
 		& TRB_TYPE_BITMASK) {
 	case TRB_TYPE(TRB_ENABLE_SLOT):
