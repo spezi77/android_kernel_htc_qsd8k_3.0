@@ -23,7 +23,6 @@
 #include <linux/clk.h>
 #include <linux/timer.h>
 #include <linux/file.h>
-#include <linux/android_pmem.h>
 #include <linux/major.h>
 
 #include <mach/msm_iomap.h>
@@ -185,7 +184,6 @@ static irqreturn_t mdp_isr(int irq, void *data)
     }
 #endif
 
-	status &= ~0x10000; // Cotulla
 	status &= mdp_irq_mask;
 #ifdef CONFIG_MSM_MDP40
 	if (mdp->mdp_dev.overrides & MSM_MDP4_MDDI_DMA_SWITCH) {
@@ -287,7 +285,7 @@ int mdp_wait(struct mdp_info *mdp, uint32_t mask, wait_queue_head_t *wq)
 	unsigned long irq_flags=0;
 
 //	pr_info("%s: WAITING for 0x%x\n", __func__, mask);
-	wait_event_timeout(*wq, !mdp_check_mask(mdp, mask), HZ);
+	wait_event_timeout(*wq, !mdp_check_mask(mdp, mask), 5*HZ);
 
 	spin_lock_irqsave(&mdp->lock, irq_flags);
 	if (mdp_irq_mask & mask) {
