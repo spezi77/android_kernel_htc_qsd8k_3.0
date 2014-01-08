@@ -507,7 +507,8 @@ static int __devexit mpc512x_psc_spi_do_remove(struct device *dev)
 	return 0;
 }
 
-static int __devinit mpc512x_psc_spi_of_probe(struct platform_device *op)
+static int __devinit mpc512x_psc_spi_of_probe(struct platform_device *op,
+					      const struct of_device_id *match)
 {
 	const u32 *regaddr_p;
 	u64 regaddr64, size64;
@@ -550,7 +551,7 @@ static struct of_device_id mpc512x_psc_spi_of_match[] = {
 
 MODULE_DEVICE_TABLE(of, mpc512x_psc_spi_of_match);
 
-static struct platform_driver mpc512x_psc_spi_of_driver = {
+static struct of_platform_driver mpc512x_psc_spi_of_driver = {
 	.probe = mpc512x_psc_spi_of_probe,
 	.remove = __devexit_p(mpc512x_psc_spi_of_remove),
 	.driver = {
@@ -562,13 +563,13 @@ static struct platform_driver mpc512x_psc_spi_of_driver = {
 
 static int __init mpc512x_psc_spi_init(void)
 {
-	return platform_driver_register(&mpc512x_psc_spi_of_driver);
+	return of_register_platform_driver(&mpc512x_psc_spi_of_driver);
 }
 module_init(mpc512x_psc_spi_init);
 
 static void __exit mpc512x_psc_spi_exit(void)
 {
-	platform_driver_unregister(&mpc512x_psc_spi_of_driver);
+	of_unregister_platform_driver(&mpc512x_psc_spi_of_driver);
 }
 module_exit(mpc512x_psc_spi_exit);
 

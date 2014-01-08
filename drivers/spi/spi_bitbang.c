@@ -259,6 +259,10 @@ static void bitbang_work(struct work_struct *work)
 	struct spi_bitbang	*bitbang =
 		container_of(work, struct spi_bitbang, work);
 	unsigned long		flags;
+	int			(*setup_transfer)(struct spi_device *,
+					struct spi_transfer *);
+
+	setup_transfer = bitbang->setup_transfer;
 
 	spin_lock_irqsave(&bitbang->lock, flags);
 	bitbang->busy = 1;
@@ -296,7 +300,11 @@ static void bitbang_work(struct work_struct *work)
 
 			/* init (-1) or override (1) transfer params */
 			if (do_setup != 0) {
-				status = bitbang->setup_transfer(spi, t);
+				if (!setup_transfer) {
+					status = -ENOPROTOOPT;
+					break;
+				}
+				status = setup_transfer(spi, t);
 				if (status < 0)
 					break;
 				if (do_setup == -1)
@@ -456,9 +464,6 @@ int spi_bitbang_start(struct spi_bitbang *bitbang)
 			bitbang->master->cleanup = spi_bitbang_cleanup;
 		}
 	} else if (!bitbang->master->setup)
-		return -EINVAL;
-	if (bitbang->master->transfer == spi_bitbang_transfer &&
-			!bitbang->setup_transfer)
 		return -EINVAL;
 
 	/* this task is the only thing to touch the SPI bits */

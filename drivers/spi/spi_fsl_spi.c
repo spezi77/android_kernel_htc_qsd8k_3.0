@@ -1042,7 +1042,8 @@ static int of_fsl_spi_free_chipselects(struct device *dev)
 	return 0;
 }
 
-static int __devinit of_fsl_spi_probe(struct platform_device *ofdev)
+static int __devinit of_fsl_spi_probe(struct platform_device *ofdev,
+					const struct of_device_id *ofid)
 {
 	struct device *dev = &ofdev->dev;
 	struct device_node *np = ofdev->dev.of_node;
@@ -1051,7 +1052,7 @@ static int __devinit of_fsl_spi_probe(struct platform_device *ofdev)
 	struct resource irq;
 	int ret = -ENOMEM;
 
-	ret = of_mpc8xxx_spi_probe(ofdev);
+	ret = of_mpc8xxx_spi_probe(ofdev, ofid);
 	if (ret)
 		return ret;
 
@@ -1099,7 +1100,7 @@ static const struct of_device_id of_fsl_spi_match[] = {
 };
 MODULE_DEVICE_TABLE(of, of_fsl_spi_match);
 
-static struct platform_driver of_fsl_spi_driver = {
+static struct of_platform_driver of_fsl_spi_driver = {
 	.driver = {
 		.name = "fsl_spi",
 		.owner = THIS_MODULE,
@@ -1176,13 +1177,13 @@ static void __exit legacy_driver_unregister(void) {}
 static int __init fsl_spi_init(void)
 {
 	legacy_driver_register();
-	return platform_driver_register(&of_fsl_spi_driver);
+	return of_register_platform_driver(&of_fsl_spi_driver);
 }
 module_init(fsl_spi_init);
 
 static void __exit fsl_spi_exit(void)
 {
-	platform_driver_unregister(&of_fsl_spi_driver);
+	of_unregister_platform_driver(&of_fsl_spi_driver);
 	legacy_driver_unregister();
 }
 module_exit(fsl_spi_exit);

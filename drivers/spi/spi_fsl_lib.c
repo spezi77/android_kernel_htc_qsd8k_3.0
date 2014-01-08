@@ -189,7 +189,8 @@ int __devexit mpc8xxx_spi_remove(struct device *dev)
 	return 0;
 }
 
-int __devinit of_mpc8xxx_spi_probe(struct platform_device *ofdev)
+int __devinit of_mpc8xxx_spi_probe(struct platform_device *ofdev,
+					const struct of_device_id *ofid)
 {
 	struct device *dev = &ofdev->dev;
 	struct device_node *np = ofdev->dev.of_node;
