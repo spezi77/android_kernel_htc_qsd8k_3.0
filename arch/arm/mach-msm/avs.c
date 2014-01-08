@@ -1,14 +1,58 @@
 /*
  * Copyright (c) 2009, Code Aurora Forum. All rights reserved.
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 2 and
- * only version 2 as published by the Free Software Foundation.
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *     * Redistributions of source code must retain the above copyright
+ *       notice, this list of conditions and the following disclaimer.
+ *     * Redistributions in binary form must reproduce the above copyright
+ *       notice, this list of conditions and the following disclaimer in the
+ *       documentation and/or other materials provided with the distribution.
+ *     * Neither the name of Code Aurora Forum nor
+ *       the names of its contributors may be used to endorse or promote
+ *       products derived from this software without specific prior written
+ *       permission.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * Alternatively, provided that this notice is retained in full, this software
+ * may be relicensed by the recipient under the terms of the GNU General Public
+ * License version 2 ("GPL") and only version 2, in which case the provisions of
+ * the GPL apply INSTEAD OF those given above.  If the recipient relicenses the
+ * software under the GPL, then the identification text in the MODULE_LICENSE
+ * macro must be changed to reflect "GPLv2" instead of "Dual BSD/GPL".  Once a
+ * recipient changes the license terms to the GPL, subsequent recipients shall
+ * not relicense under alternate licensing terms, including the BSD or dual
+ * BSD/GPL terms.  In addition, the following license statement immediately
+ * below and between the words START and END shall also then apply when this
+ * software is relicensed under the GPL:
+ *
+ * START
+ *
+ * This program is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License version 2 and only version 2 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
+ * details.
+ *
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc.,
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+ *
+ * END
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include <linux/kernel.h>
@@ -45,6 +89,40 @@ static struct avs_state_s
 	int vdd;		/* Current ACPU voltage */
 } avs_state;
 
+struct clkctl_acpu_speed {
+	unsigned acpu_khz;
+	int	 min_vdd;
+	int	 max_vdd;
+};
+
+
+struct clkctl_acpu_speed acpu_vdd_tbl[] = {
+	{  19200, 950, 975 },
+	{ 128000, 950, 975 },
+	{ 245000, 950, 1025 },
+	{ 384000, 950, 1025 },
+	{ 422400, 950, 1050 },
+	{ 460800, 975, 1050 },
+	{ 499200, 1000, 1075 },
+	{ 537600, 1000, 1075 },
+	{ 576000, 1025, 1100 },
+	{ 614400, 1050, 1100 },
+	{ 652800, 1075, 1125 },
+	{ 691200, 1100, 1150 },
+	{ 729600, 1125, 1175 },
+	{ 768000, 1150, 1200 },
+	{ 806400, 1175, 1225 },
+	{ 844800, 1200, 1250 },
+	{ 883200, 1200, 1275 },
+	{ 921600, 1225, 1275 },
+	{ 960000, 1225, 1275 },
+	{ 998400, 1225, 1275 },
+	{ 1036800, 1275, 1275 },
+	{ 1075200, 1275, 1275 },
+	{ 1113600, 1275, 1275 },
+	{ 0 },
+};
+
 /*
  *  Update the AVS voltage vs frequency table, for current temperature
  *  Adjust based on the AVS delay circuit hardware status
@@ -63,7 +141,7 @@ static void avs_update_voltage_table(short *vdd_table)
 	cur_voltage = avs_state.vdd;
 
 	avscsr = avs_test_delays();
-	AVSDEBUG("avscsr=%x, avsdscr=%x\n", avscsr, avs_get_avsdscr());
+/*	AVSDEBUG("avscsr=%x, avsdscr=%x\n", avscsr, avs_get_avsdscr());*/
 
 	/*
 	 * Read the results for the various unit's AVS delay circuits
@@ -84,8 +162,8 @@ static void avs_update_voltage_table(short *vdd_table)
 		AVSDEBUG("cpu=%d l2=%d vu=%d\n", cpu, l2, vu);
 		AVSDEBUG("Voltage up at %d\n", cur_freq_idx);
 
-		if (cur_voltage >= VOLTAGE_MAX)
-			printk(KERN_ERR
+		if (cur_voltage >= VOLTAGE_MAX || cur_voltage >= acpu_vdd_tbl[cur_freq_idx].max_vdd)
+			AVSDEBUG(KERN_ERR
 				"AVS: Voltage can not get high enough!\n");
 
 		/* Raise the voltage for all frequencies */
@@ -93,9 +171,12 @@ static void avs_update_voltage_table(short *vdd_table)
 			vdd_table[i] = cur_voltage + VOLTAGE_STEP;
 			if (vdd_table[i] > VOLTAGE_MAX)
 				vdd_table[i] = VOLTAGE_MAX;
+			else if (vdd_table[i] > acpu_vdd_tbl[i].max_vdd)
+				vdd_table[i] = acpu_vdd_tbl[i].max_vdd;
 		}
 	} else if ((cpu == 1) && (l2 == 1) && (vu == 1)) {
 		if ((cur_voltage - VOLTAGE_STEP >= VOLTAGE_MIN) &&
+		    (cur_voltage - VOLTAGE_STEP >= acpu_vdd_tbl[cur_freq_idx].min_vdd) &&
 		    (cur_voltage <= vdd_table[cur_freq_idx])) {
 			vdd_table[cur_freq_idx] = cur_voltage - VOLTAGE_STEP;
 			AVSDEBUG("Voltage down for %d and lower levels\n",
@@ -125,6 +206,15 @@ static short avs_get_target_voltage(int freq_idx, bool update_table)
 	if (update_table)
 		avs_update_voltage_table(vdd_table);
 
+	if (vdd_table[freq_idx] > acpu_vdd_tbl[freq_idx].max_vdd) {
+		AVSDEBUG("%dmV too high for %d.\n", vdd_table[freq_idx], acpu_vdd_tbl[freq_idx].acpu_khz);
+		vdd_table[freq_idx] = acpu_vdd_tbl[freq_idx].max_vdd;
+	}
+	if (vdd_table[freq_idx] < acpu_vdd_tbl[freq_idx].min_vdd) {
+		AVSDEBUG("%dmV too low for %d.\n", vdd_table[freq_idx], acpu_vdd_tbl[freq_idx].acpu_khz);
+		vdd_table[freq_idx] = acpu_vdd_tbl[freq_idx].min_vdd;
+	}
+
 	return vdd_table[freq_idx];
 }
 
@@ -135,12 +225,26 @@ static short avs_get_target_voltage(int freq_idx, bool update_table)
  */
 static int avs_set_target_voltage(int freq_idx, bool update_table)
 {
-	int rc = 0;
-	int new_voltage = avs_get_target_voltage(freq_idx, update_table);
+	int ctr = 5, rc = 0, new_voltage;
+
+	if (freq_idx < 0 || freq_idx >= avs_state.freq_cnt) {
+		AVSDEBUG("Out of range :%d\n", freq_idx);
+		return -EINVAL;
+	}
+
+	new_voltage = avs_get_target_voltage(freq_idx, update_table);
 	if (avs_state.vdd != new_voltage) {
-		AVSDEBUG("AVS setting V to %d mV @%d\n",
-			new_voltage, freq_idx);
+		AVSDEBUG("AVS setting V to %d mV @%d MHz\n",
+			new_voltage, acpu_vdd_tbl[freq_idx].acpu_khz / 1000);
 		rc = avs_state.set_vdd(new_voltage);
+		while (rc && ctr) {
+			rc = avs_state.set_vdd(new_voltage);
+			ctr--;
+			if (rc) {
+				AVSDEBUG(KERN_ERR "avs_set_target_voltage: Unable to set V to %d mV (attempt: %d)\n", new_voltage, 5 - ctr);
+				mdelay(1);
+			}
+		}
 		if (rc)
 			return rc;
 		avs_state.vdd = new_voltage;
@@ -160,7 +264,7 @@ int avs_adjust_freq(u32 freq_idx, int begin)
 		return 0;
 	}
 
-	if (freq_idx >= avs_state.freq_cnt) {
+	if (freq_idx < 0 || freq_idx >= avs_state.freq_cnt) {
 		AVSDEBUG("Out of range :%d\n", freq_idx);
 		return -EINVAL;
 	}
@@ -222,6 +326,7 @@ static int __init avs_work_init(void)
 		printk(KERN_ERR "AVS initialization failed\n");
 		return -EFAULT;
 	}
+	printk(KERN_ERR "AVS initialization success\n");
 	avs_timer_init();
 
 	return 1;
