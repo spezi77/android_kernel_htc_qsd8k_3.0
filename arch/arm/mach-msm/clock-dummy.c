@@ -1,4 +1,4 @@
-/* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2010, Code Aurora Forum. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -8,63 +8,47 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+ * 02110-1301, USA.
+ *
  */
+#include <linux/clk.h>
+#include <linux/err.h>
+#include <linux/module.h>
 
-#include "clock.h"
+struct clk *clk_get(struct device *dev, const char *id)
+{
+	return ERR_PTR(-ENOENT);
+}
+EXPORT_SYMBOL(clk_get);
 
-static int dummy_clk_reset(struct clk *clk, enum clk_reset_action action)
+int clk_enable(struct clk *clk)
+{
+	return -ENOENT;
+}
+EXPORT_SYMBOL(clk_enable);
+
+void clk_disable(struct clk *clk)
+{
+}
+EXPORT_SYMBOL(clk_disable);
+
+unsigned long clk_get_rate(struct clk *clk)
 {
 	return 0;
 }
+EXPORT_SYMBOL(clk_get_rate);
 
-static int dummy_clk_set_rate(struct clk *clk, unsigned long rate)
+int clk_set_rate(struct clk *clk, unsigned long rate)
 {
-	return 0;
+	return -ENOENT;
 }
+EXPORT_SYMBOL(clk_set_rate);
 
-static int dummy_clk_set_min_rate(struct clk *clk, unsigned long rate)
+void clk_put(struct clk *clk)
 {
-	return 0;
 }
-
-static int dummy_clk_set_max_rate(struct clk *clk, unsigned long rate)
-{
-	return 0;
-}
-
-static int dummy_clk_set_flags(struct clk *clk, unsigned flags)
-{
-	return 0;
-}
-
-static unsigned long dummy_clk_get_rate(struct clk *clk)
-{
-	return 0;
-}
-
-static long dummy_clk_round_rate(struct clk *clk, unsigned long rate)
-{
-	return rate;
-}
-
-static bool dummy_clk_is_local(struct clk *clk)
-{
-	return true;
-}
-
-static struct clk_ops clk_ops_dummy = {
-	.reset = dummy_clk_reset,
-	.set_rate = dummy_clk_set_rate,
-	.set_min_rate = dummy_clk_set_min_rate,
-	.set_max_rate = dummy_clk_set_max_rate,
-	.set_flags = dummy_clk_set_flags,
-	.get_rate = dummy_clk_get_rate,
-	.round_rate = dummy_clk_round_rate,
-	.is_local = dummy_clk_is_local,
-};
-
-struct clk dummy_clk = {
-	.dbg_name = "dummy_clk",
-	.ops = &clk_ops_dummy,
-	CLK_INIT(dummy_clk),
-};
+EXPORT_SYMBOL(clk_put);
