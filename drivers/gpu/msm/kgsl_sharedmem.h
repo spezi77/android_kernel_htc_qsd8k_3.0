@@ -1,5 +1,4 @@
-/* Copyright (c) 2002,2007-2011, Code Aurora Forum. All rights reserved.
- * Copyright (C) 2011 Sony Ericsson Mobile Communications AB.
+/* Copyright (c) 2002,2007-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -17,12 +16,9 @@
 #include <linux/slab.h>
 #include <linux/dma-mapping.h>
 #include <linux/vmalloc.h>
+#include "kgsl_mmu.h"
+#include <linux/slab.h>
 #include <linux/kmemleak.h>
-
-/*
- * Convert a page to a physical address
- */
-#define phys_to_page(phys)	(pfn_to_page(__phys_to_pfn(phys)))
 
 struct kgsl_device;
 struct kgsl_process_private;
@@ -33,15 +29,13 @@ struct kgsl_process_private;
 
 /** Set if the memdesc describes cached memory */
 #define KGSL_MEMFLAGS_CACHED    0x00000001
-/** Set if the memdesc is mapped into all pagetables */
-#define KGSL_MEMFLAGS_GLOBAL    0x00000002
 
-extern struct kgsl_memdesc_ops kgsl_page_alloc_ops;
+extern struct kgsl_memdesc_ops kgsl_vmalloc_ops;
 
-int kgsl_sharedmem_page_alloc(struct kgsl_memdesc *memdesc,
+int kgsl_sharedmem_vmalloc(struct kgsl_memdesc *memdesc,
 			   struct kgsl_pagetable *pagetable, size_t size);
 
-int kgsl_sharedmem_page_alloc_user(struct kgsl_memdesc *memdesc,
+int kgsl_sharedmem_vmalloc_user(struct kgsl_memdesc *memdesc,
 				struct kgsl_pagetable *pagetable,
 				size_t size, int flags);
 
@@ -136,7 +130,9 @@ static inline int
 kgsl_allocate(struct kgsl_memdesc *memdesc,
 		struct kgsl_pagetable *pagetable, size_t size)
 {
-	return kgsl_sharedmem_page_alloc(memdesc, pagetable, size);
+	if (kgsl_mmu_get_mmutype() == KGSL_MMU_TYPE_NONE)
+		return kgsl_sharedmem_ebimem(memdesc, pagetable, size);
+	return kgsl_sharedmem_vmalloc(memdesc, pagetable, size);
 }
 
 static inline int
@@ -144,13 +140,18 @@ kgsl_allocate_user(struct kgsl_memdesc *memdesc,
 		struct kgsl_pagetable *pagetable,
 		size_t size, unsigned int flags)
 {
-	return kgsl_sharedmem_page_alloc_user(memdesc, pagetable, size, flags);
+	if (kgsl_mmu_get_mmutype() == KGSL_MMU_TYPE_NONE)
+		return kgsl_sharedmem_ebimem_user(memdesc, pagetable, size,
+						  flags);
+	return kgsl_sharedmem_vmalloc_user(memdesc, pagetable, size, flags);
 }
 
 static inline int
 kgsl_allocate_contiguous(struct kgsl_memdesc *memdesc, size_t size)
 {
 	int ret  = kgsl_sharedmem_alloc_coherent(memdesc, size);
+	if (!ret && (kgsl_mmu_get_mmutype() == KGSL_MMU_TYPE_NONE))
+		memdesc->gpuaddr = memdesc->physaddr;
 	return ret;
 }
 

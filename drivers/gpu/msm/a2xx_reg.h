@@ -1,4 +1,4 @@
-/* Copyright (c) 2002,2007-2011, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2002,2007-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -140,9 +140,24 @@ union reg_rb_edram_info {
 	struct rb_edram_info_t f;
 };
 
-#define RBBM_READ_ERROR_ADDRESS_MASK	0x0001fffc
-#define RBBM_READ_ERROR_REQUESTER	(1<<30)
-#define RBBM_READ_ERROR_ERROR		(1<<31)
+#define RBBM_READ_ERROR_UNUSED0_SIZE		2
+#define RBBM_READ_ERROR_READ_ADDRESS_SIZE	15
+#define RBBM_READ_ERROR_UNUSED1_SIZE		13
+#define RBBM_READ_ERROR_READ_REQUESTER_SIZE	1
+#define RBBM_READ_ERROR_READ_ERROR_SIZE		1
+
+struct rbbm_read_error_t {
+	unsigned int unused0:RBBM_READ_ERROR_UNUSED0_SIZE;
+	unsigned int read_address:RBBM_READ_ERROR_READ_ADDRESS_SIZE;
+	unsigned int unused1:RBBM_READ_ERROR_UNUSED1_SIZE;
+	unsigned int read_requester:RBBM_READ_ERROR_READ_REQUESTER_SIZE;
+	unsigned int read_error:RBBM_READ_ERROR_READ_ERROR_SIZE;
+};
+
+union rbbm_read_error_u {
+	unsigned int val:32;
+	struct rbbm_read_error_t f;
+};
 
 #define CP_RB_CNTL_RB_BUFSZ_SIZE                           6
 #define CP_RB_CNTL_UNUSED0_SIZE                            2
@@ -263,7 +278,6 @@ union reg_cp_rb_cntl {
 #define REG_CP_ME_CNTL                   0x01F6
 #define REG_CP_ME_RAM_DATA               0x01FA
 #define REG_CP_ME_RAM_WADDR              0x01F8
-#define REG_CP_ME_RAM_RADDR              0x01F9
 #define REG_CP_ME_STATUS                 0x01F7
 #define REG_CP_PFP_UCODE_ADDR            0x00C0
 #define REG_CP_PFP_UCODE_DATA            0x00C1
@@ -399,6 +413,40 @@ union reg_cp_rb_cntl {
 #define REG_A225_RB_COLOR_INFO3          0x2005
 #define REG_A225_PC_MULTI_PRIM_IB_RESET_INDX 0x2103
 #define REG_A225_GRAS_UCP0X              0x2340
+#define REG_A225_GRAS_UCP5W              0x2357
 #define REG_A225_GRAS_UCP_ENABLED        0x2360
+
+/* Debug registers used by snapshot */
+#define REG_PA_SU_DEBUG_CNTL            0x0C80
+#define REG_PA_SU_DEBUG_DATA            0x0C81
+#define REG_RB_DEBUG_CNTL               0x0F26
+#define REG_RB_DEBUG_DATA               0x0F27
+#define REG_PC_DEBUG_CNTL               0x0C38
+#define REG_PC_DEBUG_DATA               0x0C39
+#define REG_GRAS_DEBUG_CNTL             0x0C80
+#define REG_GRAS_DEBUG_DATA             0x0C81
+#define REG_SQ_DEBUG_MISC               0x0D05
+#define REG_SQ_DEBUG_INPUT_FSM          0x0DAE
+#define REG_SQ_DEBUG_CONST_MGR_FSM      0x0DAF
+#define REG_SQ_DEBUG_EXP_ALLOC          0x0DB3
+#define REG_SQ_DEBUG_FSM_ALU_0          0x0DB1
+#define REG_SQ_DEBUG_FSM_ALU_1          0x0DB2
+#define REG_SQ_DEBUG_PTR_BUFF           0x0DB4
+#define REG_SQ_DEBUG_GPR_VTX            0x0DB5
+#define REG_SQ_DEBUG_GPR_PIX            0x0DB6
+#define REG_SQ_DEBUG_TB_STATUS_SEL      0x0DB7
+#define REG_SQ_DEBUG_VTX_TB_0           0x0DB8
+#define REG_SQ_DEBUG_VTX_TB_1           0x0DB9
+#define REG_SQ_DEBUG_VTX_TB_STATE_MEM   0x0DBB
+#define REG_SQ_DEBUG_TP_FSM             0x0DB0
+#define REG_SQ_DEBUG_VTX_TB_STATUS_REG  0x0DBA
+#define REG_SQ_DEBUG_PIX_TB_0           0x0DBC
+#define REG_SQ_DEBUG_PIX_TB_STATUS_REG_0 0x0DBD
+#define REG_SQ_DEBUG_PIX_TB_STATUS_REG_1 0x0DBE
+#define REG_SQ_DEBUG_PIX_TB_STATUS_REG_2 0x0DBF
+#define REG_SQ_DEBUG_PIX_TB_STATUS_REG_3 0x0DC0
+#define REG_SQ_DEBUG_PIX_TB_STATE_MEM   0x0DC1
+#define REG_SQ_DEBUG_MISC_0             0x2309
+#define REG_SQ_DEBUG_MISC_1             0x230A
 
 #endif /* __A200_REG_H */
