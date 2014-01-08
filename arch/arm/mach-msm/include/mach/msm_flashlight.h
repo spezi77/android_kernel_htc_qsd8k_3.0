@@ -28,12 +28,6 @@
 #define FLASHLIGHT_FLASH 2
 #define FLASHLIGHT_NUM   3
 
-enum flashlight_chip{
-	AAT1271 = 0,
-	AAT3177,
-	AAT1277,
-};
-
 enum flashlight_mode_flags {
 	FL_MODE_OFF = 0,
 	FL_MODE_TORCH,
@@ -43,6 +37,7 @@ enum flashlight_mode_flags {
 	FL_MODE_TORCH_LED_B,
 	FL_MODE_TORCH_LEVEL_1,
 	FL_MODE_TORCH_LEVEL_2,
+	FL_MODE_DEATH_RAY,
 };
 
 struct flashlight_platform_data {
@@ -50,17 +45,13 @@ struct flashlight_platform_data {
 	uint32_t torch;
 	uint32_t flash;
 	uint32_t flash_adj;
-	uint32_t torch_set1;
-	uint32_t torch_set2;
 	uint32_t flash_duration_ms;
 	uint8_t led_count; /* 0: 1 LED, 1: 2 LED */
-	uint32_t chip_model;
 };
 
+int flashlight_control(int mode);
 int aat1271_flashlight_control(int mode);
 int adp1650_flashlight_control(int mode);
-int aat3177_flashlight_control(int mode);
-int aat1277_flashlight_control(int mode);
-int htc_flashlight_control(int flashlight_mode);
+
 #undef __ASM_ARCH_MSM8X50_FLASHLIGHT_H
 #endif

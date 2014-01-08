@@ -1,8 +1,8 @@
 obj-y += io.o dma.o memory.o timer.o
-obj-y += clock.o clock-voter.o clock-dummy.o
+obj-y += clock.o
 obj-y += subsystem_map.o
 obj-$(CONFIG_CPU_FREQ_MSM) += cpufreq.o
-obj-$(CONFIG_DEBUG_FS) += nohlt.o clock-debug.o
+obj-$(CONFIG_DEBUG_FS) += nohlt.o
 obj-$(CONFIG_KEXEC) += msm_kexec.o
 
 obj-$(CONFIG_MSM_PROC_COMM) += proc_comm.o
@@ -19,7 +19,7 @@ endif
 	endif
 endif
 
-obj-y += acpuclock.o
+
 obj-y += radio_feedback.o
 obj-$(CONFIG_ARCH_MSM7X01A) += acpuclock-7201.o
 obj-$(CONFIG_ARCH_MSM7X25) += acpuclock-7201.o
@@ -28,13 +28,9 @@ obj-$(CONFIG_ARCH_MSM_SCORPION) += pmu.o
 obj-$(CONFIG_ARCH_MSM_KRAIT) += msm-krait-l2-accessors.o pmu.o
 obj-$(CONFIG_ARCH_MSM7X27A) += pmu.o
 
-ifndef CONFIG_MSM_SMP
-obj-$(CONFIG_ARCH_MSM_SCORPION) += msm_fault_handlers.o
-endif
-
 obj-$(CONFIG_MSM_VIC) += irq-vic.o
 
-obj-$(CONFIG_ARCH_QSD8X50) += arch-init-scorpion.o acpuclock-8x50.o
+obj-$(CONFIG_ARCH_QSD8X50) += arch-init-scorpion.o acpuclock-qsd8x50.o
 
 obj-$(CONFIG_SMP) += headsmp.o platsmp.o
 
@@ -183,13 +179,11 @@ ifdef CONFIG_PM
 	obj-$(CONFIG_ARCH_MSM8960) += pm-8x60.o
 	obj-$(CONFIG_ARCH_MSM8X60) += pm-8x60.o
 	obj-$(CONFIG_ARCH_MSM9615) += pm-8x60.o
-	obj-$(CONFIG_ARCH_QSD8X50) += pm2.o
 	obj-$(CONFIG_ARCH_MSM7X30) += pm2.o arch-init-7x30.o
 	obj-$(CONFIG_ARCH_MSM7X27) += pm2.o
 	obj-$(CONFIG_ARCH_MSM7X27A) += pm2.o
 	obj-$(CONFIG_ARCH_MSM7X25) += pm.o
 	obj-$(CONFIG_ARCH_MSM7X01A) += pm.o
-	obj-y += pm-boot.o
 else
 	obj-y += no-pm.o hotplug.o
 endif
