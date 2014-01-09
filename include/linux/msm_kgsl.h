@@ -34,6 +34,10 @@
 #define KGSL_CLK_MEM_IFACE 0x00000010
 #define KGSL_CLK_AXI	0x00000020
 
+/* Arbitrary defines for 8x50 devices using google clock naming / implementation */
+#define KGSL_CLK_GRP	0x00001000
+#define KGSL_CLK_IMEM	0x00010000
+
 /*
  * Reset status values for context
  */
@@ -62,6 +66,7 @@ enum kgsl_user_mem_type {
 	KGSL_USER_MEM_TYPE_ASHMEM	= 0x00000001,
 	KGSL_USER_MEM_TYPE_ADDR		= 0x00000002,
 	KGSL_USER_MEM_TYPE_ION		= 0x00000003,
+	KGSL_USER_MEM_TYPE_MAX		= 0x00000004,
 };
 
 struct kgsl_devinfo {
@@ -150,7 +155,6 @@ struct kgsl_version {
 #define KGSL_2D1_REG_MEMORY	"kgsl_2d1_reg_memory"
 #define KGSL_2D1_IRQ		"kgsl_2d1_irq"
 
-#if defined(CONFIG_MSM_KGSL_ADRENO200) || defined(CONFIG_MSM_KGSL_ADRENO205) || defined(CONFIG_MSM_KGSL_ADRENO220)
 struct kgsl_device_platform_data {
 	struct kgsl_pwrlevel pwrlevel[KGSL_MAX_PWRLEVELS];
 	int init_level;
@@ -164,35 +168,6 @@ struct kgsl_device_platform_data {
 	const char *iommu_user_ctx_name;
 	const char *iommu_priv_ctx_name;
 };
-#else
-struct kgsl_grp_clk_name {
-	const char *clk;
-	const char *pclk;
-};
-
-struct kgsl_device_pwr_data {
-	struct kgsl_pwrlevel pwrlevel[KGSL_MAX_PWRLEVELS];
-	int init_level;
-	int num_levels;
-	int (*set_grp_async)(void);
-	unsigned int idle_timeout;
-	unsigned int nap_allowed;
-};
-
-struct kgsl_clk_data {
-	struct kgsl_grp_clk_name name;
-	struct msm_bus_scale_pdata *bus_scale_table;
-};
-
-struct kgsl_device_platform_data {
-	struct kgsl_device_pwr_data pwr_data;
-	struct kgsl_clk_data clk;
-	/* imem_clk_name is for 3d only, not used in 2d devices */
-	struct kgsl_grp_clk_name imem_clk_name;
-	const char *iommu_user_ctx_name;
-	const char *iommu_priv_ctx_name;
-};
-#endif
 
 #endif
 
@@ -465,7 +440,8 @@ struct kgsl_cff_syncmem {
 
 /*
  * A timestamp event allows the user space to register an action following an
- * expired timestamp.
+ * expired timestamp. Note IOCTL_KGSL_TIMESTAMP_EVENT has been redefined to
+ * _IOWR to support fences which need to return a fd for the priv parameter.
  */
 
 struct kgsl_timestamp_event {
@@ -476,7 +452,7 @@ struct kgsl_timestamp_event {
 	size_t len;              /* Size of the event specific blob */
 };
 
-#define IOCTL_KGSL_TIMESTAMP_EVENT \
+#define IOCTL_KGSL_TIMESTAMP_EVENT_OLD \
 	_IOW(KGSL_IOC_TYPE, 0x31, struct kgsl_timestamp_event)
 
 /* A genlock timestamp event releases an existing lock on timestamp expire */
@@ -486,6 +462,17 @@ struct kgsl_timestamp_event {
 struct kgsl_timestamp_event_genlock {
 	int handle; /* Handle of the genlock lock to release */
 };
+
+/* A fence timestamp event releases an existing lock on timestamp expire */
+
+#define KGSL_TIMESTAMP_EVENT_FENCE 2
+
+struct kgsl_timestamp_event_fence {
+	int fence_fd; /* Fence to signal */
+};
+
+#define IOCTL_KGSL_TIMESTAMP_EVENT \
+	_IOWR(KGSL_IOC_TYPE, 0x33, struct kgsl_timestamp_event)
 
 #ifdef __KERNEL__
 #ifdef CONFIG_MSM_KGSL_DRM
