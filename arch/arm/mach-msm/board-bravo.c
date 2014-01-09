@@ -56,6 +56,7 @@
 #include <mach/vreg.h>
 #include <mach/board-bravo-microp-common.h>
 #include <mach/socinfo.h>
+#include <mach/msm_memtypes.h>
 
 #include "board-bravo.h"
 #include "devices.h"
@@ -336,58 +337,84 @@ unsigned msm_num_footswitch_devices = ARRAY_SIZE(msm_footswitch_devices);
 /* end footswitch regulator */
 
 /* pmem heaps */
+#define MSM_PMEM_SF_SIZE  0x1700000
+#define MSM_AUDIO_SIZE    0x80000
+
 #ifndef CONFIG_ION_MSM
-static struct android_pmem_platform_data mdp_pmem_pdata = {
-	.name		= "pmem",
-	.start		= MSM_PMEM_MDP_BASE,
-	.size		= MSM_PMEM_MDP_SIZE,
-/*	.no_allocator	= 0,*/
-	.allocator_type = PMEM_ALLOCATORTYPE_ALLORNOTHING,
-	.cached		= 1,
+static struct android_pmem_platform_data android_pmem_kernel_ebi1_pdata = {
+  .name = PMEM_KERNEL_EBI1_DATA_NAME,
+  /* if no allocator_type, defaults to PMEM_ALLOCATORTYPE_BITMAP,
+   * the only valid choice at this time. The board structure is
+   * set to all zeros by the C runtime initialization and that is now
+   * the enum value of PMEM_ALLOCATORTYPE_BITMAP, now forced to 0 in
+   * include/linux/android_pmem.h.
+   */
+  .cached = 0,
 };
 
-static struct platform_device android_pmem_mdp_device = {
-	.name		= "android_pmem",
-	.id		= 0,
-	.dev		= {
-		.platform_data = &mdp_pmem_pdata
-	},
+#ifdef CONFIG_KERNEL_PMEM_SMI_REGION
+
+static struct android_pmem_platform_data android_pmem_kernel_smi_pdata = {
+  .name = PMEM_KERNEL_SMI_DATA_NAME,
+  /* if no allocator_type, defaults to PMEM_ALLOCATORTYPE_BITMAP,
+   * the only valid choice at this time. The board structure is
+   * set to all zeros by the C runtime initialization and that is now
+   * the enum value of PMEM_ALLOCATORTYPE_BITMAP, now forced to 0 in
+   * include/linux/android_pmem.h.
+   */
+  .cached = 0,
+};
+
+#endif
+
+static struct android_pmem_platform_data android_pmem_pdata = {
+        .name           = "pmem",
+        .allocator_type = PMEM_ALLOCATORTYPE_ALLORNOTHING,
+        .cached         = 0,
+        .memory_type    = MEMTYPE_EBI1,
 };
 #endif
 
 static struct android_pmem_platform_data android_pmem_adsp_pdata = {
-	.name		= "pmem_adsp",
-	.start		= MSM_PMEM_ADSP_BASE,
-	.size		= MSM_PMEM_ADSP_SIZE,
-/*	.no_allocator	= 0,*/
+	.name           = "pmem_adsp",
 	.allocator_type = PMEM_ALLOCATORTYPE_BITMAP,
-	.cached		= 1,
+	.cached         = 1,
+        .memory_type    = MEMTYPE_EBI1,
+};
+
+static struct android_pmem_platform_data android_pmem_venc_pdata = {
+        .name           = "pmem_venc",
+        .allocator_type = PMEM_ALLOCATORTYPE_BITMAP,
+        .cached         = 1,
+        .memory_type    = MEMTYPE_EBI1,
+};
+
+
+static struct platform_device android_pmem_device = {
+        .name           = "android_pmem",
+        .id             = 0,
+        .dev            = { .platform_data = &android_pmem_pdata },
 };
 
 static struct platform_device android_pmem_adsp_device = {
 	.name		= "android_pmem",
 	.id		= 1,
-	.dev		= {
-		.platform_data = &android_pmem_adsp_pdata,
-	},
-};
-
-static struct android_pmem_platform_data android_pmem_venc_pdata = {
-	.name		= "pmem_venc",
-	.start		= MSM_PMEM_VENC_BASE,
-	.size		= MSM_PMEM_VENC_SIZE,
-/*	.no_allocator	= 0,*/
-	.allocator_type = PMEM_ALLOCATORTYPE_BITMAP,
-	.cached		= 1,
+	.dev		= { .platform_data = &android_pmem_adsp_pdata,	},
 };
 
 static struct platform_device android_pmem_venc_device = {
 	.name		= "android_pmem",
 	.id		= 3,
-	.dev		= {
-		.platform_data = &android_pmem_venc_pdata,
-	},
+	.dev		= { .platform_data = &android_pmem_venc_pdata,	},
 };
+
+#ifdef CONFIG_KERNEL_PMEM_SMI_REGION
+static struct platform_device android_pmem_kernel_smi_device = {
+        .name           = "android_pmem",
+        .id             = 4,
+        .dev            = { .platform_data = &android_pmem_kernel_smi_pdata },
+};
+#endif
 /* end pmem heaps */
 
 /* ion heaps */
@@ -426,6 +453,119 @@ static struct platform_device ion_dev = {
 #endif
 /* end ion heaps */
 
+static unsigned pmem_kernel_ebi1_size = PMEM_KERNEL_EBI1_SIZE;
+static int __init pmem_kernel_ebi1_size_setup(char *p)
+{
+  pmem_kernel_ebi1_size = memparse(p, NULL);
+  return 0;
+}
+early_param("pmem_kernel_ebi1_size", pmem_kernel_ebi1_size_setup);
+
+static unsigned pmem_sf_size = MSM_PMEM_SF_SIZE;
+static int __init pmem_sf_size_setup(char *p)
+{
+  pmem_sf_size = memparse(p, NULL);
+  return 0;
+}
+early_param("pmem_sf_size", pmem_sf_size_setup);
+
+static unsigned pmem_mdp_size = MSM_PMEM_MDP_SIZE;
+static int __init pmem_mdp_size_setup(char *p)
+{
+  pmem_mdp_size = memparse(p, NULL);
+  return 0;
+}
+early_param("pmem_mdp_size", pmem_mdp_size_setup);
+
+static unsigned pmem_venc_size = MSM_PMEM_VENC_SIZE;
+static int __init pmem_venc_size_setup(char *p)
+{
+  pmem_venc_size = memparse(p, NULL);
+  return 0;
+}
+early_param("pmem_venc_size", pmem_venc_size_setup);
+
+static unsigned pmem_adsp_size = MSM_PMEM_ADSP_SIZE;
+static int __init pmem_adsp_size_setup(char *p)
+{
+  pmem_adsp_size = memparse(p, NULL);
+  return 0;
+}
+early_param("pmem_adsp_size", pmem_adsp_size_setup);
+
+
+static unsigned pmem_audio_size = MSM_AUDIO_SIZE;
+static int __init pmem_audio_size_setup(char *p)
+{
+  pmem_audio_size = memparse(p, NULL);
+  return 0;
+}
+early_param("audio_size", pmem_audio_size_setup);
+
+static struct memtype_reserve qsd8x50_reserve_table[] __initdata = {
+  [MEMTYPE_SMI] = {
+  },
+  [MEMTYPE_EBI0] = {
+    .flags  =  MEMTYPE_FLAGS_1M_ALIGN,
+  },
+  [MEMTYPE_EBI1] = {
+    .flags  =  MEMTYPE_FLAGS_1M_ALIGN,
+  },
+};
+
+static void __init size_pmem_devices(void)
+{
+#ifdef CONFIG_ANDROID_PMEM
+  android_pmem_adsp_pdata.size = pmem_adsp_size;
+  android_pmem_pdata.size = pmem_mdp_size;
+  android_pmem_venc_pdata.size = pmem_venc_size;
+  android_pmem_audio_pdata.size = pmem_audio_size;
+#endif
+}
+
+
+
+static void __init reserve_memory_for(struct android_pmem_platform_data *p)
+{
+  qsd8x50_reserve_table[p->memory_type].size += p->size;
+}
+
+static void __init reserve_pmem_memory(void)
+{
+#ifdef CONFIG_ANDROID_PMEM
+  reserve_memory_for(&android_pmem_adsp_pdata);
+  reserve_memory_for(&android_pmem_pdata);
+  reserve_memory_for(&android_pmem_venc_pdata);
+  reserve_memory_for(&android_pmem_audio_pdata);
+  qsd8x50_reserve_table[MEMTYPE_EBI1].size += pmem_kernel_ebi1_size;
+#endif
+}
+
+
+static void __init qsd8x50_calculate_reserve_sizes(void)
+{
+  size_pmem_devices();
+  reserve_pmem_memory();
+}
+
+static int qsd8x50_paddr_to_memtype(unsigned int paddr)
+{
+  return MEMTYPE_EBI1;
+}
+
+static struct reserve_info qsd8x50_reserve_info __initdata = {
+  .memtype_reserve_table = qsd8x50_reserve_table,
+  .calculate_reserve_sizes = qsd8x50_calculate_reserve_sizes,
+  .paddr_to_memtype = qsd8x50_paddr_to_memtype,
+};
+
+static void __init qsd8x50_reserve(void)
+{
+  reserve_info = &qsd8x50_reserve_info;
+  msm_reserve();
+}
+
+ 
 static struct resource ram_console_resources[] = {
 	{
 		.start	= MSM_RAM_CONSOLE_BASE,
@@ -1062,15 +1202,13 @@ static struct platform_device *devices[] __initdata = {
 	&rndis_device,
 #endif
 	&android_usb_device,
-#ifndef CONFIG_ION_MSM
-	&android_pmem_mdp_device,
-#else
+#ifdef CONFIG_ION_MSM
 	&ion_dev,
 #endif
+        &android_pmem_device,
 	&android_pmem_adsp_device,
-#ifdef CONFIG_720P_CAMERA
-	&android_pmem_venc_device,
-#endif
+        &android_pmem_kernel_ebi1_device,
+        &android_pmem_venc_device,
 	&msm_kgsl_3d0,
 	&msm_device_i2c,
 	&msm_camera_sensor_s5k3e2fx,
@@ -1338,6 +1476,7 @@ MACHINE_START(BRAVOC, "bravoc")
 	.boot_params	= 0x20000100,
 	.fixup		= bravo_fixup,
 	.map_io		= bravo_map_io,
+        .reserve        = qsd8x50_reserve,
 	.init_irq	= msm_init_irq,
 	.init_machine	= bravo_init,
 	.timer		= &msm_timer,
