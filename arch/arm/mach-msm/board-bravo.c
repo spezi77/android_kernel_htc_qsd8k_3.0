@@ -519,7 +519,6 @@ static void __init size_pmem_devices(void)
   android_pmem_adsp_pdata.size = pmem_adsp_size;
   android_pmem_pdata.size = pmem_mdp_size;
   android_pmem_venc_pdata.size = pmem_venc_size;
-  android_pmem_audio_pdata.size = pmem_audio_size;
 #endif
 }
 
@@ -536,7 +535,6 @@ static void __init reserve_pmem_memory(void)
   reserve_memory_for(&android_pmem_adsp_pdata);
   reserve_memory_for(&android_pmem_pdata);
   reserve_memory_for(&android_pmem_venc_pdata);
-  reserve_memory_for(&android_pmem_audio_pdata);
   qsd8x50_reserve_table[MEMTYPE_EBI1].size += pmem_kernel_ebi1_size;
 #endif
 }
