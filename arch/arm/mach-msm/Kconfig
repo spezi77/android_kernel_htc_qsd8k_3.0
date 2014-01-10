@@ -1925,12 +1925,14 @@ choice
 	default HTCLEO_BACKLIGHT_LED
 
 	config HTCLEO_BACKLIGHT_LED
+		depends on MACH_HTCLEO
 		bool "Backlight control via LED API"
 	help
 		Needed by Google Android
 
 	config HTCLEO_BACKLIGHT
-	select BACKLIGHT_LCD_SUPPORT
+		depends on MACH_HTCLEO
+		select BACKLIGHT_LCD_SUPPORT
 		bool "Standard backlight API"
 	help
 		Works in standard Linux distros. Tested in GNOME.
