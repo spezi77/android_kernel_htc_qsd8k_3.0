@@ -20,7 +20,7 @@
 #define MSM_IRQ_BIT(irq)     (1 << ((irq) & 31))
 
 #if defined(CONFIG_ARCH_MSM8960) || defined(CONFIG_ARCH_APQ8064) || \
-	defined(CONFIG_ARCH_MSM8930)
+        defined(CONFIG_ARCH_MSM8930)
 
 #ifdef CONFIG_ARCH_MSM8960
 #include "irqs-8960.h"
@@ -43,7 +43,7 @@
 #define NR_TABLA_IRQS 49
 #define NR_GPIO_EXPANDER_IRQS 8
 #define NR_BOARD_IRQS (NR_PM8921_IRQS + NR_PM8821_IRQS + \
-		NR_TABLA_IRQS + NR_GPIO_EXPANDER_IRQS)
+                NR_TABLA_IRQS + NR_GPIO_EXPANDER_IRQS)
 #define NR_TLMM_MSM_DIR_CONN_IRQ 8 /*Need to Verify this Count*/
 #define NR_MSM_GPIOS NR_GPIO_IRQS
 
@@ -61,7 +61,7 @@
 #elif defined(CONFIG_ARCH_MSM8X60)
 #include "irqs-8x60.h"
 #elif defined(CONFIG_ARCH_MSM7X01A) || defined(CONFIG_ARCH_MSM7X25) \
-	|| defined(CONFIG_ARCH_MSM7X27)
+        || defined(CONFIG_ARCH_MSM7X27)
 #include "irqs-7xxx.h"
 #elif defined(CONFIG_ARCH_FSM9XXX)
 #include "irqs-fsm9xxx.h"
@@ -72,9 +72,34 @@
 
 #endif
 
+#define NR_PMIC8058_IRQS        256
+
+#if defined(CONFIG_MACH_BRAVO) || defined(CONFIG_MACH_BRAVOC) || defined(CONFIG_MACH_INCREDIBLEC) || defined(CONFIG_MACH_SUPERSONIC) || (CONFIG_MACH_MAHIMAHI)
+#define NR_GPIO_IRQS 165
+#define NR_MSM_IRQS 64
+#define NR_BOARD_IRQS 64
+#define NR_MICROP_IRQS 16
+#define FIRST_BOARD_IRQ (NR_MSM_IRQS + NR_SIRC_IRQS + NR_GPIO_IRQS)
+#define FIRST_MICROP_IRQ (FIRST_BOARD_IRQ + NR_BOARD_IRQS)
+#define NR_IRQS (NR_MSM_IRQS + NR_SIRC_IRQS + NR_GPIO_IRQS + NR_BOARD_IRQS \
+                + NR_MICROP_IRQS)
+#define MSM_INT_TO_GPIO(n) ((n) - NR_MSM_IRQS)
+#define MSM_uP_TO_INT(n) (FIRST_MICROP_IRQ + (n))
+#define MSM_INT_TO_GPIO(n) ((n) - NR_MSM_IRQS)
+#define MSM_uP_TO_INT(n) (FIRST_MICROP_IRQ + (n))
+#else
+#define FIRST_BOARD_IRQ (NR_MSM_IRQS + NR_SIRC_IRQS + NR_GPIO_IRQS)
+#define FIRST_MICROP_IRQ (FIRST_BOARD_IRQ + NR_BOARD_IRQS)
+#define MSM_uP_TO_INT(n) (FIRST_MICROP_IRQ + (n))
+#define MSM_uP_TO_INT(n) (FIRST_MICROP_IRQ + (n))
 #define NR_IRQS (NR_MSM_IRQS + NR_GPIO_IRQS + NR_BOARD_IRQS)
-#define MSM_GPIO_TO_INT(n) (NR_MSM_IRQS + (n))
+#endif
+
 #define FIRST_GPIO_IRQ MSM_GPIO_TO_INT(0)
+
+#define MSM_GPIO_TO_INT(n) (NR_MSM_IRQS + (n))
 #define MSM_INT_TO_REG(base, irq) (base + irq / 32)
+
+
 
 #endif

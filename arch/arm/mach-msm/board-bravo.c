@@ -519,7 +519,6 @@ static void __init size_pmem_devices(void)
   android_pmem_adsp_pdata.size = pmem_adsp_size;
   android_pmem_pdata.size = pmem_mdp_size;
   android_pmem_venc_pdata.size = pmem_venc_size;
-  android_pmem_audio_pdata.size = pmem_audio_size;
 #endif
 }
 
@@ -536,7 +535,6 @@ static void __init reserve_pmem_memory(void)
   reserve_memory_for(&android_pmem_adsp_pdata);
   reserve_memory_for(&android_pmem_pdata);
   reserve_memory_for(&android_pmem_venc_pdata);
-  reserve_memory_for(&android_pmem_audio_pdata);
   qsd8x50_reserve_table[MEMTYPE_EBI1].size += pmem_kernel_ebi1_size;
 #endif
 }
@@ -797,10 +795,11 @@ static uint32_t camera_on_gpio_table[] = {
 	PCOM_GPIO_CFG(15, 1, GPIO_OUTPUT, GPIO_PULL_UP, GPIO_8MA), /* MCLK */
 };
 
-void config_camera_on_gpios(void)
+int config_camera_on_gpios(void)
 {
 	config_gpio_table(camera_on_gpio_table,
 		ARRAY_SIZE(camera_on_gpio_table));
+	return 0;
 }
 
 void config_camera_off_gpios(void)
@@ -1207,7 +1206,6 @@ static struct platform_device *devices[] __initdata = {
 #endif
         &android_pmem_device,
 	&android_pmem_adsp_device,
-        &android_pmem_kernel_ebi1_device,
         &android_pmem_venc_device,
 	&msm_kgsl_3d0,
 	&msm_device_i2c,
@@ -1325,7 +1323,7 @@ static int __init bravo_board_serialno_setup(char *serialno)
 	return 1;
 }
 __setup("androidboot.serialno=", bravo_board_serialno_setup);
-
+/*
 static struct msm_acpu_clock_platform_data bravo_clock_data = {
 	.acpu_switch_time_us	= 20,
 	.max_speed_delta_khz	= 256000,
@@ -1343,6 +1341,7 @@ static struct msm_acpu_clock_platform_data bravo_cdma_clock_data = {
 	.wait_for_irq_khz	= 235930,
 	.mpll_khz		= 235930
 };
+*/
 
 #ifdef CONFIG_PERFLOCK
 static unsigned bravo_perf_acpu_table[] = {
@@ -1383,12 +1382,12 @@ static void __init bravo_init(void)
 	msm_hw_reset_hook = bravo_reset;
 
 	bravo_board_serialno_setup(board_serialno());
-
+/*
 	if (is_cdma_version(system_rev))
 		msm_acpu_clock_init(&bravo_cdma_clock_data);
 	else
 		msm_acpu_clock_init(&bravo_clock_data);
-
+*/
 #ifdef CONFIG_PERFLOCK
 	perflock_init(&bravo_perflock_data);
 #endif
