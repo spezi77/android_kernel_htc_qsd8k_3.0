@@ -620,6 +620,7 @@ out_rm_dev:
 }
 EXPORT_SYMBOL(wiphy_register);
 
+//#ifdef CONFIG_RFKILL_PM
 void wiphy_rfkill_start_polling(struct wiphy *wiphy)
 {
 	struct cfg80211_registered_device *rdev = wiphy_to_dev(wiphy);
@@ -638,7 +639,7 @@ void wiphy_rfkill_stop_polling(struct wiphy *wiphy)
 	rfkill_pause_polling(rdev->rfkill);
 }
 EXPORT_SYMBOL(wiphy_rfkill_stop_polling);
-
+//#endif
 void wiphy_unregister(struct wiphy *wiphy)
 {
 	struct cfg80211_registered_device *rdev = wiphy_to_dev(wiphy);
