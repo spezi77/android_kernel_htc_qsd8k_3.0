@@ -538,6 +538,7 @@ obj-$(CONFIG_HTC_BATT_CORE) += htc_battery_core.o
 obj-$(CONFIG_HTC_BATT8x60) += htc_battery_8x60.o
 
 obj-$(CONFIG_HTC_PWRSINK) += htc_pwrsink.o
+obj-$(CONFIG_HTC_PWRSPLY) += htc_power_supply.o
 obj-$(CONFIG_HTC_HEADSET_MGR) += htc_headset_mgr.o
 obj-$(CONFIG_HTC_HEADSET_H2W) += htc_headset_h2w.o
 obj-$(CONFIG_HTC_HEADSET_GPIO) += htc_headset_gpio.o
