@@ -71,7 +71,6 @@ struct spi_device {
 	struct spi_master	*master;
 	u32			max_speed_hz;
 	u8			chip_select;
-	u8			ext_gpio_cs;
 	u8			mode;
 #define	SPI_CPHA	0x01			/* clock phase */
 #define	SPI_CPOL	0x02			/* clock polarity */
@@ -590,7 +589,7 @@ extern int spi_bus_unlock(struct spi_master *master);
  * Callable only from contexts that can sleep.
  */
 static inline int
-spi_write(struct spi_device *spi, const void *buf, size_t len)
+spi_write(struct spi_device *spi, const u8 *buf, size_t len)
 {
 	struct spi_transfer	t = {
 			.tx_buf		= buf,
@@ -614,7 +613,7 @@ spi_write(struct spi_device *spi, const void *buf, size_t len)
  * Callable only from contexts that can sleep.
  */
 static inline int
-spi_read(struct spi_device *spi, void *buf, size_t len)
+spi_read(struct spi_device *spi, u8 *buf, size_t len)
 {
 	struct spi_transfer	t = {
 			.rx_buf		= buf,
@@ -629,20 +628,15 @@ spi_read(struct spi_device *spi, void *buf, size_t len)
 
 /* this copies txbuf and rxbuf data; for small transfers only! */
 extern int spi_write_then_read(struct spi_device *spi,
-		const void *txbuf, unsigned n_tx,
-		void *rxbuf, unsigned n_rx);
-
-/* HTC: to support write/read in full duplex mode */
-extern int spi_write_and_read(struct spi_device *spi,
-		u8 *txbuf, u8 *rxbuf, unsigned size);
-
+		const u8 *txbuf, unsigned n_tx,
+		u8 *rxbuf, unsigned n_rx);
 /*
-* htc workaround to support multiple clients: add mutex lock to avoid SPI commands conflict.
-* @func: true for spi write, false for spi read
-* @msg: spi write commands struct
-* @buf: spi read buffer
-* @size: read/wirte length
-*/
+ * htc workaround to support multiple clients: add mutex lock to avoid SPI commands conflict.
+ * @func: true for spi write, false for spi read
+ * @msg: spi write commands struct
+ * @buf: spi read buffer
+ * @size: read/wirte length
+ */
 extern int
 spi_read_write_lock(struct spi_device *spidev, struct spi_msg * msg, char *buf, int size, int func);
 /**
@@ -788,6 +782,7 @@ spi_register_board_info(struct spi_board_info const *info, unsigned n)
 struct spi_platform_data {
 	int clk_rate;
 };
+
 
 /* If you're hotplugging an adapter with devices (parport, usb, etc)
  * use spi_new_device() to describe each device.  You can also call

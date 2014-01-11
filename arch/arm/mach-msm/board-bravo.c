@@ -563,6 +563,85 @@ static void __init qsd8x50_reserve(void)
   msm_reserve();
 }
 
+
+#if defined(CONFIG_ARCH_QSD8X50)
+static struct resource resources_spi[] = {
+        {
+                .name   = "spi_base",
+                .start  = MSM_SPI_PHYS,
+                .end    = MSM_SPI_PHYS + MSM_SPI_SIZE - 1,
+                .flags  = IORESOURCE_MEM,
+        },
+        {
+                .name   = "spi_irq_in",
+                .start  = INT_SPI_INPUT,
+                .end    = INT_SPI_INPUT,
+                .flags  = IORESOURCE_IRQ,
+        },
+        {
+                .name   = "spi_irq_out",
+                .start  = INT_SPI_OUTPUT,
+                .end    = INT_SPI_OUTPUT,
+                .flags  = IORESOURCE_IRQ,
+        },
+        {
+                .name   = "spi_irq_err",
+                .start  = INT_SPI_ERROR,
+                .end    = INT_SPI_ERROR,
+                .flags  = IORESOURCE_IRQ,
+        },
+#if defined(CONFIG_SPI_QSD)
+        {
+                .name   = "spi_clk",
+                .start  = 17,
+                .end    = 1,
+                .flags  = IORESOURCE_IRQ,
+        },
+        {
+                .name   = "spi_mosi",
+                .start  = 18,
+                .end    = 1,
+                .flags  = IORESOURCE_IRQ,
+        },
+        {
+                .name   = "spi_miso",
+                .start  = 19,
+                .end    = 1,
+                .flags  = IORESOURCE_IRQ,
+        },
+        {
+                .name   = "spi_cs0",
+                .start  = 20,
+                .end    = 1,
+                .flags  = IORESOURCE_IRQ,
+        },
+        {
+                .name   = "spi_pwr",
+                .start  = 21,
+                .end    = 0,
+                .flags  = IORESOURCE_IRQ,
+        },
+        {
+                .name   = "spi_irq_cs0",
+                .start  = 22,
+                .end    = 0,
+                .flags  = IORESOURCE_IRQ,
+        },
+#endif
+};
+
+struct platform_device msm_device_spi = {
+#if defined(CONFIG_SPI_QSD)
+        .name           = "spi_qsd",
+#else
+        .name           = "msm_spi",
+#endif
+        .id             = 0,
+        .num_resources  = ARRAY_SIZE(resources_spi),
+        .resource       = resources_spi,
+};
+#endif
+
  
 static struct resource ram_console_resources[] = {
 	{
@@ -1193,6 +1272,7 @@ static struct platform_device *devices[] __initdata = {
 	&msm_device_uart_dm1,
 	&ram_console_device,
 	&bravo_rfkill,
+        &msm_device_spi,
 	&msm_device_smd,
 	&msm_device_nand,
 	&msm_device_hsusb,
@@ -1362,26 +1442,26 @@ static void bravo_reset(void)
 };
 
 int bravo_init_mmc(int sysrev, unsigned debug_uart);
-
+/*
 static const struct smd_tty_channel_desc smd_cdma_default_channels[] = {
 	{ .id = 0, .name = "SMD_DS" },
 	{ .id = 19, .name = "SMD_DATA3" },
 	{ .id = 27, .name = "SMD_GPSNMEA" }
 };
-
+*/
 static void __init bravo_init(void)
 {
 	int ret;
 
 	printk("bravo_init() revision=%d\n", system_rev);
-
+/* CDMA
 	if (is_cdma_version(system_rev))
 		smd_set_channel_list(smd_cdma_default_channels,
 				ARRAY_SIZE(smd_cdma_default_channels));
-
+*/
 	msm_hw_reset_hook = bravo_reset;
 
-	bravo_board_serialno_setup(board_serialno());
+	//bravo_board_serialno_setup(board_serialno());
 /*
 	if (is_cdma_version(system_rev))
 		msm_acpu_clock_init(&bravo_cdma_clock_data);
@@ -1460,7 +1540,7 @@ static void __init bravo_fixup(struct machine_desc *desc, struct tag *tags,
 static void __init bravo_map_io(void)
 {
 	msm_map_qsd8x50_io();
-	msm_clock_init(msm_clocks_8x50, msm_num_clocks_8x50);
+	msm_clock_init(&qds8x50_clock_init_data);
 	if (socinfo_init() < 0)
 		printk(KERN_ERR "%s: socinfo_init() failed!\n",__func__);
 }
