@@ -32,6 +32,31 @@
 #include <mach/mmc.h>
 #include "clock-pcom.h"
 
+static struct resource resources_uart1[] = {
+        {
+                .start  = INT_UART1,
+                .end    = INT_UART1,
+                .flags  = IORESOURCE_IRQ,
+        },
+        {
+                .start  = MSM_UART1_PHYS,
+                .end    = MSM_UART1_PHYS + MSM_UART1_SIZE - 1,
+                .flags  = IORESOURCE_MEM,
+        },
+};
+
+static struct resource resources_uart2[] = {
+        {
+                .start  = INT_UART2,
+                .end    = INT_UART2,
+                .flags  = IORESOURCE_IRQ,
+        },
+        {
+                .start  = MSM_UART2_PHYS,
+                .end    = MSM_UART2_PHYS + MSM_UART2_SIZE - 1,
+                .flags  = IORESOURCE_MEM,
+        },
+};
 static struct resource resources_uart3[] = {
 	{
 		.start	= INT_UART3,
@@ -46,6 +71,20 @@ static struct resource resources_uart3[] = {
 	},
 };
 
+struct platform_device msm_device_uart1 = {
+        .name   = "msm_serial",
+        .id     = 0,
+        .num_resources  = ARRAY_SIZE(resources_uart1),
+        .resource       = resources_uart1,
+};
+
+struct platform_device msm_device_uart2 = {
+        .name   = "msm_serial",
+        .id     = 1,
+        .num_resources  = ARRAY_SIZE(resources_uart2),
+        .resource       = resources_uart2,
+};
+
 struct platform_device msm_device_uart3 = {
 	.name	= "msm_serial",
 	.id	= 2,
@@ -53,9 +92,118 @@ struct platform_device msm_device_uart3 = {
 	.resource	= resources_uart3,
 };
 
+static struct resource msm_uart1_dm_resources[] = {
+        {
+                .start = MSM_UART1DM_PHYS,
+                .end   = MSM_UART1DM_PHYS + PAGE_SIZE - 1,
+                .flags = IORESOURCE_MEM,
+        },
+        {
+                .start = INT_UART1DM_IRQ,
+                .end   = INT_UART1DM_IRQ,
+                .flags = IORESOURCE_IRQ,
+        },
+        {
+                .start = INT_UART1DM_RX,
+                .end   = INT_UART1DM_RX,
+                .flags = IORESOURCE_IRQ,
+        },
+        {
+                .start = DMOV_HSUART1_TX_CHAN,
+                .end   = DMOV_HSUART1_RX_CHAN,
+                .name  = "uartdm_channels",
+                .flags = IORESOURCE_DMA,
+        },
+        {
+                .start = DMOV_HSUART1_TX_CRCI,
+                .end   = DMOV_HSUART1_RX_CRCI,
+                .name  = "uartdm_crci",
+                .flags = IORESOURCE_DMA,
+        },
+};
+
+static u64 msm_uart_dm1_dma_mask = DMA_BIT_MASK(32);
+
+struct platform_device msm_device_uart_dm1 = {
+        .name = "msm_serial_hs",
+        .id = 0,
+        .num_resources = ARRAY_SIZE(msm_uart1_dm_resources),
+        .resource = msm_uart1_dm_resources,
+        .dev            = {
+                .dma_mask = &msm_uart_dm1_dma_mask,
+                .coherent_dma_mask = DMA_BIT_MASK(32),
+        },
+};
+
+static struct resource msm_uart2_dm_resources[] = {
+        {
+                .start = MSM_UART2DM_PHYS,
+                .end   = MSM_UART2DM_PHYS + PAGE_SIZE - 1,
+                .flags = IORESOURCE_MEM,
+        },
+        {
+                .start = INT_UART2DM_IRQ,
+                .end   = INT_UART2DM_IRQ,
+                .flags = IORESOURCE_IRQ,
+        },
+        {
+                .start = INT_UART2DM_RX,
+                .end   = INT_UART2DM_RX,
+                .flags = IORESOURCE_IRQ,
+        },
+        {
+                .start = DMOV_HSUART2_TX_CHAN,
+                .end   = DMOV_HSUART2_RX_CHAN,
+                .name  = "uartdm_channels",
+                .flags = IORESOURCE_DMA,
+        },
+        {
+                .start = DMOV_HSUART2_TX_CRCI,
+                .end   = DMOV_HSUART2_RX_CRCI,
+                .name  = "uartdm_crci",
+                .flags = IORESOURCE_DMA,
+        },
+};
+
+static u64 msm_uart_dm2_dma_mask = DMA_BIT_MASK(32);
+
+struct platform_device msm_device_uart_dm2 = {
+        .name = "msm_serial_hs",
+        .id = 1,
+        .num_resources = ARRAY_SIZE(msm_uart2_dm_resources),
+        .resource = msm_uart2_dm_resources,
+        .dev            = {
+                .dma_mask = &msm_uart_dm2_dma_mask,
+                .coherent_dma_mask = DMA_BIT_MASK(32),
+        },
+};
+
 struct platform_device msm_device_smd = {
 	.name   = "msm_smd",
 	.id     = -1,
+};
+
+static struct resource resources_nand[] = {
+        [0] = {
+                .start  = 7,
+                .end    = 7,
+                .flags  = IORESOURCE_DMA,
+        },
+};
+
+struct flash_platform_data msm_nand_data = {
+        .parts          = NULL,
+        .nr_parts       = 0,
+};
+
+struct platform_device msm_device_nand = {
+        .name           = "msm_nand",
+        .id             = -1,
+        .num_resources  = ARRAY_SIZE(resources_nand),
+        .resource       = resources_nand,
+        .dev            = {
+                .platform_data  = &msm_nand_data,
+        },
 };
 
 static struct resource resources_otg[] = {
@@ -284,6 +432,40 @@ struct platform_device msm_device_sdc4 = {
 		.coherent_dma_mask	= 0xffffffff,
 	},
 };
+
+#if defined(CONFIG_FB_MSM_MDP40)
+#define MDP_BASE          0xA3F00000
+#define PMDH_BASE         0xAD600000
+#define EMDH_BASE         0xAD700000
+#define TVENC_BASE        0xAD400000
+#else
+#define MDP_BASE          0xAA200000
+#define PMDH_BASE         0xAA600000
+#define EMDH_BASE         0xAA700000
+#define TVENC_BASE        0xAA400000
+#endif
+
+static struct resource msm_mdp_resources[] = {
+        {
+                .name   = "mdp",
+                .start  = MDP_BASE,
+                .end    = MDP_BASE + 0x000F0000 - 1,
+                .flags  = IORESOURCE_MEM,
+        },
+        {
+                .start  = INT_MDP,
+                .end    = INT_MDP,
+                .flags  = IORESOURCE_IRQ,
+        },
+};
+
+struct platform_device msm_mdp_device = {
+        .name   = "msm_mdp",
+        .id     = 0,
+        .num_resources  = ARRAY_SIZE(msm_mdp_resources),
+        .resource       = msm_mdp_resources,
+};
+
 
 static struct platform_device *msm_sdcc_devices[] __initdata = {
 	&msm_device_sdc1,

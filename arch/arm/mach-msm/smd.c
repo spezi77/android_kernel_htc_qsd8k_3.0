@@ -363,8 +363,8 @@ static void handle_modem_crash(void)
 	smd_diag();
 
 	//hard reboot if possible 
-	if (msm_reset_hook)
-		msm_reset_hook();
+	if (msm_hw_reset_hook)
+		msm_hw_reset_hook();
 
 	/* in this case the modem or watchdog should reboot us */
 	for (;;)
