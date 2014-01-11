@@ -345,6 +345,9 @@ struct mtd_notifier {
 extern void register_mtd_user (struct mtd_notifier *new);
 extern int unregister_mtd_user (struct mtd_notifier *old);
 
+extern int add_mtd_device(struct mtd_info *mtd);
+extern int del_mtd_device (struct mtd_info *mtd);
+ 
 int default_mtd_writev(struct mtd_info *mtd, const struct kvec *vecs,
 		       unsigned long count, loff_t to, size_t *retlen);
 
