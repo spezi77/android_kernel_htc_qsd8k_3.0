@@ -135,6 +135,29 @@ struct platform_device msm_device_uart_dm1 = {
         },
 };
 
+#define MSM_I2C_SIZE          SZ_4K
+#define MSM_I2C_PHYS          0xA9900000
+
+static struct resource resources_i2c[] = {
+        {
+                .start  = MSM_I2C_PHYS,
+                .end    = MSM_I2C_PHYS + MSM_I2C_SIZE - 1,
+                .flags  = IORESOURCE_MEM,
+        },
+        {
+                .start  = INT_PWB_I2C,
+                .end    = INT_PWB_I2C,
+                .flags  = IORESOURCE_IRQ,
+        },
+};
+
+struct platform_device msm_device_i2c = {
+        .name           = "msm_i2c",
+        .id             = 0,
+        .num_resources  = ARRAY_SIZE(resources_i2c),
+        .resource       = resources_i2c,
+};
+
 static struct resource msm_uart2_dm_resources[] = {
         {
                 .start = MSM_UART2DM_PHYS,

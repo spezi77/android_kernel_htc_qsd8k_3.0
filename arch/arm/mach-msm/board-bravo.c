@@ -1058,7 +1058,7 @@ static struct msm_serial_hs_platform_data msm_uart_dm1_pdata = {
 static struct bcm_bt_lpm_platform_data bcm_bt_lpm_pdata = {
 	.gpio_wake = BRAVO_GPIO_BT_WAKE,
 	.gpio_host_wake = BRAVO_GPIO_BT_HOST_WAKE,
-	.request_clock_off_locked = msm_hs_request_clock_off_locked,
+	.request_clock_off_locked = msm_hs_request_clock_off,
 	.request_clock_on_locked = msm_hs_request_clock_on_locked,
 };
 
@@ -1436,11 +1436,6 @@ static struct perflock_platform_data bravo_perflock_data = {
 };
 #endif
 
-static void bravo_reset(void)
-{
-	gpio_set_value(BRAVO_GPIO_PS_HOLD, 0);
-};
-
 int bravo_init_mmc(int sysrev, unsigned debug_uart);
 /*
 static const struct smd_tty_channel_desc smd_cdma_default_channels[] = {
@@ -1449,6 +1444,13 @@ static const struct smd_tty_channel_desc smd_cdma_default_channels[] = {
 	{ .id = 27, .name = "SMD_GPSNMEA" }
 };
 */
+
+static void bravo_reset(void)
+{
+        printk("bravo_reset()\n");
+        gpio_set_value(BRAVO_GPIO_PS_HOLD, 0);
+}
+
 static void __init bravo_init(void)
 {
 	int ret;
@@ -1459,6 +1461,7 @@ static void __init bravo_init(void)
 		smd_set_channel_list(smd_cdma_default_channels,
 				ARRAY_SIZE(smd_cdma_default_channels));
 */
+        bravo_reset();
 	msm_hw_reset_hook = bravo_reset;
 
 	//bravo_board_serialno_setup(board_serialno());
@@ -1471,7 +1474,6 @@ static void __init bravo_init(void)
 #ifdef CONFIG_PERFLOCK
 	perflock_init(&bravo_perflock_data);
 #endif
-
 	msm_serial_debug_init(MSM_UART1_PHYS, INT_UART1,
 			      &msm_device_uart1.dev, 1, MSM_GPIO_TO_INT(139));
 
