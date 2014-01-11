@@ -26,7 +26,7 @@
 #include <asm/gpio.h>
 #include <asm/io.h>
 #include <asm/mach-types.h>
-#include <mach/mmc.h>
+#include <asm/mach/mmc.h>
 
 #include <mach/vreg.h>
 
@@ -280,6 +280,9 @@ int bravo_wifi_reset(int on)
 	bravo_wifi_reset_state = on;
 	return 0;
 }
+
+int msm_add_sdcc(unsigned int controller, struct mmc_platform_data *plat,
+                 unsigned int stat_irq, unsigned long stat_irq_flags);
 
 int __init bravo_init_mmc(unsigned int sys_rev, unsigned debug_uart)
 {
