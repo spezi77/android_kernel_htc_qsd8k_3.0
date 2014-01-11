@@ -314,9 +314,9 @@ obj-$(CONFIG_MACH_BRAVO) += board-bravo.o board-bravo-panel.o
 obj-$(CONFIG_MACH_BRAVO) += board-bravo-keypad.o board-bravo-mmc.o
 obj-$(CONFIG_MACH_BRAVO) += board-bravo-rfkill.o htc_wifi_nvs.o htc_awb_cal.o
 obj-$(CONFIG_MACH_BRAVO) += board-bravo-wifi.o board-bravo-audio.o
-obj-$(CONFIG_MACH_BRAVO) += msm_vibrator.o
-obj-$(CONFIG_MACH_BRAVO) += board-bravo-microp.o
-obj-$(CONFIG_MACH_BRAVO) += board-bravo-tpa2018d1.o
+obj-$(CONFIG_MACH_BRAVO) += msm_vibrator.o devices_htc.o htc_35mm_jack.o
+obj-$(CONFIG_MACH_BRAVO) += board-bravo-microp.o htc_acoustic_qsd.o
+obj-$(CONFIG_MACH_BRAVO) += board-bravo-tpa2018d1.o msm_flashlight.o
 obj-$(CONFIG_MACH_BRAVO) += board-bravo-smb329.o
 
 ifeq ($(CONFIG_ARCH_MSM8X60_LTE),y)
