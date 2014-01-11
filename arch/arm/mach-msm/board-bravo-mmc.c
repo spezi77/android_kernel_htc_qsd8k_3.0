@@ -165,11 +165,20 @@ static unsigned int bravo_sdslot_status(struct device *dev)
 int bravo_microp_sdslot_status_register(void (*cb)(int, void *), void *);
 unsigned int bravo_microp_sdslot_status(struct device *);
 
-static struct msm_mmc_platform_data bravo_sdslot_data = {
+static unsigned int bravo_sd_slot_type = MMC_TYPE_SD;
+static struct mmc_platform_data bravo_sdslot_data = {
+	.slot_type    		= &bravo_sd_slot_type,
 	.ocr_mask		= BRAVO_MMC_VDD,
+	.mmc_bus_width  	= MMC_CAP_4_BIT_DATA,
 	.status			= bravo_microp_sdslot_status,
 	.register_status_notify	= bravo_microp_sdslot_status_register,
 	.translate_vdd		= bravo_sdslot_switchvdd,
+	.msmsdcc_fmin		= 144000,
+	.msmsdcc_fmid		= 25000000,
+	.msmsdcc_fmax		= 49152000,
+	.xpc_cap       		= 0,
+	.nonremovable  		= 0,
+	.uhs_caps	    	= (MMC_CAP_UHS_SDR12 | MMC_CAP_UHS_SDR25 | MMC_CAP_UHS_SDR50),
 };
 
 static uint32_t wifi_on_gpio_table[] = {
@@ -230,12 +239,17 @@ static unsigned int bravo_wifi_status(struct device *dev)
 	return bravo_wifi_cd;
 }
 
-static struct msm_mmc_platform_data bravo_wifi_data = {
+static unsigned int bravo_wifi_slot_type = MMC_TYPE_SDIO_WIFI;
+static struct mmc_platform_data bravo_wifi_data = {
+	.slot_type		= &bravo_wifi_slot_type,
 	.ocr_mask		= MMC_VDD_28_29,
 	.built_in		= 1,
 	.status			= bravo_wifi_status,
 	.register_status_notify	= bravo_wifi_status_register,
 	.embedded_sdio		= &bravo_wifi_emb_data,
+	.msmsdcc_fmin	= 144000,
+	.msmsdcc_fmid	= 25000000,
+	.msmsdcc_fmax	= 49152000,
 };
 
 int bravo_wifi_set_carddetect(int val)
@@ -272,6 +286,8 @@ int bravo_wifi_power(int on)
 	return 0;
 }
 
+int msm_add_sdcc(unsigned int controller, struct mmc_platform_data *plat,
+		 unsigned int stat_irq, unsigned long stat_irq_flags);
 static int bravo_wifi_reset_state;
 
 int bravo_wifi_reset(int on)
@@ -281,8 +297,6 @@ int bravo_wifi_reset(int on)
 	return 0;
 }
 
-int msm_add_sdcc(unsigned int controller, struct mmc_platform_data *plat,
-                 unsigned int stat_irq, unsigned long stat_irq_flags);
 
 int __init bravo_init_mmc(unsigned int sys_rev, unsigned debug_uart)
 {
