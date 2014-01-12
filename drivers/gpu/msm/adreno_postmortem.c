@@ -1,4 +1,4 @@
-/* Copyright (c) 2010-2011, Code Aurora Forum. All rights reserved.
+/* Copyright (c) 2010-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -14,7 +14,6 @@
 #include <linux/vmalloc.h>
 
 #include "kgsl.h"
-#include "kgsl_sharedmem.h"
 
 #include "adreno.h"
 #include "adreno_pm4types.h"
@@ -22,6 +21,7 @@
 #include "adreno_postmortem.h"
 #include "adreno_debugfs.h"
 #include "kgsl_cffdump.h"
+#include "kgsl_pwrctrl.h"
 
 #include "a2xx_reg.h"
 
@@ -67,95 +67,6 @@ static const struct pm_id_name pm3_types[] = {
 	{CP_SET_PROTECTED_MODE,	"ST_PRT_M"},
 	{CP_SET_SHADER_BASES,		"ST_SHD_B"},
 	{CP_WAIT_FOR_IDLE,		"WAIT4IDL"},
-};
-
-/* Offset address pairs: start, end of range to dump (inclusive) */
-
-/* GPU < Z470 */
-
-static const int a200_registers[] = {
-	0x0000, 0x0008, 0x0010, 0x002c, 0x00ec, 0x00f4,
-	0x0100, 0x0110, 0x0118, 0x011c,
-	0x0700, 0x0704, 0x070c, 0x0720, 0x0754, 0x0764,
-	0x0770, 0x0774, 0x07a8, 0x07a8, 0x07b8, 0x07cc,
-	0x07d8, 0x07dc, 0x07f0, 0x07fc, 0x0e44, 0x0e48,
-	0x0e6c, 0x0e78, 0x0ec8, 0x0ed4, 0x0edc, 0x0edc,
-	0x0fe0, 0x0fec, 0x1100, 0x1100,
-
-	0x110c, 0x1110, 0x112c, 0x112c, 0x1134, 0x113c,
-	0x1148, 0x1148, 0x1150, 0x116c, 0x11fc, 0x11fc,
-	0x15e0, 0x161c, 0x1724, 0x1724, 0x1740, 0x1740,
-	0x1804, 0x1810, 0x1818, 0x1824, 0x182c, 0x1838,
-	0x184c, 0x1850, 0x28a4, 0x28ac, 0x28bc, 0x28c4,
-	0x2900, 0x290c, 0x2914, 0x2914, 0x2938, 0x293c,
-	0x30b0, 0x30b0, 0x30c0, 0x30c0, 0x30e0, 0x30f0,
-	0x3100, 0x3100, 0x3110, 0x3110, 0x3200, 0x3218,
-	0x3220, 0x3250, 0x3264, 0x3268, 0x3290, 0x3294,
-	0x3400, 0x340c, 0x3418, 0x3418, 0x3420, 0x342c,
-	0x34d0, 0x34d4, 0x36b8, 0x3704, 0x3720, 0x3750,
-	0x3760, 0x3764, 0x3800, 0x3800, 0x3808, 0x3810,
-	0x385c, 0x3878, 0x3b00, 0x3b24, 0x3b2c, 0x3b30,
-	0x3b40, 0x3b40, 0x3b50, 0x3b5c, 0x3b80, 0x3b88,
-	0x3c04, 0x3c08, 0x3c30, 0x3c30, 0x3c38, 0x3c48,
-	0x3c98, 0x3ca8, 0x3cb0, 0x3cb0,
-
-	0x8000, 0x8008, 0x8018, 0x803c, 0x8200, 0x8208,
-	0x8400, 0x8424, 0x8430, 0x8450, 0x8600, 0x8610,
-	0x87d4, 0x87dc, 0x8800, 0x8820, 0x8a00, 0x8a0c,
-	0x8a4c, 0x8a50, 0x8c00, 0x8c20, 0x8c48, 0x8c48,
-	0x8c58, 0x8c74, 0x8c90, 0x8c98, 0x8e00, 0x8e0c,
-
-	0x9000, 0x9008, 0x9018, 0x903c, 0x9200, 0x9208,
-	0x9400, 0x9424, 0x9430, 0x9450, 0x9600, 0x9610,
-	0x97d4, 0x97dc, 0x9800, 0x9820, 0x9a00, 0x9a0c,
-	0x9a4c, 0x9a50, 0x9c00, 0x9c20, 0x9c48, 0x9c48,
-	0x9c58, 0x9c74, 0x9c90, 0x9c98, 0x9e00, 0x9e0c,
-
-	0x10000, 0x1000c, 0x12000, 0x12014,
-	0x12400, 0x12400, 0x12420, 0x12420
-};
-
-/* GPU = Z470 */
-
-static const int a220_registers[] = {
-	0x0000, 0x0008, 0x0010, 0x002c, 0x00ec, 0x00f4,
-	0x0100, 0x0110, 0x0118, 0x011c,
-	0x0700, 0x0704, 0x070c, 0x0720, 0x0754, 0x0764,
-	0x0770, 0x0774, 0x07a8, 0x07a8, 0x07b8, 0x07cc,
-	0x07d8, 0x07dc, 0x07f0, 0x07fc, 0x0e44, 0x0e48,
-	0x0e6c, 0x0e78, 0x0ec8, 0x0ed4, 0x0edc, 0x0edc,
-	0x0fe0, 0x0fec, 0x1100, 0x1100,
-
-	0x110c, 0x1110, 0x112c, 0x112c, 0x1134, 0x113c,
-	0x1148, 0x1148, 0x1150, 0x116c, 0x11fc, 0x11fc,
-	0x15e0, 0x161c, 0x1724, 0x1724, 0x1740, 0x1740,
-	0x1804, 0x1810, 0x1818, 0x1824, 0x182c, 0x1838,
-	0x184c, 0x1850, 0x28a4, 0x28ac, 0x28bc, 0x28c4,
-	0x2900, 0x2900, 0x2908, 0x290c, 0x2914, 0x2914,
-	0x2938, 0x293c, 0x30c0, 0x30c0, 0x30e0, 0x30e4,
-	0x30f0, 0x30f0, 0x3200, 0x3204, 0x3220, 0x324c,
-	0x3400, 0x340c, 0x3414, 0x3418, 0x3420, 0x342c,
-	0x34d0, 0x34d4, 0x36b8, 0x3704, 0x3720, 0x3750,
-	0x3760, 0x3764, 0x3800, 0x3800, 0x3808, 0x3810,
-	0x385c, 0x3878, 0x3b00, 0x3b24, 0x3b2c, 0x3b30,
-	0x3b40, 0x3b40, 0x3b50, 0x3b5c, 0x3b80, 0x3b88,
-	0x3c04, 0x3c08, 0x8000, 0x8008, 0x8018, 0x803c,
-	0x8200, 0x8208, 0x8400, 0x8408, 0x8410, 0x8424,
-	0x8430, 0x8450, 0x8600, 0x8610, 0x87d4, 0x87dc,
-	0x8800, 0x8808, 0x8810, 0x8810, 0x8820, 0x8820,
-	0x8a00, 0x8a08, 0x8a50, 0x8a50,
-	0x8c00, 0x8c20, 0x8c24, 0x8c28, 0x8c48, 0x8c48,
-	0x8c58, 0x8c58, 0x8c60, 0x8c74, 0x8c90, 0x8c98,
-	0x8e00, 0x8e0c, 0x9000, 0x9008, 0x9018, 0x903c,
-	0x9200, 0x9208, 0x9400, 0x9408, 0x9410, 0x9424,
-	0x9430, 0x9450, 0x9600, 0x9610, 0x97d4, 0x97dc,
-	0x9800, 0x9808, 0x9810, 0x9818, 0x9820, 0x9820,
-	0x9a00, 0x9a08, 0x9a50, 0x9a50, 0x9c00, 0x9c20,
-	0x9c48, 0x9c48, 0x9c58, 0x9c58, 0x9c60, 0x9c74,
-	0x9c90, 0x9c98, 0x9e00, 0x9e0c,
-
-	0x10000, 0x1000c, 0x12000, 0x12014,
-	0x12400, 0x12400, 0x12420, 0x12420
 };
 
 static uint32_t adreno_is_pm4_len(uint32_t word)
@@ -224,8 +135,8 @@ static void adreno_dump_regs(struct kgsl_device *device,
 
 	for (range = 0; range < size; range++) {
 		/* start and end are in dword offsets */
-		int start = registers[range * 2] / 4;
-		int end = registers[range * 2 + 1] / 4;
+		int start = registers[range * 2];
+		int end = registers[range * 2 + 1];
 
 		unsigned char linebuf[32 * 3 + 2 + 32 + 1];
 		int linelen, i;
@@ -240,12 +151,12 @@ static void adreno_dump_regs(struct kgsl_device *device,
 			hex_dump_to_buffer(regvals, linelen*4, 32, 4,
 				linebuf, sizeof(linebuf), 0);
 			KGSL_LOG_DUMP(device,
-				"REG: %5.5X: %s\n", offset<<2, linebuf);
+				"REG: %5.5X: %s\n", offset, linebuf);
 		}
 	}
 }
 
-static void dump_ib(struct kgsl_device *device, char* buffId, uint32_t pt_base,
+void dump_ib(struct kgsl_device *device, char *buffId, uint32_t pt_base,
 	uint32_t base_offset, uint32_t ib_base, uint32_t ib_size, bool dump)
 {
 	uint8_t *base_addr = adreno_convertaddr(device, pt_base,
@@ -261,15 +172,7 @@ static void dump_ib(struct kgsl_device *device, char* buffId, uint32_t pt_base,
 			base_addr ? "" : " [Invalid]");
 }
 
-#define IB_LIST_SIZE	64
-struct ib_list {
-	int count;
-	uint32_t bases[IB_LIST_SIZE];
-	uint32_t sizes[IB_LIST_SIZE];
-	uint32_t offsets[IB_LIST_SIZE];
-};
-
-static void dump_ib1(struct kgsl_device *device, uint32_t pt_base,
+void dump_ib1(struct kgsl_device *device, uint32_t pt_base,
 			uint32_t base_offset,
 			uint32_t ib1_base, uint32_t ib1_size,
 			struct ib_list *ib_list, bool dump)
@@ -465,30 +368,13 @@ static int adreno_dump(struct kgsl_device *device)
 	const uint32_t *rb_vaddr;
 	int num_item = 0;
 	int read_idx, write_idx;
-        unsigned int ts_processed = 0xdeaddead;
-        struct kgsl_context *context;
-        unsigned int context_id;
+	unsigned int ts_processed;
 
 	static struct ib_list ib_list;
 
 	struct adreno_device *adreno_dev = ADRENO_DEVICE(device);
 
-	struct kgsl_pwrctrl *pwr = &device->pwrctrl;
-
 	mb();
-
-	KGSL_LOG_DUMP(device, "POWER: FLAGS = %08lX | ACTIVE POWERLEVEL = %08X",
-			pwr->power_flags, pwr->active_pwrlevel);
-
-	KGSL_LOG_DUMP(device, "POWER: INTERVAL TIMEOUT = %08X ",
-		pwr->interval_timeout);
-
-	KGSL_LOG_DUMP(device, "GRP_CLK = %lu ",
-				  kgsl_get_clkrate(pwr->grp_clks[0]));
-
-	KGSL_LOG_DUMP(device, "BUS CLK = %lu ",
-		kgsl_get_clkrate(pwr->ebi1_clk));
-
 
 	kgsl_regread(device, REG_RBBM_STATUS, &rbbm_status);
 	kgsl_regread(device, REG_RBBM_PM_OVERRIDE1, &r2);
@@ -653,7 +539,8 @@ static int adreno_dump(struct kgsl_device *device)
 		" %08X\n", r1, r2, pt_base);
 	cur_pt_base = pt_base;
 
-	KGSL_LOG_DUMP(device, "PAGETABLE SIZE: %08X ", KGSL_PAGETABLE_SIZE);
+	KGSL_LOG_DUMP(device, "PAGETABLE SIZE: %08X ",
+		kgsl_mmu_get_ptsize());
 
 	kgsl_regread(device, MH_MMU_TRAN_ERROR, &r1);
 	KGSL_LOG_DUMP(device, "        TRAN_ERROR = %08X\n", r1);
@@ -663,18 +550,9 @@ static int adreno_dump(struct kgsl_device *device)
 	KGSL_LOG_DUMP(device,
 		"MH_INTERRUPT: MASK = %08X | STATUS   = %08X\n", r1, r2);
 
-        kgsl_sharedmem_readl(&device->memstore,
-                        (unsigned int *) &context_id,
-                        KGSL_MEMSTORE_OFFSET(KGSL_MEMSTORE_GLOBAL,
-                               current_context));
-       context = idr_find(&device->context_idr, context_id);
-       if (context) {
-               ts_processed = device->ftbl->readtimestamp(device, context,
+	ts_processed = device->ftbl->readtimestamp(device,
 		KGSL_TIMESTAMP_RETIRED);
-               KGSL_LOG_DUMP(device, "CTXT: %d  TIMESTM RTRD: %08X\n",
-                               context->id, ts_processed);
-       } else
-               KGSL_LOG_DUMP(device, "BAD CTXT: %d\n", context_id);
+	KGSL_LOG_DUMP(device, "TIMESTM RTRD: %08X\n", ts_processed);
 
 	num_item = adreno_ringbuffer_count(&adreno_dev->ringbuffer,
 						cp_rb_rptr);
@@ -737,8 +615,19 @@ static int adreno_dump(struct kgsl_device *device)
 					ib_list.bases[i],
 					ib_list.sizes[i], 0);
 		} else if (this_cmd == cp_type0_packet(MH_MMU_PT_BASE, 1)) {
+
+			KGSL_LOG_DUMP(device, "Current pagetable: %x\t"
+				"pagetable base: %x\n",
+				kgsl_mmu_get_ptname_from_ptbase(cur_pt_base),
+				cur_pt_base);
+
 			/* Set cur_pt_base to the new pagetable base */
 			cur_pt_base = rb_copy[read_idx++];
+
+			KGSL_LOG_DUMP(device, "New pagetable: %x\t"
+				"pagetable base: %x\n",
+				kgsl_mmu_get_ptname_from_ptbase(cur_pt_base),
+				cur_pt_base);
 		}
 	}
 
@@ -788,10 +677,10 @@ static int adreno_dump(struct kgsl_device *device)
 
 	if (adreno_is_a20x(adreno_dev))
 		adreno_dump_regs(device, a200_registers,
-			ARRAY_SIZE(a200_registers) / 2);
+			a200_registers_count);
 	else if (adreno_is_a22x(adreno_dev))
 		adreno_dump_regs(device, a220_registers,
-			ARRAY_SIZE(a220_registers) / 2);
+			a220_registers_count);
 
 error_vfree:
 	vfree(rb_copy);
@@ -810,6 +699,7 @@ end:
 int adreno_postmortem_dump(struct kgsl_device *device, int manual)
 {
 	bool saved_nap;
+	struct kgsl_pwrctrl *pwr = &device->pwrctrl;
 
 	BUG_ON(device == NULL);
 
@@ -828,8 +718,23 @@ int adreno_postmortem_dump(struct kgsl_device *device, int manual)
 			kgsl_idle(device,  KGSL_TIMEOUT_DEFAULT);
 
 	}
+	KGSL_LOG_DUMP(device, "POWER: FLAGS = %08lX | ACTIVE POWERLEVEL = %08X",
+			pwr->power_flags, pwr->active_pwrlevel);
+
+	KGSL_LOG_DUMP(device, "POWER: INTERVAL TIMEOUT = %08X ",
+		pwr->interval_timeout);
+
+	KGSL_LOG_DUMP(device, "GRP_CLK = %lu ",
+				  kgsl_get_clkrate(pwr->grp_clks[0]));
+
+	KGSL_LOG_DUMP(device, "BUS CLK = %lu ",
+		kgsl_get_clkrate(pwr->ebi1_clk));
+
 	/* Disable the idle timer so we don't get interrupted */
 	del_timer_sync(&device->idle_timer);
+	mutex_unlock(&device->mutex);
+	flush_workqueue(device->work_queue);
+	mutex_lock(&device->mutex);
 
 	/* Turn off napping to make sure we have the clocks full
 	   attention through the following process */
@@ -842,21 +747,6 @@ int adreno_postmortem_dump(struct kgsl_device *device, int manual)
 	/* Disable the irq */
 	kgsl_pwrctrl_irq(device, KGSL_PWRFLAGS_OFF);
 
-	/* If this is not a manual trigger, then set up the
-	   state to try to recover */
-
-	if (!manual) {
-		device->state = KGSL_STATE_DUMP_AND_RECOVER;
-		KGSL_PWR_WARN(device,
-				"state -> DUMP_AND_RECOVER, device %d\n",
-				device->id);
-	}
-
-	KGSL_DRV_ERR(device,
-			"wait for work in workqueue to complete\n");
-	mutex_unlock(&device->mutex);
-	flush_workqueue(device->work_queue);
-	mutex_lock(&device->mutex);
 	adreno_dump(device);
 
 	/* Restore nap mode */
@@ -871,7 +761,7 @@ int adreno_postmortem_dump(struct kgsl_device *device, int manual)
 		kgsl_pwrctrl_irq(device, KGSL_PWRFLAGS_ON);
 
 		/* try to go into a sleep mode until the next event */
-		device->requested_state = KGSL_STATE_SLEEP;
+		kgsl_pwrctrl_request_state(device, KGSL_STATE_SLEEP);
 		kgsl_pwrctrl_sleep(device);
 	}
 
