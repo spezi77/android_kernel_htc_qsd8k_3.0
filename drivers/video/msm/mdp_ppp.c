@@ -19,6 +19,7 @@
 #include <linux/msm_mdp.h>
 #include <linux/mutex.h>
 #include <linux/android_pmem.h>
+#include <linux/ion.h>
 #include <linux/wait.h>
 #include <mach/msm_fb.h>
 
@@ -42,6 +43,8 @@
 #define Y_TO_CRCB_RATIO(format) \
 	((format == MDP_Y_CBCR_H2V2 || format == MDP_Y_CRCB_H2V2) ?  2 :\
 	 (format == MDP_Y_CBCR_H2V1 || format == MDP_Y_CRCB_H2V1) ?  1 : 1)
+
+static struct ion_client *ppp_display_iclient;
 
 static uint32_t pack_pattern[] = {
 	PPP_ARRAY0(PACK_PATTERN)
@@ -413,21 +416,21 @@ static void flush_imgs(struct mdp_blit_req *req, struct ppp_regs *regs,
 	uint32_t src0_len, src1_len, dst0_len, dst1_len;
 
 	if (!(req->flags & MDP_BLIT_NON_CACHED)) {
-		/* flush src images to memory before dma to mdp */
-		get_len(&req->src, &req->src_rect, regs->src_bpp, &src0_len,
-			&src1_len);
-		flush_pmem_file(src_file, req->src.offset, src0_len);
-		if (IS_PSEUDOPLNR(req->src.format))
-			flush_pmem_file(src_file, req->src.offset + src0_len,
-					src1_len);
+	/* flush src images to memory before dma to mdp */
+	get_len(&req->src, &req->src_rect, regs->src_bpp, &src0_len,
+		&src1_len);
+	flush_pmem_file(src_file, req->src.offset, src0_len);
+	if (IS_PSEUDOPLNR(req->src.format))
+		flush_pmem_file(src_file, req->src.offset + src0_len,
+				src1_len);
 
-		/* flush dst images */
-		get_len(&req->dst, &req->dst_rect, regs->dst_bpp, &dst0_len,
-			&dst1_len);
-		flush_pmem_file(dst_file, req->dst.offset, dst0_len);
-		if (IS_PSEUDOPLNR(req->dst.format))
-			flush_pmem_file(dst_file, req->dst.offset + dst0_len,
-					dst1_len);
+	/* flush dst images */
+	get_len(&req->dst, &req->dst_rect, regs->dst_bpp, &dst0_len,
+		&dst1_len);
+	flush_pmem_file(dst_file, req->dst.offset, dst0_len);
+	if (IS_PSEUDOPLNR(req->dst.format))
+		flush_pmem_file(dst_file, req->dst.offset + dst0_len,
+				dst1_len);
 	}
 #endif
 }
@@ -678,13 +681,18 @@ static int mdp_ppp_wait(struct mdp_info *mdp)
 	return ret;
 }
 
-static int get_img(struct mdp_img *img, struct fb_info *info,
+int get_img(struct mdp_img *img, struct mdp_blit_req *req,
+		   struct fb_info *info,
 		   unsigned long *start, unsigned long *len,
-		   struct file** filep)
+		   struct file** filep, struct ion_handle **ihdlp)
 {
 	int put_needed, ret = 0;
 	struct file *file;
+#ifdef CONFIG_ION_MSM
+	struct msmfb_info *msmfb = (struct msmfb_info *)info->par;
+#else
 	unsigned long vstart;
+#endif
 
     if (img->memory_id & 0x40000000)
     {
@@ -697,42 +705,44 @@ static int get_img(struct mdp_img *img, struct fb_info *info,
         *filep = NULL;
         return 0;
     }
-	
-	if (!get_pmem_file(img->memory_id, start, &vstart, len, filep))
-		return 0;
-#if 0
-	else if (!get_msm_hw3d_file(img->memory_id, &img->offset, start, len,
-				    filep))
-		return 0;
-#endif
-	file = fget_light(img->memory_id, &put_needed);
-	if (file == NULL)
+
+	if (req->flags & MDP_MEMORY_ID_TYPE_FB) {
+		file = fget_light(img->memory_id, &put_needed);
+		if (file == NULL)
+			return -1;
+
+		if (MAJOR(file->f_dentry->d_inode->i_rdev) == FB_MAJOR) {
+			*start = info->fix.smem_start;
+			*len = info->fix.smem_len;
+			fput_light(file, put_needed);
+			return 0;
+		} else
+			fput_light(file, put_needed);
+	}
+
+#ifdef CONFIG_ION_MSM
+	*ihdlp = ion_import_fd(msmfb->iclient, img->memory_id);
+	if (IS_ERR_OR_NULL(*ihdlp))
 		return -1;
 
-	if (MAJOR(file->f_dentry->d_inode->i_rdev) == FB_MAJOR) {
-		*start = info->fix.smem_start;
-		*len = info->fix.smem_len;
-		ret = 0;
-	} else
-		ret = -1;
-	fput_light(file, put_needed);
+	if (!ion_phys(msmfb->iclient, *ihdlp, start, (size_t *) len))
+		return 0;
+	else
+		return -1;
+#else
+	if (!get_pmem_file(img->memory_id, start, &vstart, len, filep))
+		return 0;
+	else
+		return -1;
+#endif
+}
 
-	return ret;
-}
-/*
-static void put_img(struct file *file)
+void put_img(struct file *p_src_file, struct ion_handle *p_ihdl)
 {
-	if (file) {
-		if (is_pmem_file(file))
-			put_pmem_file(file);
-		else if (is_msm_hw3d_file(file))
-			put_msm_hw3d_file(file);
-	}
-}
-*/
-void put_img(struct file *p_src_file)
-{
-#ifdef CONFIG_ANDROID_PMEM
+#ifdef CONFIG_ION_MSM
+	if (!IS_ERR_OR_NULL(p_ihdl))
+		ion_free(ppp_display_iclient, p_ihdl);
+#else
 	if (p_src_file)
 		put_pmem_file(p_src_file);
 #endif
@@ -797,6 +807,10 @@ int mdp_ppp_blit(struct mdp_info *mdp, struct fb_info *fb,
 	int ret;
 	unsigned long src_start = 0, src_len = 0, dst_start = 0, dst_len = 0;
 	struct file *src_file = 0, *dst_file = 0;
+	struct ion_handle *src_ihdl = NULL;
+	struct ion_handle *dst_ihdl = NULL;
+	struct msmfb_info *msmfb = fb->par;
+	ppp_display_iclient = msmfb->iclient;
 
 	ret = mdp_ppp_validate_blit(mdp, req);
 	if (ret)
@@ -804,16 +818,16 @@ int mdp_ppp_blit(struct mdp_info *mdp, struct fb_info *fb,
 
 	/* do this first so that if this fails, the caller can always
 	 * safely call put_img */
-	if (unlikely(get_img(&req->src, fb, &src_start, &src_len, &src_file))) {
+	if (unlikely(get_img(&req->src, req, fb, &src_start, &src_len, &src_file, &src_ihdl))) {
 		printk(KERN_ERR "mdp_ppp: could not retrieve src image from "
 				"memory\n");
 		return -EINVAL;
 	}
 
-	if (unlikely(get_img(&req->dst, fb, &dst_start, &dst_len, &dst_file))) {
+	if (unlikely(get_img(&req->dst, req, fb, &dst_start, &dst_len, &dst_file, &dst_ihdl))) {
 		printk(KERN_ERR "mdp_ppp: could not retrieve dst image from "
 				"memory\n");
-		put_img(src_file);
+		put_img(src_file, src_ihdl);
 		return -EINVAL;
 	}
 	mutex_lock(&mdp_mutex);
@@ -825,8 +839,8 @@ int mdp_ppp_blit(struct mdp_info *mdp, struct fb_info *fb,
 	ret = mdp_ppp_do_blit(mdp, req, src_file, src_start, src_len,
 			      dst_file, dst_start, dst_len);
 
-	put_img(src_file);
-	put_img(dst_file);
+	put_img(src_file, src_ihdl);
+	put_img(dst_file, dst_ihdl);
 	mutex_unlock(&mdp_mutex);
 	return ret;
 }

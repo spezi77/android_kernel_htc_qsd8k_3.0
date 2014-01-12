@@ -33,6 +33,7 @@
 #include <linux/debugfs.h>
 #include <linux/dma-mapping.h>
 #include <linux/android_pmem.h>
+#include <linux/ion.h>
 #include "mdp_hw.h"
 
 extern void start_drawing_late_resume(struct early_suspend *h);
@@ -84,45 +85,6 @@ module_param_named(msmfb_debug_mask, msmfb_debug_mask, int,
 
 struct mdp_device *mdp;
 static atomic_t mdpclk_on = ATOMIC_INIT(1);
-
-struct msmfb_info {
-	struct fb_info *fb;
-	struct msm_panel_data *panel;
-	int xres;
-	int yres;
-	unsigned output_format;
-	unsigned yoffset;
-	unsigned frame_requested;
-	unsigned frame_done;
-	int sleeping;
-	unsigned update_frame;
-	struct {
-		int left;
-		int top;
-		int eright; /* exclusive */
-		int ebottom; /* exclusive */
-	} update_info;
-	char *black;
-#ifdef CONFIG_HTC_ONMODE_CHARGING
-	struct early_suspend onchg_earlier_suspend;
-	struct early_suspend onchg_suspend;
-#endif
-	struct early_suspend earlier_suspend;
-	struct early_suspend early_suspend;
-
-	struct wake_lock idle_lock;
-	spinlock_t update_lock;
-	struct mutex panel_init_lock;
-	wait_queue_head_t frame_wq;
-	struct workqueue_struct *resume_workqueue;
-	struct work_struct resume_work;
-	struct work_struct msmfb_resume_work;
-	struct msmfb_callback dma_callback;
-	struct msmfb_callback vsync_callback;
-	struct hrtimer fake_vsync;
-	ktime_t vsync_request_time;
-	unsigned fb_resumed;
-};
 
 #ifdef CONFIG_FB_MSM_OVERLAY
 #define USE_OVERLAY	1
@@ -247,13 +209,6 @@ static int msmfb_start_dma(struct msmfb_info *msmfb)
 	y = msmfb->update_info.top;
 	w = msmfb->update_info.eright - x;
 	h = msmfb->update_info.ebottom - y;
-#if 0 /* zeusk: */
-;;;;;;ASD
-#if defined(CONFIG_FRAMEBUFFER_CONSOLE)
-	x = 0; y = 0; w = msmfb->xres; h = msmfb->yres;
-#endif
-ASD;;;;;;
-#endif
 	yoffset = msmfb->yoffset;
 	msmfb->update_info.left = msmfb->xres + 1;
 	msmfb->update_info.top = msmfb->yres + 1;
@@ -1119,6 +1074,10 @@ static int msmfb_probe(struct platform_device *pdev)
 	msmfb->xres = panel->fb_data->xres;
 	msmfb->yres = panel->fb_data->yres;
 
+#ifdef CONFIG_ION_MSM
+	msmfb->iclient = msm_ion_client_create(-1, pdev->name);
+#endif
+
 	ret = setup_fbmem(msmfb, pdev);
 	if (ret)
 		goto error_setup_fbmem;
@@ -1200,10 +1159,10 @@ static int msmfb_probe(struct platform_device *pdev)
 		/* Flip buffer */
 		msmfb->update_info.left = 0;
 		msmfb->update_info.top = 0;
-		msmfb->update_info.eright = msmfb->xres;
-		msmfb->update_info.ebottom = msmfb->yres;
-		msmfb_pan_update(msmfb->fb, 0, 0, msmfb->xres,
-				 msmfb->yres, 0, 1);
+		msmfb->update_info.eright = info->var.xres;
+		msmfb->update_info.ebottom = info->var.yres;
+		msmfb_pan_update(info, 0, 0, fb->var.xres,
+				 fb->var.yres, 0, 1);
 	}
 #endif
 	/* Jay, 29/12/08' */
