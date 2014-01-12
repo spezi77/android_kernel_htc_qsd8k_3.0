@@ -19,11 +19,11 @@
 #include <mach/htc_battery.h>
 
 enum ds2784_notify_evt_t{
-	DS2784_CHARGING_CONTROL = 0,
-	DS2784_LEVEL_UPDATE,
-	DS2784_BATTERY_FAULT,
-	DS2784_OVER_TEMP,
-	DS2784_NUM_EVENTS,
+        DS2784_CHARGING_CONTROL = 0,
+        DS2784_LEVEL_UPDATE,
+        DS2784_BATTERY_FAULT,
+        DS2784_OVER_TEMP,
+        DS2784_NUM_EVENTS,
 };
 
 #ifdef CONFIG_BATTERY_DS2784
@@ -31,21 +31,21 @@ extern int ds2784_register_notifier(struct notifier_block *nb);
 extern int ds2784_unregister_notifier(struct notifier_block *nb);
 extern int ds2784_get_battery_info(struct battery_info_reply *batt_info);
 extern ssize_t htc_battery_show_attr(struct device_attribute *attr,
-			char *buf);
+                        char *buf);
 #else
 static int ds2784_register_notifier(struct notifier_block *nb) { return 0; }
 static int ds2784_unregister_notifier(struct notifier_block *nb) { return 0; }
 static int ds2784_get_battery_info(struct battery_info_reply *batt_info)
 {
-	batt_info->level = 10;
-	return 0;
+        batt_info->level = 10;
+        return 0;
 }
 extern ssize_t htc_battery_show_attr(struct device_attribute *attr,
-			char *buf){ return 0; }
+                        char *buf){ return 0; }
 
 struct ds2784_platform_data {
-	int (*charge)(int on, int fast);
-	void *w1_slave;
+        int (*charge)(int on, int fast);
+        void *w1_slave;
 };
 
 #endif
