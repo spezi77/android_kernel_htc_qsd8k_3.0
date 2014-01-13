@@ -353,6 +353,7 @@ static int msm_ion_probe(struct platform_device *pdev)
 							  heap_data->base,
 							  heap_data->size);
                         else
+				pr_info("ION heap %s created\n",
 							  heap_data->name);
 		}
 
