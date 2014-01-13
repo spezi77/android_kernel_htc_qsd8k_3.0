@@ -1,6 +1,6 @@
 /*
  *
- * Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+ * Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License version 2 and
@@ -18,22 +18,27 @@
 #include <linux/vmalloc.h>
 
 struct fmem_platform_data {
-	unsigned long phys;
-	unsigned long size;
+        unsigned long phys;
+        unsigned long size;
+        unsigned long reserved_size_low;
+        unsigned long reserved_size_high;
+        unsigned long align;
 };
 
 struct fmem_data {
-	unsigned long phys;
-	void *virt;
-	struct vm_struct *area;
-	unsigned long size;
+        unsigned long phys;
+        void *virt;
+        struct vm_struct *area;
+        unsigned long size;
+        unsigned long reserved_size_low;
+        unsigned long reserved_size_high;
 };
 
 enum fmem_state {
-	FMEM_UNINITIALIZED = 0,
-	FMEM_C_STATE,
-	FMEM_T_STATE,
-	FMEM_O_STATE,
+        FMEM_UNINITIALIZED = 0,
+        FMEM_C_STATE,
+        FMEM_T_STATE,
+        FMEM_O_STATE,
 };
 
 #ifdef CONFIG_QCACHE

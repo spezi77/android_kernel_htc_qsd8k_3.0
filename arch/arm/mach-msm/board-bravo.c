@@ -32,6 +32,7 @@
 #include <linux/usb/android_composite.h>
 //#include <linux/usb/f_accessory.h>
 #include <linux/android_pmem.h>
+#include <linux/ion.h>
 #include <../../../drivers/staging/android/timed_gpio.h>
 #include <linux/synaptics_i2c_rmi.h>
 #include <linux/capella_cm3602_htc.h>
@@ -109,53 +110,44 @@ extern int microp_headset_has_mic(void);
 // KGSL (HW3D support)#include <linux/android_pmem.h>
 ///////////////////////////////////////////////////////////////////////
 
-/* start kgsl */
+//* start kgsl */
 static struct resource kgsl_3d0_resources[] = {
-	{
-		.name  = KGSL_3D0_REG_MEMORY,
-		.start = 0xA0000000,
-		.end = 0xA001ffff,
-		.flags = IORESOURCE_MEM,
-	},
-	{
-		.name = KGSL_3D0_IRQ,
-		.start = INT_GRAPHICS,
-		.end = INT_GRAPHICS,
-		.flags = IORESOURCE_IRQ,
-	},
+        {
+                .name  = KGSL_3D0_REG_MEMORY,
+                .start = 0xA0000000,
+                .end = 0xA001ffff,
+                .flags = IORESOURCE_MEM,
+        },
+        {
+                .name = KGSL_3D0_IRQ,
+                .start = INT_GRAPHICS,
+                .end = INT_GRAPHICS,
+                .flags = IORESOURCE_IRQ,
+        },
 };
 
 static struct kgsl_device_platform_data kgsl_3d0_pdata = {
-	.pwr_data = {
-		.pwrlevel = {
-			{
-				.gpu_freq = 0,
-				.bus_freq = 128000000,
-			},
-		},
-		.init_level = 0,
-		.num_levels = 1,
-		.set_grp_async = NULL,
-		.idle_timeout = HZ/5,
-	},
-	.clk = {
-		.name = {
-			.clk = "core_clk",
-		},
-	},
-	.imem_clk_name = {
-		.clk = "iface_clk",
-	},
+        .pwrlevel = {
+                {
+                        .gpu_freq = 0,
+                        .bus_freq = 128000000,
+                },
+        },
+        .init_level = 0,
+        .num_levels = 1,
+        .set_grp_async = NULL,
+        .idle_timeout = HZ/5,
+        .clk_map = KGSL_CLK_GRP | KGSL_CLK_IMEM,
 };
 
 struct platform_device msm_kgsl_3d0 = {
-	.name = "kgsl-3d0",
-	.id = 0,
-	.num_resources = ARRAY_SIZE(kgsl_3d0_resources),
-	.resource = kgsl_3d0_resources,
-	.dev = {
-		.platform_data = &kgsl_3d0_pdata,
-	},
+        .name = "kgsl-3d0",
+        .id = 0,
+        .num_resources = ARRAY_SIZE(kgsl_3d0_resources),
+        .resource = kgsl_3d0_resources,
+        .dev = {
+                .platform_data = &kgsl_3d0_pdata,
+        },
 };
 /* end kgsl */
 
@@ -187,12 +179,53 @@ static struct android_pmem_platform_data android_pmem_kernel_smi_pdata = {
 
 #endif
 
+/* pmem heaps */
+#ifndef CONFIG_ION_MSM
+
 static struct android_pmem_platform_data android_pmem_pdata = {
 	.name = "pmem",
 	.allocator_type = PMEM_ALLOCATORTYPE_ALLORNOTHING,
 	.cached = 1,
 	.memory_type = MEMTYPE_EBI1,
 };
+
+#endif
+
+/* ion heaps */
+#ifdef CONFIG_ION_MSM
+static struct ion_co_heap_pdata co_ion_pdata = {
+        .adjacent_mem_id = INVALID_HEAP_ID,
+        .align = PAGE_SIZE,
+};
+
+static struct ion_platform_data ion_pdata = {
+        .nr = 2,
+        .heaps = {
+                {
+                        .id        = ION_SYSTEM_HEAP_ID,
+                        .type        = ION_HEAP_TYPE_SYSTEM,
+                        .name        = ION_VMALLOC_HEAP_NAME,
+                },
+                /* PMEM_MDP = SF */
+                {
+                        .id        = ION_SF_HEAP_ID,
+                        .type        = ION_HEAP_TYPE_CARVEOUT,
+                        .name        = ION_SF_HEAP_NAME,
+                        .base        = MSM_PMEM_MDP_BASE,
+                        .size        = MSM_PMEM_MDP_SIZE,
+                        .memory_type = ION_EBI_TYPE,
+                        .extra_data = (void *)&co_ion_pdata,
+                },
+        }
+};
+
+static struct platform_device ion_dev = {
+        .name = "ion-msm",
+        .id = 1,
+        .dev = { .platform_data = &ion_pdata },
+};
+#endif
+/* end ion heaps */
 
 static struct android_pmem_platform_data android_pmem_adsp_pdata = {
 	.name = "pmem_adsp",
@@ -208,11 +241,13 @@ static struct android_pmem_platform_data android_pmem_venc_pdata = {
 	.memory_type = MEMTYPE_EBI1,
 };
 
+#ifndef CONFIG_ION_MSM
 static struct platform_device android_pmem_device = {
 	.name = "android_pmem",
 	.id = 0,
 	.dev = { .platform_data = &android_pmem_pdata },
 };
+#endif
 
 static struct platform_device android_pmem_adsp_device = {
 	.name = "android_pmem",
@@ -280,7 +315,9 @@ static void __init size_pmem_devices(void)
 {
 #ifdef CONFIG_ANDROID_PMEM
   size_pmem_device(&android_pmem_adsp_pdata, 0, pmem_adsp_size);
+#ifndef CONFIG_ION_MSM
   size_pmem_device(&android_pmem_pdata, 0, pmem_mdp_size);
+#endif
   size_pmem_device(&android_pmem_venc_pdata, 0, pmem_venc_size);
   qsd8x50_reserve_table[MEMTYPE_EBI1].size += PMEM_KERNEL_EBI1_SIZE;
 #endif
@@ -298,7 +335,9 @@ static void __init reserve_pmem_memory(void)
 {
 #ifdef CONFIG_ANDROID_PMEM
 	reserve_memory_for(&android_pmem_adsp_pdata);
+#ifndef CONFIG_ION_MSM
 	reserve_memory_for(&android_pmem_pdata);
+#endif
 #endif
 }
 
@@ -1437,7 +1476,12 @@ static struct platform_device *devices[] __initdata = {
 	&usb_mass_storage_device,
 	&rndis_device,
 #endif
+#ifdef CONFIG_ION_MSM
+        &ion_dev,
+#endif
+#ifndef CONFIG_ION_MSM
 	&android_pmem_device,
+#endif
 	&android_pmem_adsp_device,
 	&android_pmem_venc_device,
 	&msm_kgsl_3d0,

@@ -41,6 +41,7 @@
 #define ITEM_RAND_DATA			0x23
 #define ITEM_VALIDATE_KEYBOX	0x26
 
+#define SCM_SVC_CP                      0xC
 
 #ifdef CONFIG_MSM_SCM
 extern int scm_call(u32 svc_id, u32 cmd_id, const void *cmd_buf, size_t cmd_len,
