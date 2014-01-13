@@ -866,13 +866,15 @@ int mmc_attach_sdio(struct mmc_host *host)
 	 * The number of functions on the card is encoded inside
 	 * the ocr.
 	 */
-	funcs = (ocr & 0x70000000) >> 28;
-	card->sdio_funcs = 0;
+	card->sdio_funcs = funcs = (ocr & 0x70000000) >> 28;
 
 #ifdef CONFIG_MMC_EMBEDDED_SDIO
 	if (host->embedded_sdio_data.funcs)
 		card->sdio_funcs = funcs = host->embedded_sdio_data.num_funcs;
 #endif
+	err = sdio_disable_cd(card);
+	if (err)
+		goto remove;
 
 	/*
 	 * Initialize (but don't add) all present functions.
