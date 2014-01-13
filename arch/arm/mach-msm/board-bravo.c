@@ -137,7 +137,7 @@ static struct kgsl_device_platform_data kgsl_3d0_pdata = {
         .num_levels = 1,
         .set_grp_async = NULL,
         .idle_timeout = HZ/5,
-        .clk_map = KGSL_CLK_GRP | KGSL_CLK_IMEM,
+        .clk_map = KGSL_CLK_CORE | KGSL_CLK_IFACE,
 };
 
 struct platform_device msm_kgsl_3d0 = {
@@ -313,11 +313,11 @@ static void __init size_pmem_device(struct android_pmem_platform_data *pdata, un
 
 static void __init size_pmem_devices(void)
 {
-#ifdef CONFIG_ANDROID_PMEM
-  size_pmem_device(&android_pmem_adsp_pdata, 0, pmem_adsp_size);
 #ifndef CONFIG_ION_MSM
   size_pmem_device(&android_pmem_pdata, 0, pmem_mdp_size);
 #endif
+#ifdef CONFIG_ANDROID_PMEM
+  size_pmem_device(&android_pmem_adsp_pdata, 0, pmem_adsp_size);
   size_pmem_device(&android_pmem_venc_pdata, 0, pmem_venc_size);
   qsd8x50_reserve_table[MEMTYPE_EBI1].size += PMEM_KERNEL_EBI1_SIZE;
 #endif
@@ -335,9 +335,9 @@ static void __init reserve_pmem_memory(void)
 {
 #ifdef CONFIG_ANDROID_PMEM
 	reserve_memory_for(&android_pmem_adsp_pdata);
-#ifndef CONFIG_ION_MSM
-	reserve_memory_for(&android_pmem_pdata);
 #endif
+#ifndef CONFIG_ION_MSM
+        reserve_memory_for(&android_pmem_pdata);
 #endif
 }
 

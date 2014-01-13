@@ -177,7 +177,7 @@ static void msm_ion_heap_fixup(struct ion_platform_heap heap_data[],
 
 static void msm_ion_allocate(struct ion_platform_heap *heap)
 {
-
+ printk("TEST 6-_----------------------------");
 	if (!heap->base && heap->extra_data) {
 		unsigned int align = 0;
 		switch (heap->type) {
@@ -317,6 +317,7 @@ static long msm_ion_custom_ioctl(struct ion_client *client,
 
 static int msm_ion_probe(struct platform_device *pdev)
 {
+   printk("TEST 1-_----------------------------");
 	struct ion_platform_data *pdata = pdev->dev.platform_data;
 	int err;
 	int i;
@@ -324,7 +325,7 @@ static int msm_ion_probe(struct platform_device *pdev)
 	num_heaps = pdata->nr;
 
 	heaps = kcalloc(pdata->nr, sizeof(struct ion_heap *), GFP_KERNEL);
-
+        printk("TEST 2-_----------------------------");
 	if (!heaps) {
 		err = -ENOMEM;
 		goto out;
@@ -349,18 +350,22 @@ static int msm_ion_probe(struct platform_device *pdev)
 			heaps[i] = 0;
 			continue;
 		} else {
-			if (heap_data->size)
+			if (heap_data->size) {
+                           printk("TEST 3-_----------------------------");
 				pr_info("ION heap %s created at %lx "
 					"with size %x\n", heap_data->name,
 							  heap_data->base,
 							  heap_data->size);
-			else
+                        } else {
+                           printk("TEST 4-_----------------------------");
 				pr_info("ION heap %s created\n",
 							  heap_data->name);
+                        }
 		}
 
 		ion_device_add_heap(idev, heaps[i]);
 	}
+	 printk("TEST 5-_----------------------------");
 	platform_set_drvdata(pdev, idev);
 	return 0;
 
@@ -391,6 +396,7 @@ static struct platform_driver msm_ion_driver = {
 
 static int __init msm_ion_init(void)
 {
+        printk("SHOULD INIT ION NOW_-------------------------------_");
 	return platform_driver_register(&msm_ion_driver);
 }
 
