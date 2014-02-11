@@ -129,6 +129,8 @@ extern void tcp_time_wait(struct sock *sk, int state, int timeo);
 						 * valid RTT sample has been acquired,
 						 * most likely due to retrans in 3WHS.
 						 */
+/* Number of full MSS to receive before Acking RFC2581 */
+#define TCP_DELACK_SEG          1
 
 /* Number of full MSS to receive before Acking RFC2581 */
 #define TCP_DELACK_SEG          1
