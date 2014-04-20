@@ -549,12 +549,13 @@ static void flashlight_early_suspend(struct early_suspend *handler)
 	struct flashlight_struct *fl_str = container_of(handler,
 			struct flashlight_struct, early_suspend_flashlight);
 	if (fl_str != NULL && fl_str->mode_status) {
-		if (fl_str->mode_status == FL_MODE_FLASH)
+		if (fl_str->mode_status == FL_MODE_FLASH) {
 			hrtimer_cancel(&fl_str->timer);
-		spin_lock_irqsave(&fl_str->spin_lock, fl_str->spinlock_flags);
-		flashlight_turn_off();
-		spin_unlock_irqrestore(&fl_str->spin_lock,
+			spin_lock_irqsave(&fl_str->spin_lock, fl_str->spinlock_flags);
+			flashlight_turn_off();
+			spin_unlock_irqrestore(&fl_str->spin_lock,
 						fl_str->spinlock_flags);
+		}
 	}
 }
 
