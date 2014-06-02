@@ -9,7 +9,12 @@
 #include <asm/gpio.h>
 #include <asm/io.h>
 #include <linux/skbuff.h>
+
+#ifdef CONFIG_BCMDHD
+#include <linux/wlan_plat.h>
+#else
 #include <linux/wifi_tiwlan.h>
+#endif
 
 #include "board-primou.h"
 

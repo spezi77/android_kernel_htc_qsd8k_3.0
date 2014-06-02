@@ -24,7 +24,7 @@
  * software in any way with any other Broadcom software provided under a license
  * other than the GPL, without Broadcom's express prior written consent.
  *
- * $Id: dhd.h 344123 2012-07-11 09:33:49Z $
+ * $Id: dhd.h 357954 2012-09-20 18:22:31Z $
  */
 
 /****************
@@ -94,6 +94,8 @@ enum dhd_bus_state {
 
 #define DHD_BEACON_TIMEOUT_NORMAL	4
 #define DHD_BEACON_TIMEOUT_HIGH		10
+
+#define DYNAMIC_DTIM_SKIP 1
 
 enum dhd_bus_wake_state {
 	WAKE_LOCK_OFF,
@@ -235,6 +237,11 @@ typedef struct dhd_pub {
 #ifdef WLMEDIA_HTSF
 	uint8 htsfdlystat_sz; /* Size of delay stats, max 255B */
 #endif
+#ifdef DYNAMIC_DTIM_SKIP
+	ulong pre_rx_packets;
+	int   dynamic_dtim_skip;
+	int   dynamic_dtim_data_counter;
+#endif
 } dhd_pub_t;
 
 typedef struct dhd_cmn {
@@ -301,6 +308,8 @@ extern int dhd_os_wake_unlock(dhd_pub_t *pub);
 extern int dhd_os_wake_lock_timeout(dhd_pub_t *pub);
 extern int dhd_os_wake_lock_rx_timeout_enable(dhd_pub_t *pub, int val);
 extern int dhd_os_wake_lock_ctrl_timeout_enable(dhd_pub_t *pub, int val);
+extern int dhd_os_wd_wake_lock(dhd_pub_t *pub);
+extern int dhd_os_wd_wake_unlock(dhd_pub_t *pub);
 
 inline static void MUTEX_LOCK_SOFTAP_SET_INIT(dhd_pub_t * dhdp)
 {
@@ -323,12 +332,14 @@ inline static void MUTEX_UNLOCK_SOFTAP_SET(dhd_pub_t * dhdp)
 #endif /* (LINUX_VERSION_CODE >= KERNEL_VERSION(2, 6, 27)) */
 }
 
-#define DHD_OS_WAKE_LOCK(pub) 			dhd_os_wake_lock(pub)
-#define DHD_OS_WAKE_UNLOCK(pub) 		dhd_os_wake_unlock(pub)
+#define DHD_OS_WAKE_LOCK(pub)			dhd_os_wake_lock(pub)
+#define DHD_OS_WAKE_UNLOCK(pub)			dhd_os_wake_unlock(pub)
+#define DHD_OS_WD_WAKE_LOCK(pub)		dhd_os_wd_wake_lock(pub)
+#define DHD_OS_WD_WAKE_UNLOCK(pub)		dhd_os_wd_wake_unlock(pub)
 #define DHD_OS_WAKE_LOCK_TIMEOUT(pub)		dhd_os_wake_lock_timeout(pub)
 #define DHD_OS_WAKE_LOCK_RX_TIMEOUT_ENABLE(pub, val)	dhd_os_wake_lock_rx_timeout_enable(pub, val)
 #define DHD_OS_WAKE_LOCK_CTRL_TIMEOUT_ENABLE(pub, val)	dhd_os_wake_lock_ctrl_timeout_enable(pub, val)
-#define DHD_PACKET_TIMEOUT_MS	1000
+#define DHD_PACKET_TIMEOUT_MS	500
 #define DHD_EVENT_TIMEOUT_MS	1500
 
 /* interface operations (register, remove) should be atomic, use this lock to prevent race
@@ -607,6 +618,25 @@ extern uint dhd_pktgen_len;
 #define MAX_PKTGEN_LEN 1800
 #endif
 
+/* hooks for custom glom setting option via Makefile */
+#define DEFAULT_GLOM_VALUE 	-1
+#ifndef CUSTOM_GLOM_SETTING
+#define CUSTOM_GLOM_SETTING 	DEFAULT_GLOM_VALUE
+#endif
+
+/* hooks for custom Roaming Trigger  setting via Makefile */
+#define DEFAULT_ROAM_TRIGGER_VALUE -65 /* dBm default roam trigger all band */
+#define DEFAULT_ROAM_TRIGGER_SETTING 	-1
+#ifndef CUSTOM_ROAM_TRIGGER_SETTING
+#define CUSTOM_ROAM_TRIGGER_SETTING 	DEFAULT_ROAM_TRIGGER_VALUE
+#endif
+
+/* hooks for custom Roaming Romaing  setting via Makefile */
+#define DEFAULT_ROAM_DELTA_VALUE  10 /* dBm default roam delta all band */
+#define DEFAULT_ROAM_DELTA_SETTING 	-1
+#ifndef CUSTOM_ROAM_DELTA_SETTING
+#define CUSTOM_ROAM_DELTA_SETTING 	DEFAULT_ROAM_DELTA_VALUE
+#endif
 
 /* optionally set by a module_param_string() */
 #define MOD_PARAM_PATHLEN	2048

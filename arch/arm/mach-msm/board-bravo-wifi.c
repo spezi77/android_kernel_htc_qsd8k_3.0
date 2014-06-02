@@ -95,6 +95,7 @@ static struct wifi_platform_data bravo_wifi_control = {
 #else
 	.mem_prealloc   = NULL,
 #endif
+
 };
 
 static struct platform_device bravo_wifi_device = {
