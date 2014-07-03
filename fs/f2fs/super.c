@@ -879,7 +879,6 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
 		goto free_sb_buf;
 
 	sb->s_maxbytes = max_file_size(le32_to_cpu(raw_super->log_blocksize));
-	sb->s_max_links = F2FS_LINK_MAX;
 	get_random_bytes(&sbi->s_next_generation, sizeof(u32));
 
 	sb->s_op = &f2fs_sops;
@@ -989,7 +988,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
 		goto free_root_inode;
 	}
 
-	sb->s_root = d_make_root(root); /* allocate root dentry */
+	sb->s_root = d_alloc_root(root); /* allocate root dentry */
 	if (!sb->s_root) {
 		err = -ENOMEM;
 		goto free_root_inode;
@@ -1050,8 +1049,7 @@ free_proc:
 	}
 	f2fs_destroy_stats(sbi);
 free_root_inode:
-	dput(sb->s_root);
-	sb->s_root = NULL;
+	iput(root);
 free_node_inode:
 	iput(sbi->node_inode);
 free_nm:
