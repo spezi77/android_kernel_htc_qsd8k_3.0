@@ -24,22 +24,9 @@
 /* dog_keepalive server definitions */
 
 #define DOG_KEEPALIVE_PROG 0x30000015
-
-#ifndef DOG_KEEPALIVE_VERS
-#if CONFIG_MSM_AMSS_VERSION==6210
-#define DOG_KEEPALIVE_VERS 0
-#define RPC_DOG_KEEPALIVE_BEACON 1
-#elif (CONFIG_MSM_AMSS_VERSION==6220) || (CONFIG_MSM_AMSS_VERSION==6225)
-#define DOG_KEEPALIVE_VERS 0x731fa727
+#define DOG_KEEPALIVE_VERS 0x10001
 #define RPC_DOG_KEEPALIVE_BEACON 2
-#else
-#error "Unsupported AMSS version"
-#endif
-#endif
-
-#define DOG_KEEPALIVE_VERS_COMP 0x00010001
 #define RPC_DOG_KEEPALIVE_NULL 0
-
 
 /* TODO: Remove server registration with _VERS when modem is upated with _COMP*/
 
