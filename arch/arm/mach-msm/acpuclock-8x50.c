@@ -152,7 +152,7 @@ static struct clkctl_acpu_speed *acpu_freq_tbl = acpu_freq_tbl_1190;
 /* Use 245MHz (not 128MHz) for SWFI to avoid unnecessary steps between
  * 128MHz<->245MHz. Jumping to high frequencies from 128MHz directly
  * is not allowed. */
-#define WAIT_FOR_IRQ_KHZ	245760
+#define WAIT_FOR_IRQ_KHZ	128000
 
 #ifdef CONFIG_CPU_FREQ_MSM
 static struct cpufreq_frequency_table freq_table[21];
