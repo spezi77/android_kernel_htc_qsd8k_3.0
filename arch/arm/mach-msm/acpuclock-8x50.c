@@ -70,10 +70,10 @@ struct clkctl_acpu_speed {
 	unsigned long    lpj; /* loops_per_jiffy */
 };
 
-struct clkctl_acpu_speed acpu_freq_tbl_1113[] = {
+struct clkctl_acpu_speed acpu_freq_tbl_1190[] = {
 	{ 0, 19200, ACPU_PLL_TCXO, 0, 0, 0, 0, 14000, 0, 0, 1000},
 	{ 0, 128000, ACPU_PLL_1, 1, 5, 0, 0, 14000, 2, 0, 1000},
-	/*{ 1, 245760, ACPU_PLL_0, 4, 0, 0, 0, 29000, 0, 0, 1000},*/
+	{ 0, 245760, ACPU_PLL_0, 4, 0, 0, 0, 29000, 0, 0, 1000},
 	/* Update AXI_S and PLL0_S macros if above row numbers change. */
 	{ 1, 384000, ACPU_PLL_3, 0, 0, 0, 0, 58000, 1, 0xA, 1000},
 	{ 0, 422400, ACPU_PLL_3, 0, 0, 0, 0, 117000, 1, 0xB, 1000},
@@ -89,12 +89,11 @@ struct clkctl_acpu_speed acpu_freq_tbl_1113[] = {
 	{ 0, 806400, ACPU_PLL_3, 0, 0, 0, 0, 128000, 1, 0x15, 1175},
 	{ 0, 844800, ACPU_PLL_3, 0, 0, 0, 0, 128000, 1, 0x16, 1225},
 	{ 0, 883200, ACPU_PLL_3, 0, 0, 0, 0, 128000, 1, 0x17, 1250},
-	{ 0, 921600, ACPU_PLL_3, 0, 0, 0, 0, 128000, 1, 0x18, 1275},
-	{ 0, 960000, ACPU_PLL_3, 0, 0, 0, 0, 128000, 1, 0x19, 1275},
-	{ 1, 998400, ACPU_PLL_3, 0, 0, 0, 0, 128000, 1, 0x1A, 1275},
-	{ 0, 1036800, ACPU_PLL_3, 0, 0, 0, 0, 128000, 1, 0x1B, 1300},
-	{ 0, 1075200, ACPU_PLL_3, 0, 0, 0, 0, 128000, 1, 0x1C, 1300},
-	{ 1, 1113600, ACPU_PLL_3, 0, 0, 0, 0, 128000, 1, 0x1D, 1300},
+	{ 0, 921600, ACPU_PLL_3, 0, 0, 0, 0, 128000, 1, 0x18, 1300},
+	{ 0, 960000, ACPU_PLL_3, 0, 0, 0, 0, 128000, 1, 0x19, 1300},
+	{ 1, 998400, ACPU_PLL_3, 0, 0, 0, 0, 128000, 1, 0x1A, 1300},
+	{ 0, 1036800, ACPU_PLL_3,0, 0, 0, 0, 128000, 1, 0x1B, 1300},
+	{ 1, 1190400, ACPU_PLL_3,0, 0, 0, 0, 128000, 1, 0x1D, 1325},
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 };
 
@@ -142,7 +141,7 @@ struct clkctl_acpu_speed acpu_freq_tbl_768[] = {
 	{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 };
 
-static struct clkctl_acpu_speed *acpu_freq_tbl = acpu_freq_tbl_1113;
+static struct clkctl_acpu_speed *acpu_freq_tbl = acpu_freq_tbl_1190;
 #define AXI_S	(&acpu_freq_tbl[1])
 #define PLL0_S	(&acpu_freq_tbl[2])
 
@@ -156,7 +155,7 @@ static struct clkctl_acpu_speed *acpu_freq_tbl = acpu_freq_tbl_1113;
 #define WAIT_FOR_IRQ_KHZ	245760
 
 #ifdef CONFIG_CPU_FREQ_MSM
-static struct cpufreq_frequency_table freq_table[20];
+static struct cpufreq_frequency_table freq_table[21];
 
 static void __init cpufreq_table_init(void)
 {
@@ -635,7 +634,7 @@ static void __init acpu_freq_tbl_fixup(void)
 		break;
 	case 0x30:
 	case 0x00:
-		max_acpu_khz = 998400;
+		max_acpu_khz = 1190400;
 		break;
 	case 0x10:
 		max_acpu_khz = 1267200;
