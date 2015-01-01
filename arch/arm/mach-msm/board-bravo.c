@@ -1775,7 +1775,7 @@ static void __init bravo_init(void)
 		pr_crit("%s: Unable to initialize MMC\n", __func__);
 
 	msm_pm_set_platform_data(msm_pm_data, ARRAY_SIZE(msm_pm_data));
-	BUG_ON(msm_pm_boot_init(MSM_PM_BOOT_CONFIG_RESET_VECTOR, ioremap(0x0, PAGE_SIZE)));
+	//BUG_ON(msm_pm_boot_init(MSM_PM_BOOT_CONFIG_RESET_VECTOR, ioremap(0x0, PAGE_SIZE)));
 #ifdef CONFIG_USB_G_ANDROID
 	bravo_add_usb_devices();
 #endif
