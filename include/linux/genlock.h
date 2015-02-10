@@ -1,8 +1,6 @@
 #ifndef _GENLOCK_H_
 #define _GENLOCK_H_
 
-#include <linux/bitops.h>
-
 #ifdef __KERNEL__
 
 struct genlock;
