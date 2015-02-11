@@ -105,10 +105,6 @@ tm.tm_hour, tm.tm_min, tm.tm_sec, ts.tv_nsec); \
 #define HTC_PROCEDURE_SET_FULL_LEVEL	7
 #define HTC_PROCEDURE_GET_USB_ACCESSORY_ADC_LEVEL	10
 
-#if CONFIG_ARCH_QSD8X50
-#define FORCE_NO_RPC 1
-#endif
-
 const char *charger_tags[] = {"none", "USB", "AC", "SUPER AC", "WIRELESS CHARGER"};
 
 struct htc_battery_info {
@@ -129,6 +125,7 @@ struct htc_battery_info {
 	int gpio_iset;
 	int guage_driver;
 	int m2a_cable_detect;
+        int force_no_rpc;
 	int charger;
 	int gpio_adp_9v;
 	unsigned int option_flag;
@@ -1944,7 +1941,7 @@ static int htc_battery_core_probe(struct platform_device *pdev)
 	*/
 	htc_batt_info.present 		= 1;
 
-	if (!FORCE_NO_RPC) {
+	if (!htc_batt_info.force_no_rpc) {
 		/* init rpc */
 		endpoint = msm_rpc_connect(APP_BATT_PROG, APP_BATT_VER, 0);
 		if (IS_ERR(endpoint)) {
@@ -1969,7 +1966,7 @@ static int htc_battery_core_probe(struct platform_device *pdev)
 	 */
 	htc_battery_initial = 1;
 
-	if (FORCE_NO_RPC) {
+	if (htc_batt_info.force_no_rpc) {
 		update_batt_info();
 	} else {
 		mutex_lock(&htc_batt_info.rpc_lock);
@@ -2251,6 +2248,7 @@ static int htc_battery_probe(struct platform_device *pdev)
 	htc_batt_info.gpio_usb_id = pdata->gpio_usb_id;
 	htc_batt_info.guage_driver = pdata->guage_driver;
 	htc_batt_info.m2a_cable_detect = pdata->m2a_cable_detect;
+        htc_batt_info.force_no_rpc = pdata->force_no_rpc;
 	htc_batt_info.func_show_batt_attr = pdata->func_show_batt_attr;
 	htc_batt_info.charger = pdata->charger;
 	htc_batt_info.option_flag = pdata->option_flag;
@@ -2292,7 +2290,7 @@ static int htc_battery_probe(struct platform_device *pdev)
 	batt_charger_ctrl_wq =
 			create_singlethread_workqueue("charger_ctrl_timer");
 
-	if(FORCE_NO_RPC) {
+	if(htc_batt_info.force_no_rpc) {
 		htc_battery_core_probe(pdev);
 		htc_cable_status_update(get_vbus_state());
 	}
