@@ -1877,10 +1877,10 @@ static int _gadget_stop_activity(struct usb_gadget *gadget, int mute)
 	usb_ep_fifo_flush(&udc->ep0in.ep);
 	#endif
 	/* cancel pending ep0 transactions */
-	spin_lock(udc->lock);
+	spin_lock_irqsave(udc->lock, flags);
 	_ep_nuke(&udc->ep0out);
 	_ep_nuke(&udc->ep0in);
-	spin_unlock(udc->lock);
+	spin_unlock_irqrestore(udc->lock, flags);
 
 	if (mute)
 		udc->driver->mute_disconnect(gadget);
