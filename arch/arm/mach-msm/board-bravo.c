@@ -1229,8 +1229,8 @@ static struct htc_battery_platform_data htc_battery_pdev_data = {
 	.gpio_adp_9v = BRAVO_GPIO_POWER_USB,
 	.guage_driver = GUAGE_DS2784,
 	.charger = LINEAR_CHARGER,
-	.m2a_cable_detect = 0,
-	.force_no_rpc = 1,
+	.m2a_cable_detect = 1,
+	.force_no_rpc = 0,
 /*	.int_data = {
 		.chg_int = HTCLEO_GPIO_BATTERY_OVER_CHG,
 	},*/
