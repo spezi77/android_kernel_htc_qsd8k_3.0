@@ -847,6 +847,7 @@ void bravo_add_usb_devices(void)
 	android_usb_pdata.products[0].product_id =
 			android_usb_pdata.product_id;
 
+	android_usb_pdata.serial_number = board_serialno();
 
 	/* add cdrom support in normal mode */
 	if (board_mfg_mode() == 0) {
@@ -858,6 +859,7 @@ void bravo_add_usb_devices(void)
 	//msm_device_gadget_peripheral.dev.platform_data = &msm_gadget_pdata;
 	msm_device_gadget_peripheral.dev.parent = &msm_device_otg.dev;
 	//usb_gpio_init();
+	platform_device_register(&msm_device_otg);
 	platform_device_register(&msm_device_gadget_peripheral);
 	platform_device_register(&android_usb_device);
 }
@@ -869,13 +871,6 @@ unsigned bravo_get_vbus_state(void)
 	else
 		return 0;
 }
-
-static int __init bravo_board_serialno_setup(char *serialno)
-{
-	android_usb_pdata.serial_number = serialno;
-	return 1;
-}
-__setup("androidboot.serialno=", bravo_board_serialno_setup);
 
 static int __capella_cm3602_power(int on)
 {
@@ -1461,7 +1456,6 @@ static struct platform_device *devices[] __initdata = {
 	&msm_device_uart1,
 #endif
 	&qsd_device_spi,
-	&msm_device_otg,
 #ifdef CONFIG_SERIAL_BCM_BT_LPM
 	&bcm_bt_lpm_device,
 #endif
@@ -1733,8 +1727,6 @@ static void __init bravo_init(void)
 
 	pr_info("bravo_init() revision=%d\n", system_rev);
 	msm_hw_reset_hook = bravo_reset;
-
-	bravo_board_serialno_setup(board_serialno());
 
 	do_grp_reset();
 	do_sdc1_reset();
