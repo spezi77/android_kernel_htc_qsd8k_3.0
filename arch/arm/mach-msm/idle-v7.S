@@ -176,7 +176,7 @@ ENTRY(msm_pm_collapse_exit)
 	mov     r1, #'A'
 	str     r1, [r0, #0x00C]
 #endif
-#ifdef CONFIG_ARCH_MSM7X30
+#if defined(CONFIG_ARCH_MSM7X30) || defined(CONFIG_ARCH_QSD8X50)
 	bl	__cpu_early_init
 
 .globl _cpu_early_init_complete
