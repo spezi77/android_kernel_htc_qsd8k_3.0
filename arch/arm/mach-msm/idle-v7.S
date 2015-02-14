@@ -18,13 +18,27 @@
 #include <linux/linkage.h>
 #include <linux/threads.h>
 #include <asm/assembler.h>
+#ifdef CONFIG_VFP
+#include <asm/vfpmacros.h>
+#endif
+
 
 #ifdef CONFIG_MSM_CPU_AVS
+#ifdef CONFIG_VFP
+/* 11 general purpose registers (r4-r14), 10 cp15 registers, 3 AVS registers, VFP working registers, VFP state registers */
+#define CPU_SAVED_STATE_SIZE (4 * 11 + 4 * 10 + 4 * 3 + 8 * 32 + 4 * 2)
+#else
 /* 11 general purpose registers (r4-r14), 10 cp15 registers, 3 AVS registers */
 #define CPU_SAVED_STATE_SIZE (4 * 11 + 4 * 10 + 4 * 3)
+#endif
+#else
+#ifdef CONFIG_VFP
+/* 11 general purpose registers (r4-r14), 10 cp15 registers, VFP working registers, VFP state registers */
+#define CPU_SAVED_STATE_SIZE (4 * 11 + 4 * 10 + 8 * 32 + 4 * 2)
 #else
 /* 11 general purpose registers (r4-r14), 10 cp15 registers */
 #define CPU_SAVED_STATE_SIZE (4 * 11 + 4 * 10)
+#endif
 #endif
 #ifdef CONFIG_ARCH_MSM_KRAIT
 #define SCM_SVC_BOOT 0x1
@@ -82,6 +96,13 @@ ENTRY(msm_pm_collapse)
 	stmia   r0!, {r1-r3}
 #endif
 
+#ifdef CONFIG_VFP
+	.fpu	neon
+	VFPFSTMIA r0, r1              /* Save VFP working registers */
+	fmrx    r1, fpexc
+	fmrx    r2, fpscr
+	stmia   r0!, {r1, r2}         /* Save VFP state registers */
+#endif
 #ifdef CONFIG_MSM_DEBUG_ACROSS_PC
 	bl      msm_save_jtag_debug
 #endif
@@ -179,6 +200,23 @@ _cpu_early_init_complete:
 #endif
 	mcr     p15, 7, r3, c15, c0, 6 /* AVSDSCR */
 	mcr     p15, 7, r2, c15, c1, 7 /* AVSCSR */
+#endif
+#ifdef CONFIG_VFP
+	mrc     p15, 0, r2, c1, c0, 2 /* Read CP Access Control Register */
+	orr     r2, r2, #0x00F00000   /* Enable full access for p10,11 */
+	mcr     p15, 0, r2, c1, c0, 2 /* Write CPACR */
+	isb
+	mov     r2, #0x40000000       /* Enable VFP */
+	fmxr    fpexc, r2
+	isb
+	ldmdb   r1!, {r2, r3}         /* Read saved VFP state registers */
+	sub     r1, r1, #32*8         /* Jump to start of vfp regs area */
+	VFPFLDMIA r1, r4              /* Restore VFP working registers,
+				       * r1 incremented to end of vfp
+				       * regs area */
+	sub     r1, r1, #32*8         /* Jump back to start of vfp regs area */
+	fmxr    fpscr, r3             /* Restore FPSCR */
+	fmxr    fpexc, r2             /* Restore FPEXC last */
 #endif
 	ldmdb   r1!, {r2-r11}
 	mcr     p15, 0, r4, c3, c0, 0 /* dacr */
