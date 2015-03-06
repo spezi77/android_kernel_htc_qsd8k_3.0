@@ -48,6 +48,8 @@
 #include <linux/time.h>
 #include <linux/rtc.h>
 
+#include <linux/debugfs.h>
+
 int Batt_extended;
 
 struct battery_info {
@@ -202,6 +204,38 @@ static int Full_0;
 #define FAST_POLL	(1 * 60)
 #define SLOW_POLL	(10 * 60)
 #define Onehr_POLL	(60 * 60)
+
+#define BATTERY_LOG_MAX 1024
+#define BATTERY_LOG_MASK (BATTERY_LOG_MAX - 1)
+
+struct battery_status {
+	unsigned long update_time;	/* jiffies when data read */
+
+	struct battery_info rep;
+
+} __attribute__((packed));
+
+static DEFINE_MUTEX(battery_log_lock);
+static struct battery_status battery_log[BATTERY_LOG_MAX];
+static unsigned battery_log_head;
+static unsigned battery_log_tail;
+
+void battery_log_status(unsigned long update_time)
+{
+	unsigned n;
+
+	mutex_lock(&battery_log_lock);
+	n = battery_log_head;
+
+	battery_log[n].update_time = update_time;
+	memcpy(&(battery_log[n].rep), &(htc_batt_info.rep), sizeof(htc_batt_info.rep));
+
+	n = (n + 1) & BATTERY_LOG_MASK;
+	if (n == battery_log_tail)
+		battery_log_tail = (battery_log_tail + 1) & BATTERY_LOG_MASK;
+	battery_log_head = n;
+	mutex_unlock(&battery_log_lock);
+}
 
 static BLOCKING_NOTIFIER_HEAD(ds2784_notifier_list);
 int ds2784_register_notifier(struct notifier_block *nb)
@@ -1330,6 +1364,8 @@ static void ds2784_battery_work(struct work_struct *work)
 
 	di->last_poll = alarm_get_elapsed_realtime();
 
+	battery_log_status(ktime_to_ms(di->last_poll));
+
 	/* prevent suspend before starting the alarm */
 	local_irq_save(flags);
 	wake_unlock(&di->work_wake_lock);
@@ -1858,8 +1894,51 @@ static struct platform_driver ds2784_battery_driver = {
 	.remove   = ds2784_battery_remove,
 };
 
+static const char *battery_source[3] = { "none", " usb", "  ac" };
+static const char *battery_mode[4] = { " off", "slow", "fast", "full" };
+
+static int battery_log_print(struct seq_file *sf, void *private)
+{
+	unsigned n;
+	mutex_lock(&battery_log_lock);
+	seq_printf(sf, "timestamp batt_id batt_vol(mV) batt_temp(C) batt_cur(mA) batt_cur_avg(mA) level(%%) ch_source ch_enabled acr(mAh) active_empty(mAh) status_reg full_level\n");
+	for (n = battery_log_tail; n != battery_log_head; n = (n + 1) & BATTERY_LOG_MASK) {
+		struct battery_status *s = battery_log + n;
+		seq_printf(sf, "%9lu %7d %12d %12d %12d %16d %8d %9s %10s %8d %17d %10x %10d\n",
+			s->update_time,			
+			s->rep.batt_id,
+			s->rep.batt_vol,
+			s->rep.batt_temp,
+			s->rep.batt_current,
+			s->rep.batt_current_avg,
+			s->rep.level,
+			battery_source[s->rep.charging_source],
+			battery_mode[s->rep.charging_enabled],
+			s->rep.acr,
+			s->rep.active_empty,
+			s->rep.guage_status_reg,
+			s->rep.full_level
+		);
+	}
+	mutex_unlock(&battery_log_lock);
+	return 0;
+}
+
+static int battery_log_open(struct inode *inode, struct file *file)
+{
+	return single_open(file, battery_log_print, NULL);
+}
+
+static struct file_operations battery_log_fops = {
+	.open = battery_log_open,
+	.read = seq_read,
+	.llseek = seq_lseek,
+	.release = single_release,
+};
+
 static int __init ds2784_battery_init(void)
 {
+	debugfs_create_file("battery_log", 0444, NULL, NULL, &battery_log_fops);
 	wake_lock_init(&vbus_wake_lock, WAKE_LOCK_SUSPEND, "vbus_present");
 	register_notifier_cable_status(&cable_status_handler);
 	mutex_init(&htc_batt_info.lock);
