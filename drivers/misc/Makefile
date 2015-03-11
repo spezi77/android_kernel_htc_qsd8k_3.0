@@ -78,4 +78,6 @@ obj-$(CONFIG_CABLE_DETECT_8X60) += cable_detect.o
 obj-$(CONFIG_CABLE_DETECT_8960) += cable_detect_8960.o
 obj-$(CONFIG_CABLE_DETECT_8X55) += cable_detect_8x55.o
 
-obj-$(CONFIG_FSYNC_CONTROL) += fsync_control.o 
+obj-$(CONFIG_FSYNC_CONTROL) += fsync_control.o
+ 
+obj-$(CONFIG_UID_CPUTIME) += uid_cputime.o
