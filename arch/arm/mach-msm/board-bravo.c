@@ -783,6 +783,7 @@ void msm_hsusb_8x50_phy_reset(void)
 static int bravo_phy_init_seq[] ={0x0C, 0x31, 0x30, 0x32, 0x1D, 0x0D, 0x1D, 0x10, -1};
 
 static struct msm_otg_platform_data msm_otg_pdata = {
+	.phy_reset		= msm_hsusb_8x50_phy_reset,
 	.phy_init_seq		= bravo_phy_init_seq,
 	.mode			= USB_PERIPHERAL,
 	.otg_control		= OTG_PHY_CONTROL,
