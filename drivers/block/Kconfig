@@ -115,6 +115,7 @@ config PARIDE
 	  etc.).
 
 source "drivers/block/paride/Kconfig"
+source "drivers/block/zram/Kconfig"
 
 config BLK_CPQ_DA
 	tristate "Compaq SMART2 support"
