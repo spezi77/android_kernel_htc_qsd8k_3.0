@@ -261,7 +261,7 @@ int ds2784_get_battery_info(struct battery_info_reply *batt_info)
 /* DS2784 did not support this over vchg, but we need to have reply */
 	batt_info->over_vchg = 0;
 	pr_info("[BATT-DEBUG: DISPLAYING ADDITIONAL BATTERY INFO]\n");
-	pr_info("[BATT-DEBUG]: Batt ID:%d Batt_vol:%d Batt_temp:%d\n",htc_batt_info.rep.batt_id, htc_batt_info.rep.batt_vol, htc_batt_info.rep.batt_temp);
+	pr_info("[BATT-DEBUG]: Batt ID:%d Batt_vol:%d Batt_temp:%d Batt_current:%d Batt_currrent_avg:%d\n",htc_batt_info.rep.batt_id, htc_batt_info.rep.batt_vol, htc_batt_info.rep.batt_temp, batt_info->batt_current, htc_batt_info.rep.batt_current_avg);
 	pr_info("[BATT-DEBUG]: Batt_level:%d Batt_charging_source: %d Batt_enabled: %d Full_bat: %d\n", htc_batt_info.rep.level, htc_batt_info.rep.charging_source, htc_batt_info.rep.charging_enabled, htc_batt_info.rep.acr);
 	return 0;
 }
