@@ -1146,7 +1146,7 @@ static bool ar5008_hw_ani_control_old(struct ath_hw *ah,
 			REG_CLR_BIT(ah, AR_PHY_SFCORR_LOW,
 				    AR_PHY_SFCORR_LOW_USE_SELF_CORR_LOW);
 
-		if (!on != aniState->ofdmWeakSigDetectOff) {
+		if (on == aniState->ofdmWeakSigDetectOff) {
 			if (on)
 				ah->stats.ast_ani_ofdmon++;
 			else
@@ -1313,7 +1313,7 @@ static bool ar5008_hw_ani_control_new(struct ath_hw *ah,
 			REG_CLR_BIT(ah, AR_PHY_SFCORR_LOW,
 				    AR_PHY_SFCORR_LOW_USE_SELF_CORR_LOW);
 
-		if (!on != aniState->ofdmWeakSigDetectOff) {
+		if (on == aniState->ofdmWeakSigDetectOff) {
 			ath_dbg(common, ATH_DBG_ANI,
 				"** ch %d: ofdm weak signal: %s=>%s\n",
 				chan->channel,
