@@ -5194,6 +5194,7 @@ msmsdcc_runtime_suspend(struct device *dev)
 			spin_lock_irqsave(&host->lock, flags);
 			host->sdcc_suspended = true;
 			spin_unlock_irqrestore(&host->lock, flags);
+#ifdef CONFIG_MMC_CLKGATE
 			if (mmc->card && mmc_card_sdio(mmc->card) &&
 				mmc->ios.clock) {
 				/*
@@ -5210,6 +5211,7 @@ msmsdcc_runtime_suspend(struct device *dev)
 				mmc_set_ios(mmc);
 				mmc_host_clk_release(mmc);
 			}
+#endif
 		}
 		host->sdcc_suspending = 0;
 		mmc->suspend_task = NULL;
