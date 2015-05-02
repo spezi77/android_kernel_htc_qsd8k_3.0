@@ -419,5 +419,4 @@ header-y += lightsensor.h
 header-y += tpa2018d1.h
 header-y += akm8973.h
 header-y += bitops.h
-header-y += asm/bitops.h
-header-y += asm/types.h
+
