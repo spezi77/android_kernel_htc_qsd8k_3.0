@@ -1616,7 +1616,7 @@ static struct msm_pm_platform_data msm_pm_data[MSM_PM_SLEEP_MODE_NR] = {
 		.suspend_supported = 1,
 		.idle_enabled = 1,
 		.suspend_enabled = 1,
-		.latency = 8594,
+		.latency = 4594,
 		.residency = 23740,
 	},
 	[MSM_PM_SLEEP_MODE_RAMP_DOWN_AND_WAIT_FOR_INTERRUPT] = {

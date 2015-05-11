@@ -34,10 +34,10 @@
 #else
 #ifdef CONFIG_VFP
 /* 11 general purpose registers (r4-r14), 10 cp15 registers, VFP working registers, VFP state registers */
-#define CPU_SAVED_STATE_SIZE (4 * 11 + 4 * 10 + 4 * 3 + 8 * 32 + 4 * 2)
+#define CPU_SAVED_STATE_SIZE (4 * 11 + 4 * 10 + 8 * 32 + 4 * 2)
 #else
 /* 11 general purpose registers (r4-r14), 10 cp15 registers */
-#define CPU_SAVED_STATE_SIZE (4 * 11 + 4 * 10 + 8 * 32 + 4 * 2)
+#define CPU_SAVED_STATE_SIZE (4 * 11 + 4 * 10)
 #endif
 #endif
 #ifdef CONFIG_ARCH_MSM_KRAIT
@@ -110,18 +110,26 @@ ENTRY(msm_pm_collapse)
 	bl      etm_save_reg_check
 #endif
 
-#ifdef CONFIG_VFP
-        .fpu        neon
-        VFPFSTMIA r0, r1              /* Save VFP working registers */
-        fmrx    r1, fpexc
-        fmrx    r2, fpscr
-        stmia   r0!, {r1, r2}         /* Save VFP state registers */
-#endif
-
+	ldr	r0, =msm_pm_flush_l2_flag
+	ldr	r0, [r0]
+	mov	r1, #0
+	mcr	p15, 2, r1, c0, c0, 0 /*CCSELR*/
+	isb
+	mrc	p15, 1, r1, c0, c0, 0 /*CCSIDR*/
+	mov	r2, #1
+	and	r1, r2, r1, ASR #30 /* Check if the cache is write back */
+	orr	r1, r0, r1
+	cmp	r1, #1
+	bne	skip
 	bl	v7_flush_dcache_all
 
-	mrc     p15, 0, r1, c1, c0, 0    /* read current CR    */
-	bic     r0, r1, #(1 << 2)        /* clear dcache bit   */
+skip:	ldr	r0, =saved_state
+	ldr	r1, =saved_state_end
+	sub	r1, r1, r0
+	bl	v7_flush_kern_dcache_area
+
+	mrc     p15, 0, r4, c1, c0, 0    /* read current CR    */
+	bic     r0, r4, #(1 << 2)        /* clear dcache bit   */
 	bic     r0, r0, #(1 << 12)       /* clear icache bit   */
 	mcr     p15, 0, r0, c1, c0, 0    /* disable d/i cache  */
 
@@ -135,7 +143,7 @@ ENTRY(msm_pm_collapse)
 #else
 	wfi
 #endif
-	mcr     p15, 0, r1, c1, c0, 0    /* restore d/i cache  */
+	mcr     p15, 0, r4, c1, c0, 0    /* restore d/i cache  */
 	isb
 
 #if defined(CONFIG_MSM_FIQ_SUPPORT)
@@ -284,7 +292,19 @@ ENTRY(msm_pm_boot_entry)
 ENTRY(msm_pm_write_boot_vector)
 	ldr     r2, =msm_pm_boot_vector
 	add     r2, r2, r0, LSL #2       /* locate boot vector for our cpu */
-	str     r1, [r2]	
+	str     r1, [r2]
+	mov	r0, r2
+	ldr	r1, =4
+	stmfd	sp!, {lr}
+	bl	v7_flush_kern_dcache_area
+	ldmfd	sp!, {lr}
+	bx      lr
+
+ENTRY(msm_pm_set_l2_flush_flag)
+	ldr r1, =msm_pm_flush_l2_flag
+	str r0, [r1]
+	bx lr
+
 	.data
 
 	.globl msm_pm_pc_pgd
@@ -301,3 +321,11 @@ saved_state_end:
 
 msm_pm_boot_vector:
 	.space  4 * NR_CPUS
+
+/*
+ * Default the l2 flush flag to 1 so that caches are flushed during power
+ * collapse unless the  L2 driver decides to flush them only during L2
+ * Power collapse.
+ */
+msm_pm_flush_l2_flag:
+	.long 0x1
