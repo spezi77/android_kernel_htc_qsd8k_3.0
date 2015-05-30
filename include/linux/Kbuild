@@ -418,3 +418,4 @@ header-y += capella_cm3602.h
 header-y += lightsensor.h
 header-y += tpa2018d1.h
 header-y += akm8973.h
+header-y += bitops.h
