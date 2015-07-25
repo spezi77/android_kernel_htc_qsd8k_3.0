@@ -1,0 +1,7 @@
+#!/bin/sh
+export ARCH=arm
+export CROSS_COMPILE=/home/spezi77/android/evervolv-kk/prebuilts/gcc/linux-x86/arm/arm-eabi-4.8/bin/arm-eabi-
+make clean
+make mrproper
+make bravo_defconfig
+make -j6
