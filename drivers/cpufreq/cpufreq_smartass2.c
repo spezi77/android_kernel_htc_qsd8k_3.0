@@ -113,7 +113,7 @@ static unsigned int sample_rate_jiffies;
 /*
  * Boost enabled
  */
-#define DEFAULT_BOOST_ENABLED 0
+#define DEFAULT_BOOST_ENABLED 1
 static unsigned int boost_enabled;
 
 /*
