@@ -736,6 +736,7 @@ static void avc_audit_post_callback(struct audit_buffer *ab, void *a)
     if (ad->selinux_audit_data.denied) {
 		audit_log_format(ab, " permissive=%u",
 				 ad->selinux_audit_data.result ? 0 : 1);
+	}
 }
 
 static inline int avc_operation_audit(u32 ssid, u32 tsid, u16 tclass,
@@ -1196,23 +1197,14 @@ inline int avc_has_perm_noaudit(u32 ssid, u32 tsid,
 
 	node = avc_lookup(ssid, tsid, tclass);
 	if (unlikely(!node))
-		rcu_read_unlock();
-		security_compute_av(ssid, tsid, tclass, avd, &ops_node);
-		rcu_read_lock();
-		node = avc_insert(ssid, tsid, tclass, avd);
+		node = avc_compute_av(ssid, tsid, tclass, avd, &ops_node);
 	else
 		memcpy(avd, &node->ae.avd, sizeof(*avd));
 
 	denied = requested & ~(avd->allowed);
 	if (unlikely(denied))
-		if (flags & AVC_STRICT)
-			rc = -EACCES;
-		else if (!selinux_enforcing || (avd->flags & AVD_FLAGS_PERMISSIVE))
-			avc_update_node(AVC_CALLBACK_GRANT, requested, ssid,
-					tsid, tclass, 0, avd->seqno);
-		else
-			rc = -EACCES;
-	}
+		rc = avc_denied(ssid, tsid, tclass, requested, 0, flags, avd);
+
 	rcu_read_unlock();
 	return rc;
 }
