@@ -1252,45 +1252,6 @@ static void get_dev_and_dir(const struct sk_buff *skb,
 	}
 }
 
-/*
- * Update stats for the specified interface from the skb.
- * Do nothing if the entry
- * does not exist (when a device was never configured with an IP address).
- * Called on each sk.
- */
-static void iface_stat_update_from_skb(const struct sk_buff *skb,
-				       struct xt_action_param *par)
-{
-	struct iface_stat *entry;
-	const struct net_device *el_dev;
-	enum ifs_tx_rx direction;
-	int bytes = skb->len;
-	int proto;
-
-	get_dev_and_dir(skb, par, &direction, &el_dev);
-	proto = ipx_proto(skb, par);
-	MT_DEBUG("qtaguid[%d]: iface_stat: %s(%s): "
-		 "type=%d fam=%d proto=%d dir=%d\n",
-		 par->hooknum, __func__, el_dev->name, el_dev->type,
-		 par->family, proto, direction);
-
-	spin_lock_bh(&iface_stat_list_lock);
-	entry = get_iface_entry(el_dev->name);
-	if (entry == NULL) {
-		IF_DEBUG("qtaguid[%d]: iface_stat: %s(%s): not tracked\n",
-			 par->hooknum, __func__, el_dev->name);
-		spin_unlock_bh(&iface_stat_list_lock);
-		return;
-	}
-
-	IF_DEBUG("qtaguid[%d]: %s(%s): entry=%p\n", par->hooknum,  __func__,
-		 el_dev->name, entry);
-
-	data_counters_update(&entry->totals_via_skb, 0, direction, proto,
-			     bytes);
-	spin_unlock_bh(&iface_stat_list_lock);
-}
-
 static void tag_stat_update(struct tag_stat *tag_entry,
 			enum ifs_tx_rx direction, int proto, int bytes)
 {
