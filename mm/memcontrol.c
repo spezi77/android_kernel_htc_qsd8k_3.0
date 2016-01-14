@@ -4563,6 +4563,12 @@ swap_buffers:
 	/* To be sure that nobody uses thresholds */
 	synchronize_rcu();
 
+	/* If all events are unregistered, free the spare array */
+	if (!new) {
+		kfree(thresholds->spare);
+		thresholds->spare = NULL;
+	}
+unlock:
 	mutex_unlock(&memcg->thresholds_lock);
 }
 
