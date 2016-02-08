@@ -7923,11 +7923,6 @@ int wl_cfg80211_do_driver_init(struct net_device *net)
 	return 0;
 }
 
-void wl_cfg80211_enable_trace(int level)
-{
-	wl_dbg_level |= WL_DBG_DBG;
-}
-
 static s32
 wl_cfg80211_mgmt_tx_cancel_wait(struct wiphy *wiphy,
 	struct net_device *dev, u64 cookie)

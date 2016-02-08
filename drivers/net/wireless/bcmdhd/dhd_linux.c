@@ -4963,6 +4963,38 @@ int dhd_os_wake_lock(dhd_pub_t *pub)
 	return ret;
 }
 
+int net_os_wake_lock(struct net_device *dev)
+{
+	dhd_info_t *dhd = *(dhd_info_t **)netdev_priv(dev);
+	int ret = 0;
+
+	if (dhd)
+		ret = dhd_os_wake_lock(&dhd->pub);
+	return ret;
+}
+
+int dhd_os_wake_unlock(dhd_pub_t *pub)
+{
+	dhd_info_t *dhd = (dhd_info_t *)(pub->info);
+	unsigned long flags;
+	int ret = 0;
+
+	dhd_os_wake_lock_timeout(pub);
+	if (dhd) {
+		spin_lock_irqsave(&dhd->wakelock_spinlock, flags);
+		if (dhd->wakelock_counter) {
+			dhd->wakelock_counter--;
+#ifdef CONFIG_HAS_WAKELOCK
+			if (!dhd->wakelock_counter)
+				wake_unlock(&dhd->wl_wifi);
+#endif
+			ret = dhd->wakelock_counter;
+		}
+		spin_unlock_irqrestore(&dhd->wakelock_spinlock, flags);
+	}
+	return ret;
+}
+
 int dhd_os_check_wakelock(void *dhdp)
 {
 #ifdef CONFIG_HAS_WAKELOCK
@@ -4986,7 +5018,7 @@ int net_os_wake_unlock(struct net_device *dev)
 	int ret = 0;
 
 	if (dhd)
-		ret = dhd_os_wake_lock(&dhd->pub);
+		ret = dhd_os_wake_unlock(&dhd->pub);
 	return ret;
 }
 
@@ -5578,3 +5610,4 @@ void htsf_update(dhd_info_t *dhd, void *data)
 }
 
 #endif /* WLMEDIA_HTSF */
+
