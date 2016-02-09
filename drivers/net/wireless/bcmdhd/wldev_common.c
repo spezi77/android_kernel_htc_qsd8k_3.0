@@ -333,11 +333,25 @@ int wldev_set_country(
 	wl_country_t cspec = {{0}, 0, {0}};
 	scb_val_t scbval;
 	char smbuf[WLC_IOCTL_SMLEN];
+	int i;
+	char *broken_ccodes[] = {
+		"AM","AZ","BH","GE","IR","IQ","IL","JO","KW",
+		"LB","OM","QA","SA","SY","TR","TM","AE","YE"};
 
 	if (!country_code) {
 		WLDEV_ERROR(("%s: set country failed for %s\n",
 			__FUNCTION__, country_code));
 		return error;
+	}
+
+	//Check for broken country codes
+	for(i = 0; i < sizeof(broken_ccodes) / sizeof(broken_ccodes[0]); i++) {
+		if (strncmp(country_code, broken_ccodes[i], WLC_CNTRY_BUF_SZ) == 0) {
+			WLDEV_ERROR(("%s: Found broken country code %s. Forcing to EU\n",
+				__FUNCTION__, country_code));
+			country_code = "EU";
+			break;
+		}
 	}
 
 	error = wldev_iovar_getbuf(dev, "country", &cspec, sizeof(cspec),
