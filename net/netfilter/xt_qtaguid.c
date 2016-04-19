@@ -1370,6 +1370,7 @@ static void if_tag_stat_update(const char *ifname, uid_t uid,
 		new_tag_stat->parent_counters = uid_tag_counters;
 	}
 	tag_stat_update(new_tag_stat, direction, proto, bytes);
+  unlock:
 	spin_unlock_bh(&iface_entry->tag_stat_list_lock);
 	spin_unlock_bh(&iface_stat_list_lock);
 }
