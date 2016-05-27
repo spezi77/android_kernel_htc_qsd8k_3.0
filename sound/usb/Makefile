@@ -2,8 +2,6 @@
 # Makefile for ALSA
 #
 
-EXTRA_CFLAGS += -Wno-array-bounds
-
 snd-usb-audio-objs := 	card.o \
 			mixer.o \
 			mixer_quirks.o \
