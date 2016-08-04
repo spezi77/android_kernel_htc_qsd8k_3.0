@@ -55,7 +55,7 @@ struct hci_conn *hci_le_connect(struct hci_dev *hdev, __u16 pkt_type,
 	struct adv_entry *entry;
 	struct link_key *key;
 
-	BT_DBG("%p", hdev);
+	BT_DBG("%pK", hdev);
 
 	le = hci_conn_hash_lookup_ba(hdev, LE_LINK, dst);
 	if (le) {
@@ -143,7 +143,7 @@ void hci_le_cancel_create_connect(struct hci_dev *hdev, bdaddr_t *dst)
 {
 	struct hci_conn *le;
 
-	BT_DBG("%p", hdev);
+	BT_DBG("%pK", hdev);
 
 	le = hci_conn_hash_lookup_ba(hdev, LE_LINK, dst);
 	if (le) {
@@ -160,7 +160,7 @@ void hci_le_add_dev_white_list(struct hci_dev *hdev, bdaddr_t *dst)
 	struct adv_entry *entry;
 	struct link_key *key;
 
-	BT_DBG("%p", hdev);
+	BT_DBG("%pK", hdev);
 
 	memset(&cp, 0, sizeof(cp));
 	bacpy(&cp.addr, dst);
@@ -186,7 +186,7 @@ void hci_le_remove_dev_white_list(struct hci_dev *hdev, bdaddr_t *dst)
 	struct adv_entry *entry;
 	struct link_key *key;
 
-	BT_DBG("%p", hdev);
+	BT_DBG("%pK", hdev);
 
 	memset(&cp, 0, sizeof(cp));
 	bacpy(&cp.addr, dst);
@@ -212,7 +212,7 @@ void hci_acl_connect(struct hci_conn *conn)
 	struct inquiry_entry *ie;
 	struct hci_cp_create_conn cp;
 
-	BT_DBG("%p", conn);
+	BT_DBG("%pK", conn);
 
 	conn->state = BT_CONNECT;
 	conn->out = 1;
@@ -253,7 +253,7 @@ static void hci_acl_connect_cancel(struct hci_conn *conn)
 {
 	struct hci_cp_create_conn_cancel cp;
 
-	BT_DBG("%p", conn);
+	BT_DBG("%pK", conn);
 
 	if (conn->hdev->hci_ver < 2)
 		return;
@@ -264,7 +264,7 @@ static void hci_acl_connect_cancel(struct hci_conn *conn)
 
 void hci_acl_disconn(struct hci_conn *conn, __u8 reason)
 {
-	BT_DBG("%p", conn);
+	BT_DBG("%pK", conn);
 
 	conn->state = BT_DISCONN;
 
@@ -287,7 +287,7 @@ void hci_add_sco(struct hci_conn *conn, __u16 handle)
 	struct hci_dev *hdev = conn->hdev;
 	struct hci_cp_add_sco cp;
 
-	BT_DBG("%p", conn);
+	BT_DBG("%pK", conn);
 
 	conn->state = BT_CONNECT;
 	conn->out = 1;
@@ -305,7 +305,7 @@ void hci_setup_sync(struct hci_conn *conn, __u16 handle)
 	struct hci_dev *hdev = conn->hdev;
 	struct hci_cp_setup_sync_conn cp;
 
-	BT_DBG("%p", conn);
+	BT_DBG("%pK", conn);
 
 	conn->state = BT_CONNECT;
 	conn->out = 1;
@@ -372,7 +372,7 @@ void hci_le_start_enc(struct hci_conn *conn, __le16 ediv, __u8 rand[8],
 	struct hci_dev *hdev = conn->hdev;
 	struct hci_cp_le_start_enc cp;
 
-	BT_DBG("%p", conn);
+	BT_DBG("%pK", conn);
 
 	memset(&cp, 0, sizeof(cp));
 
@@ -390,7 +390,7 @@ void hci_le_ltk_reply(struct hci_conn *conn, u8 ltk[16])
 	struct hci_dev *hdev = conn->hdev;
 	struct hci_cp_le_ltk_reply cp;
 
-	BT_DBG("%p", conn);
+	BT_DBG("%pK", conn);
 
 	memset(&cp, 0, sizeof(cp));
 
@@ -406,7 +406,7 @@ void hci_le_ltk_neg_reply(struct hci_conn *conn)
 	struct hci_dev *hdev = conn->hdev;
 	struct hci_cp_le_ltk_neg_reply cp;
 
-	BT_DBG("%p", conn);
+	BT_DBG("%pK", conn);
 
 	memset(&cp, 0, sizeof(cp));
 
@@ -420,7 +420,7 @@ void hci_sco_setup(struct hci_conn *conn, __u8 status)
 {
 	struct hci_conn *sco = conn->link;
 
-	BT_DBG("%p", conn);
+	BT_DBG("%pK", conn);
 
 	if (!sco)
 		return;
@@ -442,7 +442,7 @@ static void hci_conn_timeout(unsigned long arg)
 	struct hci_dev *hdev = conn->hdev;
 	__u8 reason;
 
-	BT_DBG("conn %p state %d", conn, conn->state);
+	BT_DBG("conn %pK state %d", conn, conn->state);
 
 	hci_dev_lock(hdev);
 
@@ -476,7 +476,7 @@ static void hci_conn_idle(unsigned long arg)
 {
 	struct hci_conn *conn = (void *) arg;
 
-	BT_DBG("conn %p mode %d", conn, conn->mode);
+	BT_DBG("conn %pK mode %d", conn, conn->mode);
 
 	hci_conn_enter_sniff_mode(conn);
 }
@@ -488,7 +488,7 @@ static void hci_conn_rssi_update(struct work_struct *work)
 	struct hci_conn *conn =
 		container_of(delayed, struct hci_conn, rssi_update_work);
 
-	BT_DBG("conn %p mode %d", conn, conn->mode);
+	BT_DBG("conn %pK mode %d", conn, conn->mode);
 
 	hci_read_rssi(conn);
 }
@@ -582,7 +582,7 @@ int hci_conn_del(struct hci_conn *conn)
 {
 	struct hci_dev *hdev = conn->hdev;
 
-	BT_DBG("%s conn %p handle %d", hdev->name, conn, conn->handle);
+	BT_DBG("%s conn %pK handle %d", hdev->name, conn, conn->handle);
 
 	/* Make sure no timers are running */
 	del_timer(&conn->idle_timer);
@@ -652,7 +652,7 @@ struct hci_chan *hci_chan_add(struct hci_dev *hdev)
 
 int hci_chan_del(struct hci_chan *chan)
 {
-	BT_DBG("%s chan %p", chan->hdev->name, chan);
+	BT_DBG("%s chan %pK", chan->hdev->name, chan);
 
 	list_del(&chan->list);
 
@@ -670,7 +670,7 @@ int hci_chan_put(struct hci_chan *chan)
 	struct hci_conn *hcon;
 	u16 ll_handle;
 
-	BT_DBG("chan %p refcnt %d", chan, atomic_read(&chan->refcnt));
+	BT_DBG("chan %pK refcnt %d", chan, atomic_read(&chan->refcnt));
 	if (!atomic_dec_and_test(&chan->refcnt))
 		return 0;
 
@@ -852,7 +852,7 @@ EXPORT_SYMBOL(hci_connect);
 
 void hci_disconnect(struct hci_conn *conn, __u8 reason)
 {
-	BT_DBG("conn %p", conn);
+	BT_DBG("conn %pK", conn);
 
 	hci_proto_disconn_cfm(conn, reason, 0);
 }
@@ -862,7 +862,7 @@ void hci_disconnect_amp(struct hci_conn *conn, __u8 reason)
 {
 	struct hci_dev *hdev = NULL;
 
-	BT_DBG("conn %p", conn);
+	BT_DBG("conn %pK", conn);
 
 	read_lock_bh(&hci_dev_list_lock);
 
@@ -883,7 +883,7 @@ void hci_disconnect_amp(struct hci_conn *conn, __u8 reason)
 /* Check link security requirement */
 int hci_conn_check_link_mode(struct hci_conn *conn)
 {
-	BT_DBG("conn %p", conn);
+	BT_DBG("conn %pK", conn);
 
 	if (conn->ssp_mode > 0 && conn->hdev->ssp_mode > 0 &&
 					!(conn->link_mode & HCI_LM_ENCRYPT))
@@ -896,7 +896,7 @@ EXPORT_SYMBOL(hci_conn_check_link_mode);
 /* Authenticate remote device */
 static int hci_conn_auth(struct hci_conn *conn, __u8 sec_level, __u8 auth_type)
 {
-	BT_DBG("conn %p", conn);
+	BT_DBG("conn %pK", conn);
 
 	if (conn->pending_sec_level > sec_level)
 		sec_level = conn->pending_sec_level;
@@ -928,7 +928,7 @@ static int hci_conn_auth(struct hci_conn *conn, __u8 sec_level, __u8 auth_type)
 /* Enable security */
 int hci_conn_security(struct hci_conn *conn, __u8 sec_level, __u8 auth_type)
 {
-	BT_DBG("conn %p %d %d", conn, sec_level, auth_type);
+	BT_DBG("conn %pK %d %d", conn, sec_level, auth_type);
 
 	if (sec_level == BT_SECURITY_SDP)
 		return 1;
@@ -966,7 +966,7 @@ EXPORT_SYMBOL(hci_conn_security);
 /* Change link key */
 int hci_conn_change_link_key(struct hci_conn *conn)
 {
-	BT_DBG("conn %p", conn);
+	BT_DBG("conn %pK", conn);
 
 	if (!test_and_set_bit(HCI_CONN_AUTH_PEND, &conn->pend)) {
 		struct hci_cp_change_conn_link_key cp;
@@ -982,7 +982,7 @@ EXPORT_SYMBOL(hci_conn_change_link_key);
 /* Switch role */
 int hci_conn_switch_role(struct hci_conn *conn, __u8 role)
 {
-	BT_DBG("conn %p", conn);
+	BT_DBG("conn %pK", conn);
 
 	if (!role && conn->link_mode & HCI_LM_MASTER)
 		return 1;
@@ -1003,7 +1003,7 @@ void hci_conn_enter_active_mode(struct hci_conn *conn, __u8 force_active)
 {
 	struct hci_dev *hdev = conn->hdev;
 
-	BT_DBG("conn %p mode %d", conn, conn->mode);
+	BT_DBG("conn %pK mode %d", conn, conn->mode);
 
 	if (test_bit(HCI_RAW, &hdev->flags))
 		return;
@@ -1028,7 +1028,7 @@ timer:
 
 static inline void hci_conn_stop_rssi_timer(struct hci_conn *conn)
 {
-	BT_DBG("conn %p", conn);
+	BT_DBG("conn %pK", conn);
 	cancel_delayed_work(&conn->rssi_update_work);
 }
 
@@ -1036,7 +1036,7 @@ static inline void hci_conn_start_rssi_timer(struct hci_conn *conn,
 	u16 interval)
 {
 	struct hci_dev *hdev = conn->hdev;
-	BT_DBG("conn %p, pending %d", conn,
+	BT_DBG("conn %pK, pending %d", conn,
 			delayed_work_pending(&conn->rssi_update_work));
 	if (!delayed_work_pending(&conn->rssi_update_work)) {
 		queue_delayed_work(hdev->workqueue, &conn->rssi_update_work,
@@ -1068,7 +1068,7 @@ void hci_conn_enter_sniff_mode(struct hci_conn *conn)
 {
 	struct hci_dev *hdev = conn->hdev;
 
-	BT_DBG("conn %p mode %d", conn, conn->mode);
+	BT_DBG("conn %pK mode %d", conn, conn->mode);
 
 	if (test_bit(HCI_RAW, &hdev->flags))
 		return;
